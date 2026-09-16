@@ -1,0 +1,2290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Premium Portfolio & Arcade</title>
+    <!-- Google Fonts & FontAwesome for Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #050810;
+            --card-bg: rgba(20, 25, 40, 0.4);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.35);
+            --secondary: #818cf8;
+            --pink-accent: #f472b6;
+            --pink-glow: rgba(244, 114, 182, 0.35);
+            --orange-accent: #fb923c;
+            --orange-glow: rgba(251, 146, 60, 0.35);
+            --green-accent: #4ade80;
+            --green-glow: rgba(74, 222, 128, 0.35);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --insta-color: #e1306c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: radial-gradient(circle at center, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* SHATTER LOCK SCREEN */
+        #lockScreen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #03050a;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: background 0.8s ease;
+        }
+
+        #lockScreen::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .arcade-card {
+            background: rgba(15, 23, 42, 0.75);
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.25), inset 0 0 15px rgba(56, 189, 248, 0.15);
+            border-radius: 28px;
+            padding: 40px 36px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+            max-width: 380px;
+            width: 90%;
+            position: relative;
+            z-index: 3;
+            backdrop-filter: blur(20px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .logo-emblem {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(129, 140, 248, 0.15));
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            color: var(--accent);
+            box-shadow: 0 0 25px var(--accent-glow);
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: logoPulse 2.5s infinite alternate ease-in-out;
+        }
+
+        .logo-emblem:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 0 40px var(--accent);
+        }
+
+        @keyframes logoPulse {
+            0% { box-shadow: 0 0 15px var(--accent-glow), inset 0 0 10px rgba(56, 189, 248, 0.1); }
+            100% { box-shadow: 0 0 35px var(--accent-glow), inset 0 0 20px rgba(56, 189, 248, 0.3); }
+        }
+
+        .arcade-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 13px;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .passcode-box {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 12px;
+            transition: all 0.5s ease;
+        }
+
+        .passcode-input {
+            width: 100%;
+            text-align: center;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 18px;
+            letter-spacing: 6px;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .passcode-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .unlock-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5);
+        }
+
+        .error-msg {
+            color: #f87171;
+            font-size: 13px;
+            min-height: 18px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .shatter-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 100000;
+        }
+
+        .glass-shard {
+            position: absolute;
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            clip-path: polygon(50% 0%, 100% 100%, 0% 70%);
+            transition: transform 0.8s cubic-bezier(0.1, 0.8, 0.3, 1), opacity 0.8s ease;
+        }
+
+        #lockScreen.shattered {
+            background: transparent;
+            pointer-events: none;
+        }
+
+        #lockScreen.shattered .glass-shard {
+            transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.1);
+            opacity: 0;
+        }
+
+        #lockScreen.shattered .arcade-card {
+            animation: cardBreak 0.7s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+
+        @keyframes cardBreak {
+            0% { transform: scale(1); filter: contrast(1); }
+            30% { transform: scale(1.08) rotate(2deg); filter: contrast(2) brightness(1.5); }
+            100% { transform: scale(0.2) rotate(-30deg); opacity: 0; }
+        }
+
+        .shake { animation: errorShake 0.4s ease-in-out; }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        /* TERMINAL EASTER EGG MODAL */
+        .terminal-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(3, 5, 10, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 50000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .terminal-modal.active { display: flex; }
+        .terminal-box {
+            background: #020408;
+            border: 1px solid var(--green-accent);
+            box-shadow: 0 0 40px var(--green-glow);
+            width: 100%;
+            max-width: 650px;
+            height: 420px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: 'VT323', monospace;
+        }
+        .terminal-topbar {
+            background: rgba(74, 222, 128, 0.1);
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--green-accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--green-accent);
+            font-size: 16px;
+        }
+        .terminal-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            color: var(--green-accent);
+            font-size: 20px;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .terminal-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(0,0,0,0.5);
+            border-top: 1px solid rgba(74, 222, 128, 0.2);
+        }
+        .terminal-input-row input {
+            background: transparent;
+            border: none;
+            color: var(--green-accent);
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            outline: none;
+            width: 100%;
+            padding: 0;
+            box-shadow: none !important;
+        }
+
+        /* MATRIX TERMINAL OVERLAY */
+        .matrix-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 80000;
+            display: none;
+        }
+        .matrix-overlay.active { display: block; }
+        #matrixCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .matrix-exit-btn {
+            position: absolute;
+            top: 25px; right: 25px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--green-accent);
+            color: var(--green-accent);
+            padding: 10px 20px;
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 0 15px var(--green-glow);
+            z-index: 80001;
+            transition: all 0.3s ease;
+        }
+        .matrix-exit-btn:hover {
+            background: var(--green-accent);
+            color: #000;
+            box-shadow: 0 0 25px var(--green-accent);
+        }
+
+        /* VIP PASS MODAL & CARD STYLES */
+        .vip-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(3, 5, 10, 0.92);
+            backdrop-filter: blur(25px);
+            z-index: 60000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .vip-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+
+        .vip-card-wrapper {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(5, 8, 16, 0.98));
+            border: 2px solid var(--accent);
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 0 50px var(--accent-glow), inset 0 0 20px rgba(56, 189, 248, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .vip-pass-badge-preview {
+            width: 100%;
+            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.12), rgba(0, 0, 0, 0.6));
+            border: 1px dashed var(--accent);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vip-pass-badge-preview::before {
+            content: "VIP ACCESS";
+            position: absolute;
+            top: 10px; right: -30px;
+            background: var(--accent);
+            color: #050810;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 30px;
+            transform: rotate(45deg);
+            letter-spacing: 1px;
+        }
+
+        .vip-avatar-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #fff;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .vip-card-name {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--accent-glow);
+            word-break: break-all;
+        }
+
+        .vip-card-footer-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 10px;
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* MAIN SITE STYLES */
+        .ambient-glow {
+            position: fixed;
+            width: 45vw; height: 45vw;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.4;
+            animation: pulse 12s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+        .glow-1 { top: -10%; left: -10%; background: linear-gradient(135deg, #38bdf8, #818cf8); }
+        .glow-2 { bottom: -10%; right: -10%; background: linear-gradient(135deg, #c084fc, #3b82f6); animation-delay: -6s; }
+
+        @keyframes pulse {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.3; }
+            100% { transform: scale(1.2) translate(40px, 40px); opacity: 0.5; }
+        }
+
+        .floating-controls {
+            position: fixed;
+            top: 30px;
+            width: 100%;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .audio-controls-group {
+            display: flex;
+            gap: 10px;
+            pointer-events: auto;
+        }
+
+        .control-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            pointer-events: auto;
+        }
+
+        .control-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 25px var(--accent-glow);
+            color: var(--accent);
+        }
+
+        #musicBtn:hover { transform: scale(1.1); }
+        .music-playing i { animation: spin 4s linear infinite; color: var(--accent); }
+        .music-playing { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        #menuBtn:hover { transform: scale(1.1) rotate(90deg); }
+
+        /* PLAYLIST MODAL & AUDIO PLAYER */
+        .playlist-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(5, 8, 16, 0.92);
+            backdrop-filter: blur(25px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .playlist-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+
+        .playlist-card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--accent);
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px var(--accent-glow);
+            position: relative;
+        }
+
+        .playlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .playlist-header h2 {
+            font-size: 22px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .playlist-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 5px;
+        }
+
+        .track-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .track-item:hover, .track-item.active-track {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .custom-url-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .embed-container {
+            margin-top: 15px;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            right: 30px;
+            top: 75px;
+            background: rgba(10, 15, 28, 0.85);
+            border: 1px solid var(--border-color);
+            width: 240px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .dropdown-content.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .dropdown-content a {
+            color: var(--text-muted);
+            padding: 16px 24px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+        }
+
+        .dropdown-content a::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; height: 100%; width: 3px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            color: var(--text-main);
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.1), transparent);
+            padding-left: 30px;
+        }
+
+        .dropdown-content a:hover::before { transform: scaleY(1); }
+        .dropdown-content a i { width: 20px; text-align: center; color: var(--accent); }
+
+        .dropdown-content a.insta-link::before { background: var(--insta-color); }
+        .dropdown-content a.insta-link:hover { background: linear-gradient(90deg, rgba(225, 48, 108, 0.15), transparent); }
+        .dropdown-content a.insta-link i { color: var(--insta-color); }
+
+        main {
+            width: 100%;
+            max-width: 720px;
+            padding: 20px;
+            z-index: 1;
+            margin-top: 60px;
+        }
+
+        .page-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            padding: 60px 50px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .page-section.active { display: block; }
+
+        .page-section.active > * {
+            opacity: 0;
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .page-section.active > *:nth-child(1) { animation-delay: 0.1s; }
+        .page-section.active > *:nth-child(2) { animation-delay: 0.2s; }
+        .page-section.active > *:nth-child(3) { animation-delay: 0.3s; }
+        .page-section.active > *:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 38px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 20%, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 17px;
+            line-height: 1.8;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        /* MINI GAMES SECTION STYLES */
+        .game-nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .game-tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .game-tab-btn.active-tab-boy {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+            border-color: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .game-tab-btn.active-tab-girl {
+            background: linear-gradient(135deg, rgba(244, 114, 182, 0.2), rgba(192, 132, 252, 0.2));
+            border-color: var(--pink-accent);
+            color: #fff;
+            box-shadow: 0 0 15px var(--pink-glow);
+        }
+
+        .game-tab-btn.active-tab-sprint {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.2), rgba(245, 158, 11, 0.2));
+            border-color: var(--orange-accent);
+            color: #fff;
+            box-shadow: 0 0 15px var(--orange-glow);
+        }
+
+        .game-tab-btn.active-tab-juggling {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(56, 189, 248, 0.2));
+            border-color: var(--green-accent);
+            color: #fff;
+            box-shadow: 0 0 15px var(--green-glow);
+        }
+
+        .game-box {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Penalty Game Arena */
+        .role-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .role-btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .role-btn.selected {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #050810;
+        }
+
+        .pitch-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(180deg, #15803d 0%, #166534 100%);
+            border: 3px solid #fff;
+            border-radius: 16px;
+            margin: 20px 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .goal-post {
+            width: 75%;
+            height: 70px;
+            border: 4px solid #fff;
+            border-bottom: none;
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .keeper-icon {
+            font-size: 30px;
+            color: #facc15;
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .ball-icon {
+            font-size: 26px;
+            color: #fff;
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .direction-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--accent);
+            color: #fff;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: var(--accent);
+            color: #050810;
+        }
+
+        /* Speed Sprint Game */
+        .sprint-tap-btn {
+            width: 100%;
+            padding: 30px;
+            margin: 20px 0;
+            background: linear-gradient(135deg, var(--orange-accent), #f59e0b);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 8px 30px var(--orange-glow);
+            transition: transform 0.05s ease, box-shadow 0.2s ease;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .sprint-tap-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 15px var(--orange-glow);
+        }
+
+        .sprint-track {
+            height: 12px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 15px 0 25px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sprint-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #fb923c, #facc15);
+            border-radius: 10px;
+            transition: width 0.1s ease;
+        }
+
+        /* Juggling Challenge Game */
+        .juggle-tap-btn {
+            width: 100%;
+            padding: 30px;
+            margin: 20px 0;
+            background: linear-gradient(135deg, var(--green-accent), #059669);
+            border: none;
+            border-radius: 20px;
+            color: #050810;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 8px 30px var(--green-glow);
+            transition: transform 0.05s ease;
+            user-select: none;
+        }
+        .juggle-tap-btn:active { transform: scale(0.96); }
+
+        /* Makeup Game Routine */
+        .makeup-step-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .makeup-item {
+            padding: 10px 16px;
+            background: rgba(244, 114, 182, 0.15);
+            border: 1px solid var(--pink-accent);
+            border-radius: 20px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .makeup-item:hover {
+            transform: translateY(-2px);
+            background: var(--pink-accent);
+            color: #050810;
+        }
+
+        .makeup-item.used {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .routine-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .slot-row {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px dashed rgba(244, 114, 182, 0.4);
+            padding: 12px 18px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .slot-num {
+            color: var(--pink-accent);
+            font-weight: 700;
+            width: 25px;
+        }
+
+        .slot-val {
+            flex: 1;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .clear-slot-btn {
+            background: transparent;
+            border: none;
+            color: #f87171;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .pink-btn {
+            background: linear-gradient(135deg, var(--pink-accent), #c084fc) !important;
+            box-shadow: 0 6px 20px var(--pink-glow) !important;
+            border: none !important;
+        }
+
+        /* Standard Portfolio Sections */
+        .memories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .memory-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .memory-card:hover {
+            border-color: rgba(56, 189, 248, 0.35);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .memory-badge {
+            align-self: flex-start;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(129, 140, 248, 0.15));
+            color: var(--accent);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        .gallery-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(5, 8, 16, 0.92);
+            backdrop-filter: blur(25px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .gallery-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .gallery-container {
+            position: relative;
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gallery-img {
+            max-width: 100%;
+            max-height: 65vh;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            object-fit: contain;
+        }
+
+        .gallery-caption { margin-top: 15px; color: var(--text-muted); font-size: 15px; text-align: center; }
+        .gallery-counter { color: var(--accent); font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+
+        .gallery-close {
+            position: absolute; top: -45px; right: 0;
+            background: transparent; border: none; color: var(--text-main); font-size: 26px; cursor: pointer;
+        }
+
+        .gallery-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(20, 25, 40, 0.7); border: 1px solid var(--border-color);
+            color: #fff; width: 48px; height: 48px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+
+        .gallery-prev { left: -25px; }
+        .gallery-next { right: -25px; }
+
+        .review-form { margin-top: 40px; display: flex; flex-direction: column; gap: 18px; }
+
+        input, textarea {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            padding: 16px 20px;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+        }
+
+        button.submit-btn {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: #fff; border: none; padding: 16px; border-radius: 14px;
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.4s ease;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        .review-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            border: 1px solid var(--border-color);
+            padding: 24px; border-radius: 18px; margin-top: 20px;
+            border-left: 3px solid var(--accent);
+        }
+
+        @media (max-width: 600px) {
+            .page-section { padding: 40px 30px; }
+            h1 { font-size: 32px; }
+            .memories-grid { grid-template-columns: 1fr; }
+            .gallery-prev { left: 5px; }
+            .gallery-next { right: 5px; }
+            .sprint-tap-btn { font-size: 14px; padding: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGO TRANSITION & SHATTER LOCK SCREEN -->
+    <div id="lockScreen">
+        <div class="arcade-card" id="arcadeCard">
+            <div class="logo-emblem" id="logoEmblem" onclick="focusPassword()">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <div class="arcade-title">SYSTEM LOCKED</div>
+            <div class="passcode-box">
+                <input type="password" id="passInput" class="passcode-input" maxlength="4" placeholder="••••" autocomplete="off" autofocus>
+                <div id="errorMsg" class="error-msg"></div>
+                <button class="unlock-btn" onclick="verifyPasscode()">
+                    <i class="fas fa-key"></i> UNLOCK SYSTEM
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECRET TERMINAL MODAL -->
+    <div id="terminalModal" class="terminal-modal" onclick="closeTerminalOnOutside(event)">
+        <div class="terminal-box">
+            <div class="terminal-topbar">
+                <span>guest@radhwan-terminal:~</span>
+                <span style="cursor:pointer;" onclick="toggleTerminal(false)">[X]</span>
+            </div>
+            <div class="terminal-body" id="terminalOutput">
+                <div>Welcome to Radhwan's interactive terminal v1.0.0</div>
+                <div>Type <span style="color:#fff">&apos;help&apos;</span>, <span style="color:#fff">&apos;matrix&apos;</span>, or <span style="color:#fff">&apos;vip [your name]&apos;</span> for a VIP Pass.</div>
+                <br>
+            </div>
+            <div class="terminal-input-row">
+                <span>&gt;</span>
+                <input type="text" id="terminalInput" autocomplete="off" placeholder="type a command...">
+            </div>
+        </div>
+    </div>
+
+    <!-- MATRIX RAIN OVERLAY -->
+    <div id="matrixOverlay" class="matrix-overlay">
+        <button class="matrix-exit-btn" onclick="stopMatrixRain()">[EXIT MATRIX]</button>
+        <canvas id="matrixCanvas"></canvas>
+    </div>
+
+    <!-- VIP PASS MODAL -->
+    <div id="vipModal" class="vip-modal" onclick="closeVipOnOutside(event)">
+        <div class="vip-card-wrapper">
+            <div class="playlist-header" style="width: 100%; margin-bottom: 0;">
+                <h2><i class="fas fa-id-card"></i> VIP Pass Generated</h2>
+                <button class="clear-slot-btn" onclick="closeVipModal()" style="font-size: 20px;"><i class="fas fa-times"></i></button>
+            </div>
+
+            <!-- The Renderable Pass Card -->
+            <div class="vip-pass-badge-preview" id="vipPassCard">
+                <div class="vip-avatar-circle">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+                <div style="font-size: 11px; color: var(--accent); letter-spacing: 2px; font-weight: 600;">VERIFIED GUEST PASS</div>
+                <div class="vip-card-name" id="vipCardHolderName">RADHWAN</div>
+                <div class="vip-card-footer-text">
+                    <span>ID: #VIP-2026</span>
+                    <span style="color: var(--green-accent);">Made by M-Radhwan</span>
+                </div>
+            </div>
+
+            <button class="unlock-btn" onclick="downloadVipPass()">
+                <i class="fas fa-download"></i> Download VIP Card
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN PORTFOLIO -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <audio id="bgMusic" loop></audio>
+
+    <div class="floating-controls">
+        <div class="audio-controls-group">
+            <button id="musicBtn" class="control-btn" onclick="toggleMusic()" title="Play/Pause Music">
+                <i class="fas fa-music"></i>
+            </button>
+            <button id="playlistBtn" class="control-btn" onclick="openPlaylistModal()" title="Music Playlist">
+                <i class="fas fa-list-ul"></i>
+            </button>
+            <button id="terminalBtn" class="control-btn" onclick="toggleTerminal(true)" title="Open Terminal (~)">
+                <i class="fas fa-terminal"></i>
+            </button>
+        </div>
+
+        <div style="position: relative;">
+            <button id="menuBtn" class="control-btn" onclick="toggleMenu()">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div id="dropdownMenu" class="dropdown-content">
+                <a href="#" onclick="showSection('intro')"><i class="fas fa-hand-sparkles"></i> Introduction</a>
+                <a href="#" onclick="showSection('minigames')"><i class="fas fa-gamepad"></i> Mini Games</a>
+                <a href="#" onclick="showSection('football')"><i class="fas fa-futbol"></i> Football Life</a>
+                <a href="#" onclick="showSection('gaming')"><i class="fas fa-gamepad"></i> Game Life</a>
+                <a href="#" onclick="showSection('tips')"><i class="fas fa-lightbulb"></i> Tips & Tricks</a>
+                <a href="#" onclick="showSection('preferences')"><i class="fas fa-star"></i> Likes & Dislikes</a>
+                <a href="#" onclick="showSection('memories')"><i class="fas fa-heart"></i> Sweet Memories</a>
+                <a href="#" onclick="showSection('reviews')"><i class="fas fa-comment-alt"></i> Reviews</a>
+                <a href="https://www.instagram.com/mohd_radhwan?utm_source=qr&stkn=MTg1ZHVuZjZ3eGQzeA==" target="_blank" rel="noopener noreferrer" class="insta-link">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- PLAYLIST SELECTION MODAL -->
+    <div id="playlistModal" class="playlist-modal" onclick="closePlaylistOnOutsideClick(event)">
+        <div class="playlist-card">
+            <div class="playlist-header">
+                <h2><i class="fas fa-compact-disc"></i> Select Music</h2>
+                <button class="clear-slot-btn" onclick="closePlaylistModal()" style="font-size: 20px;"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="playlist-items" id="playlistTrackList"></div>
+
+            <div class="custom-url-box">
+                <span style="font-size: 13px; color: var(--text-muted); font-weight: 500;">Paste Custom Audio / Stream URL or Embed Code:</span>
+                <input type="text" id="customAudioUrl" placeholder="MP3 URL or Audio/Iframe Embed Code" style="padding: 10px; font-size: 13px;">
+                <button class="unlock-btn" style="padding: 10px; font-size: 12px;" onclick="loadCustomAudio()">
+                    <i class="fas fa-plus"></i> Load Track
+                </button>
+            </div>
+
+            <div id="embedContainer" class="embed-container"></div>
+        </div>
+    </div>
+
+    <main>
+        <!-- INTRODUCTION SECTION -->
+        <section id="intro" class="page-section active">
+            <h1>Welcome to my space.</h1>
+            <p>Hey, Its me Radhwan. I come from India, Kerala—if you're here, you're probably here to get to know me. I'm currently studying in 12th grade in the commerce stream.</p>
+            <p>Hobbies aren't much: gaming, sleeping, writing, and coding. These things pass my time.</p>
+            <p>My favorite part about me? Football... it's something I love and I'll tell you exactly how I fell into it and how I tried my best to focus on it.</p>
+            <p>So yes, in my personal life I am as single as a stick, but who cares? Life's all fun and games.</p>
+            <p style="color: var(--accent); font-weight: 500;">"Don't stop. If you do, you don't know what catches you from behind."</p>
+        </section>
+
+        <!-- MINI GAMES SECTION -->
+        <section id="minigames" class="page-section">
+            <h1>Arcade Mini Games</h1>
+            <p>Choose your arena! Penalty Shootout, 10s Sprint Dash, Juggling Challenge, and Makeup Routine.</p>
+
+            <div class="game-nav-tabs">
+                <button class="game-tab-btn active-tab-boy" id="tabPenalty" onclick="switchMiniGame('penalty')">
+                    <i class="fas fa-futbol"></i> Penalty
+                </button>
+                <button class="game-tab-btn" id="tabSprint" onclick="switchMiniGame('sprint')">
+                    <i class="fas fa-running"></i> Sprint
+                </button>
+                <button class="game-tab-btn" id="tabJuggle" onclick="switchMiniGame('juggle')">
+                    <i class="fas fa-circle-notch"></i> Juggling
+                </button>
+                <button class="game-tab-btn" id="tabMakeup" onclick="switchMiniGame('makeup')">
+                    <i class="fas fa-wand-magic-sparkles"></i> Makeup
+                </button>
+            </div>
+
+            <!-- GAME 1: PENALTY SHOOTOUT -->
+            <div id="penaltyGameContainer" class="game-box">
+                <h3 style="color: var(--accent); margin-bottom: 5px;">⚽ Penalty Shootout Showdown</h3>
+                <p style="font-size: 14px; margin-bottom: 15px;">Pick your side: Will you shoot or save?</p>
+
+                <div class="role-selector">
+                    <button class="role-btn selected" id="roleShooter" onclick="setRole('shooter')"><i class="fas fa-shoe-prints"></i> Shooter</button>
+                    <button class="role-btn" id="roleKeeper" onclick="setRole('keeper')"><i class="fas fa-hand-paper"></i> Goalkeeper</button>
+                </div>
+
+                <div class="pitch-container">
+                    <div class="goal-post">
+                        <i class="fas fa-user-ninja keeper-icon" id="keeperIcon"></i>
+                    </div>
+                    <i class="fas fa-futbol ball-icon" id="ballIcon"></i>
+                </div>
+
+                <div id="gameStatus" style="font-weight: 600; font-size: 16px; margin: 10px 0; min-height: 24px;">Choose a direction to play!</div>
+                <div id="scoreBoard" style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">Score: 0 Goals | Saves: 0</div>
+
+                <div class="direction-controls">
+                    <button class="action-btn" onclick="playTurn('left')"><i class="fas fa-arrow-left"></i> Left</button>
+                    <button class="action-btn" onclick="playTurn('center')"><i class="fas fa-arrow-up"></i> Center</button>
+                    <button class="action-btn" onclick="playTurn('right')"><i class="fas fa-arrow-right"></i> Right</button>
+                </div>
+            </div>
+
+            <!-- GAME 2: SPEED SPRINT (10 SECONDS) -->
+            <div id="sprintGameContainer" class="game-box" style="display: none; border-color: rgba(251, 146, 60, 0.4);">
+                <h3 style="color: var(--orange-accent); margin-bottom: 5px;">⚡ 10-Second Sprint Dash</h3>
+                <p style="font-size: 14px; margin-bottom: 15px;">Tap the button as fast as you can before the 10s timer runs out!</p>
+
+                <div style="display: flex; justify-content: space-around; margin: 15px 0; font-weight: 700; font-size: 16px;">
+                    <div>⏱️ Time: <span id="sprintTimer" style="color: var(--orange-accent);">10.0</span>s</div>
+                    <div>🏃 Distance: <span id="sprintScore" style="color: #4ade80;">0</span>m</div>
+                    <div>🏆 Best: <span id="sprintHighScore" style="color: #facc15;">0</span>m</div>
+                </div>
+
+                <div class="sprint-track">
+                    <div class="sprint-progress" id="sprintProgress"></div>
+                </div>
+
+                <button class="sprint-tap-btn" id="sprintBtn" onclick="registerSprintTap()">
+                    ⚡ TAP FAST TO RUN! ⚡
+                </button>
+
+                <div id="sprintResult" style="font-weight: 600; font-size: 15px; margin: 12px 0; min-height: 24px;"></div>
+
+                <button class="action-btn" style="border-color: var(--orange-accent);" onclick="resetSprintGame()">
+                    <i class="fas fa-rotate"></i> Reset Sprint
+                </button>
+            </div>
+
+            <!-- GAME 3: FOOTBALL JUGGLING CHALLENGE -->
+            <div id="juggleGameContainer" class="game-box" style="display: none; border-color: rgba(74, 222, 128, 0.4);">
+                <h3 style="color: var(--green-accent); margin-bottom: 5px;">⚽ Football Juggling Challenge</h3>
+                <p style="font-size: 14px; margin-bottom: 15px;">Keep the ball in the air! Tap as many times as you can in 10 seconds.</p>
+
+                <div style="display: flex; justify-content: space-around; margin: 15px 0; font-weight: 700; font-size: 16px;">
+                    <div>⏱️ Time: <span id="juggleTimer" style="color: var(--green-accent);">10.0</span>s</div>
+                    <div>⚽ Jungles: <span id="juggleScore" style="color: #38bdf8;">0</span></div>
+                </div>
+
+                <button class="juggle-tap-btn" id="juggleBtn" onclick="registerJuggleTap()">
+                    👟 TAP TO JUGGLE! ⚽
+                </button>
+
+                <div id="juggleResult" style="font-weight: 600; font-size: 15px; margin: 12px 0; min-height: 24px;"></div>
+
+                <button class="action-btn" style="border-color: var(--green-accent);" onclick="resetJuggleGame()">
+                    <i class="fas fa-rotate"></i> Reset Juggling
+                </button>
+            </div>
+
+            <!-- GAME 4: MAKEUP ORDER ROUTINE -->
+            <div id="makeupGameContainer" class="game-box" style="display: none; border-color: rgba(244, 114, 182, 0.3);">
+                <h3 style="color: var(--pink-accent); margin-bottom: 5px;">💄 Makeup Order Routine Challenge</h3>
+                <p style="font-size: 14px; margin-bottom: 15px;">Tap the products below in the correct order to craft a flawless look!</p>
+
+                <div class="routine-slots" id="routineSlots"></div>
+
+                <div class="makeup-step-pool" id="makeupPool"></div>
+
+                <div id="makeupResult" style="font-weight: 600; font-size: 15px; margin: 12px 0; min-height: 24px;"></div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button class="unlock-btn pink-btn" onclick="checkMakeupOrder()"><i class="fas fa-check-circle"></i> Submit Routine</button>
+                    <button class="action-btn" style="border-color: var(--pink-accent);" onclick="resetMakeupGame()"><i class="fas fa-rotate"></i> Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTBALL LIFE -->
+        <section id="football" class="page-section">
+            <h1>Football Life</h1>
+            <p style="color: var(--accent); font-weight: 500;">Let's break it down, step by step.</p>
+
+            <p><strong>Part 1: Introduction to the sport</strong><br>
+            My life was built in the Middle East—born and raised here. Didn't have many contacts, but neither lacked friends. I had some friends who introduced me to a game... which I started, but never tried to stop. We found a place to play it, we found ways to learn it. It was hard... really hard cause I knew nothing about the game, so I watched it play out. And then I saw Ronaldo... 41 now, but was 32 when I was watching him... adapted and showed how he plays. Which made me think, I want to be him. But neither of us knew he would try his best.</p>
+
+            <p><strong>Part 2: Learning</strong><br>
+            I started focusing on the game to get better. As I said in the beginning, it was not easy at all with the physical body I had. I was heavy and laggy with the ball, couldn't do many movements, and I was honestly tired and wanted to just let myself free from the game. But then I realized, what's the point of letting it go? I thought, why did I start to learn if I wanted to stop right in the beginning? Yeah sure, I was fat, slow, and had no sense of game... but that doesn't always last, does it? So I became determined. I stopped letting others' words hurt me or affect me. I played, I just played because I loved to play rather than to show others who I am.</p>
+
+            <p><strong>Part 3: Turning point</strong><br>
+            Once I got used to the game, I started playing and enjoying my time as a player and as someone who was enjoying the game rather than just seeing it as a sport, but as a relief of pressure, stress, and found love for the game. Until I met with an injury on my right ankle which forced me to stop playing football for a whole 3 months. I didn't lose my touch, but I lost the way my shots went... it was horrible, it was like I was starting over. My legs wanted to bend into it... but I can't let it, cause that part of me doesn't exist. I relied on speed and pace and running over pure dribbling. Once I figured it's not possible for me to play with the outside of my boot, I knew... I wouldn't be good for the team. People will hate me for the way I play. But this was the only way for me to enjoy the game I loved since I was a kid, and I just didn't want others' words to end a beautiful story of my life.</p>
+
+            <p><strong>Part 4: The ending</strong><br>
+            Now that I lived and had my moments in football, I decided now that I am growing up, I have responsibilities and work to do... and can't always be out there giving time to my favorite sport. Do I regret that I wasted my time? Absolutely not. Indeed, I wish I could go back and congratulate myself for choosing this sport and making me who I am today. All I have for this game and for the people I played it with is respect and love... which stays no matter how far I go from them or the game. Whenever I get the time, I will always come back to this exact moment and push through everything just like I did, and score for myself and for a future.</p>
+
+            <p style="color: var(--accent); font-weight: 600; text-transform: uppercase;">"NEVER LET YOURSELF DOWN. IF YOU DO, YOU NEVER SEE WHAT'S AHEAD."</p>
+        </section>
+
+        <!-- GAME LIFE -->
+        <section id="gaming" class="page-section">
+            <h1>Game Life</h1>
+            <p>I play games whenever I get the time and want to enjoy some time solo or with friends. I play Valorant, Minecraft, and many other story games such as the Resident Evil series, The Walking Dead series, and GTA series along with many other games which help me settle down in my free time.</p>
+            <p>I mostly play arcade and story mode games since they help me go through time faster than other games.</p>
+            <p>I don't stream nor record much, I just play to have fun, have a stress-free life, and just roast our friends.</p>
+            <p>So yeah, nothing much about my game life—it's just as plain as the others. Nothing crazy about this page, but I am always up for new games. Use the review page to drop suggestions!</p>
+        </section>
+
+        <!-- TIPS & TRICKS -->
+        <section id="tips" class="page-section">
+            <h1>Tips & Tricks</h1>
+            <p style="color: var(--accent); font-weight: 500; font-size: 19px; line-height: 1.6;">
+                "None... just live the life you want. Listen when you need, ignore when you know it's wrong. Move forward with a goal so when you stop, you realize why you walked."
+            </p>
+        </section>
+
+        <!-- LIKES & DISLIKES -->
+        <section id="preferences" class="page-section">
+            <h1>Likes & Dislikes</h1>
+            <p><strong style="color: var(--accent);">What I Like:</strong></p>
+            <p>
+                • I like sports<br>
+                • I like my friends<br>
+                • I like to go out & roam around<br>
+                • I like music & dancing<br>
+                • I like spending time with family & friends<br>
+                • I like the color yellow<br>
+                • I like chocolate juice<br>
+                • My favorite food is "Depends"<br>
+                • I like to help others & spread positivity
+            </p>
+
+            <p><strong style="color: #f87171;">What I Dislike:</strong></p>
+            <p>
+                • I hate people who second-guess others<br>
+                • I hate people who judge someone for how they look<br>
+                • I hate people who look down on those below them<br>
+                • I hate the color green<br>
+                • I hate being left out<br>
+                • I hate people who make themselves sound bigger than the event<br>
+                • Etc. <em>(Never ends, does it?)</em>
+            </p>
+        </section>
+
+        <!-- SWEET MEMORIES -->
+        <section id="memories" class="page-section">
+            <h1>Sweet Memories</h1>
+            <p style="color: var(--accent); font-weight: 500;">
+                Unforgettable moments, core memories, and the people who made the ride worth it. Click any card to open the photo gallery!
+            </p>
+
+            <div class="memories-grid">
+                <div class="memory-card" onclick="openGallery('squad')">
+                    <span class="memory-badge"><i class="fas fa-users"></i> The Squad</span>
+                    <h3>Late Night Hangouts</h3>
+                    <p>Unplanned matches under the floodlights, endless laughter, and roasting each other until midnight. The best moments were never planned.</p>
+                </div>
+                <div class="memory-card" onclick="openGallery('goal')">
+                    <span class="memory-badge"><i class="fas fa-trophy"></i> Pitch Days</span>
+                    <h3>The Winning Goal</h3>
+                    <p>Stepping back onto the pitch after 3 months out with an ankle injury, beating the defender on the wing, and scoring for myself.</p>
+                </div>
+                <div class="memory-card" onclick="openGallery('coding')">
+                    <span class="memory-badge"><i class="fas fa-code"></i> Late Coding</span>
+                    <h3>Building Web Projects</h3>
+                    <p>Staying up late tweaking HTML, CSS, and JavaScript line by line, solving broken bugs at 2 AM, and seeing custom web pages go live.</p>
+                </div>
+                <div class="memory-card" onclick="openGallery('special')">
+                    <span class="memory-badge"><i class="fas fa-heart"></i> Special Days</span>
+                    <h3>Celebrations & Surprises</h3>
+                    <p>Crafting custom gifts, making interactive birthday sites, and celebrating the genuine people who bring positive light into my life.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- REVIEWS -->
+        <section id="reviews" class="page-section">
+            <h1>Visitor Reviews</h1>
+            <p>Enjoyed the vibe? Leave a quick note or rating about your experience!</p>
+            <div class="review-form">
+                <input type="text" id="revName" placeholder="Your Name" autocomplete="off">
+                <textarea id="revText" rows="3" placeholder="Write a review..."></textarea>
+                <button class="submit-btn" onclick="addReview()">
+                    <i class="fas fa-paper-plane"></i> Post Review
+                </button>
+            </div>
+            <div id="reviewContainer" style="margin-top: 30px;"></div>
+        </section>
+    </main>
+
+    <!-- PHOTO GALLERY MODAL -->
+    <div id="galleryModal" class="gallery-modal" onclick="closeGalleryOnOutsideClick(event)">
+        <div class="gallery-container">
+            <button class="gallery-close" onclick="closeGallery()"><i class="fas fa-times"></i></button>
+            <div class="gallery-counter" id="galleryCounter">1 / 1</div>
+            <img id="galleryImage" class="gallery-img" src="" alt="Memory Image">
+            <div class="gallery-caption" id="galleryCaption"></div>
+            <button class="gallery-nav gallery-prev" onclick="changeSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="gallery-nav gallery-next" onclick="changeSlide(1)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Canvas element for image generation -->
+    <canvas id="vipCanvas" style="display:none;"></canvas>
+
+    <script>
+        /* LOCK SCREEN & GLASS SHATTER LOGIC */
+        const passInput = document.getElementById('passInput');
+        const lockScreen = document.getElementById('lockScreen');
+        const arcadeCard = document.getElementById('arcadeCard');
+        const errorMsg = document.getElementById('errorMsg');
+        const logoEmblem = document.getElementById('logoEmblem');
+
+        function focusPassword() {
+            logoEmblem.style.transform = "scale(0.85) rotate(360deg)";
+            setTimeout(() => {
+                logoEmblem.style.transform = "";
+                passInput.focus();
+            }, 300);
+        }
+
+        passInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                verifyPasscode();
+            }
+        });
+
+        function verifyPasscode() {
+            const val = passInput.value.trim();
+            if (val === '2008') {
+                errorMsg.textContent = '';
+                triggerShatterEffect(() => {
+                    lockScreen.style.display = 'none';
+                    showSection('intro');
+                });
+            } else {
+                errorMsg.textContent = 'ACCESS DENIED: INCORRECT CODE';
+                arcadeCard.classList.remove('shake');
+                void arcadeCard.offsetWidth;
+                arcadeCard.classList.add('shake');
+                passInput.value = '';
+            }
+        }
+
+        function triggerShatterEffect(callback) {
+            playShatterSound();
+            const shatterOverlay = document.createElement('div');
+            shatterOverlay.className = 'shatter-overlay';
+
+            const shardsCount = 35;
+            for (let i = 0; i < shardsCount; i++) {
+                const shard = document.createElement('div');
+                shard.className = 'glass-shard';
+
+                const size = Math.random() * 80 + 40;
+                const tx = (Math.random() - 0.5) * 1200;
+                const ty = (Math.random() - 0.5) * 1200;
+                const rot = (Math.random() - 0.5) * 1080;
+
+                shard.style.width = `${size}px`;
+                shard.style.height = `${size}px`;
+                shard.style.left = `${Math.random() * 80 + 10}%`;
+                shard.style.top = `${Math.random() * 80 + 10}%`;
+                shard.style.setProperty('--tx', `${tx}px`);
+                shard.style.setProperty('--ty', `${ty}px`);
+                shard.style.setProperty('--rot', `${rot}deg`);
+
+                shatterOverlay.appendChild(shard);
+            }
+
+            lockScreen.appendChild(shatterOverlay);
+
+            setTimeout(() => { lockScreen.classList.add('shattered'); }, 20);
+            setTimeout(() => { if (callback) callback(); }, 750);
+        }
+
+        function playShatterSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const bufferSize = ctx.sampleRate * 0.2;
+                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) { data[i] = Math.random() * 2 - 1; }
+                const noise = ctx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = ctx.createBiquadFilter();
+                filter.type = 'highpass'; filter.frequency.value = 1200;
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0.6, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+                noise.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+                noise.start();
+            } catch(e) {}
+        }
+
+        /* SECRET TERMINAL, MATRIX & VIP PASS LOGIC */
+        const terminalModal = document.getElementById('terminalModal');
+        const terminalInput = document.getElementById('terminalInput');
+        const terminalOutput = document.getElementById('terminalOutput');
+        const vipModal = document.getElementById('vipModal');
+        let currentVipName = 'RADHWAN';
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === '`' || e.key === '~') {
+                e.preventDefault();
+                const isOpen = terminalModal.classList.contains('active');
+                toggleTerminal(!isOpen);
+            }
+        });
+
+        function toggleTerminal(open) {
+            if (open) {
+                terminalModal.classList.add('active');
+                terminalInput.focus();
+            } else {
+                terminalModal.classList.remove('active');
+            }
+        }
+
+        function closeTerminalOnOutside(e) {
+            if (e.target.id === 'terminalModal') toggleTerminal(false);
+        }
+
+        terminalInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const rawCmd = terminalInput.value.trim();
+                const cmd = rawCmd.toLowerCase();
+                appendTerminalLine(`> ${rawCmd}`);
+                processCommand(cmd, rawCmd);
+                terminalInput.value = '';
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
+        });
+
+        function appendTerminalLine(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            terminalOutput.appendChild(div);
+        }
+
+        function processCommand(cmd, rawCmd) {
+            if (cmd === 'help') {
+                appendTerminalLine('Available commands: bio, football, skills, matrix, vip [name], clear, exit');
+            } else if (cmd === 'matrix') {
+                appendTerminalLine('Launching Matrix Digital Rain...');
+                toggleTerminal(false);
+                setTimeout(startMatrixRain, 300);
+            } else if (cmd.startsWith('vip')) {
+                const parts = rawCmd.split(' ');
+                if (parts.length > 1) {
+                    currentVipName = parts.slice(1).join(' ').toUpperCase();
+                } else {
+                    currentVipName = 'GUEST USER';
+                }
+                appendTerminalLine(`Generating VIP Pass for: ${currentVipName}...`);
+                setTimeout(() => {
+                    toggleTerminal(false);
+                    openVipModal(currentVipName);
+                }, 500);
+            } else {
+                switch(cmd) {
+                    case 'bio':
+                        appendTerminalLine('Radhwan // 12th CBSE Commerce student from Kerala/Sharjah. Passionate coder & gamer.');
+                        break;
+                    case 'football':
+                        appendTerminalLine('Football position: Left winger / Striker. Inspired by Cristiano Ronaldo.');
+                        break;
+                    case 'skills':
+                        appendTerminalLine('HTML/CSS/JS, Python, Gaming, Linux terminal & Web Architecture.');
+                        break;
+                    case 'clear':
+                        terminalOutput.innerHTML = '';
+                        break;
+                    case 'exit':
+                        toggleTerminal(false);
+                        break;
+                    default:
+                        if (cmd !== '') appendTerminalLine(`Command not recognized: '${cmd}'. Type 'help' for options.`);
+                }
+            }
+        }
+
+        /* MATRIX RAIN ANIMATION ENGINE */
+        let matrixInterval = null;
+        function startMatrixRain() {
+            const overlay = document.getElementById('matrixOverlay');
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+
+            overlay.classList.add('active');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
+            const alphabet = katakana + latin;
+
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+            const rainDrops = [];
+
+            for (let x = 0; x < columns; x++) {
+                rainDrops[x] = 1;
+            }
+
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#4ade80';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < rainDrops.length; i++) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        rainDrops[i] = 0;
+                    }
+                    rainDrops[i]++;
+                }
+            }
+
+            if (matrixInterval) clearInterval(matrixInterval);
+            matrixInterval = setInterval(drawMatrix, 30);
+        }
+
+        function stopMatrixRain() {
+            clearInterval(matrixInterval);
+            document.getElementById('matrixOverlay').classList.remove('active');
+        }
+
+        function openVipModal(name) {
+            document.getElementById('vipCardHolderName').textContent = name;
+            vipModal.classList.add('active');
+        }
+
+        function closeVipModal() {
+            vipModal.classList.remove('active');
+        }
+
+        function closeVipOnOutside(e) {
+            if (e.target.id === 'vipModal') closeVipModal();
+        }
+
+        function downloadVipPass() {
+            const canvas = document.getElementById('vipCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 600;
+            canvas.height = 360;
+
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+            ctx.fillRect(20, 20, canvas.width - 40, 50);
+
+            ctx.font = 'bold 16px Outfit, sans-serif';
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillText('⚡ VERIFIED GUEST PASS', 40, 52);
+
+            ctx.fillStyle = '#f87171';
+            ctx.font = 'bold 12px Outfit, sans-serif';
+            ctx.fillText('VIP ACCESS', canvas.width - 130, 52);
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Outfit, sans-serif';
+            ctx.fillText('CARD HOLDER:', 40, 120);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 28px Press Start 2P, monospace';
+            ctx.fillText(currentVipName, 40, 175);
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(40, 240);
+            ctx.lineTo(canvas.width - 40, 240);
+            ctx.stroke();
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '14px Outfit, sans-serif';
+            ctx.fillText('ID: #VIP-2026-DXB', 40, 290);
+
+            ctx.fillStyle = '#4ade80';
+            ctx.font = 'bold 14px Outfit, sans-serif';
+            ctx.fillText('Made by M-Radhwan', canvas.width - 210, 290);
+
+            const link = document.createElement('a');
+            link.download = `VIP-Pass-${currentVipName.replace(/\s+/g, '_')}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        /* PLAYLIST MANAGER & AUDIO SYSTEM */
+        const defaultTracks = [
+            { title: "Lofi Study Beats", url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" },
+            { title: "Chill Synthwave Pass", url: "https://cdn.pixabay.com/download/audio/2021/11/24/audio_3387eb7d39.mp3?filename=chill-synthwave-11108.mp3" },
+            { title: "Chillout Ambient", url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8266497.mp3?filename=chillout-ambient-10255.mp3" }
+        ];
+
+        let currentTrackIndex = 0;
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = musicBtn.querySelector('i');
+        const playlistModal = document.getElementById('playlistModal');
+        bgMusic.volume = 0.4;
+
+        function initPlaylist() {
+            bgMusic.src = defaultTracks[0].url;
+            renderPlaylistTracks();
+        }
+
+        function renderPlaylistTracks() {
+            const trackListContainer = document.getElementById('playlistTrackList');
+            trackListContainer.innerHTML = '';
+
+            defaultTracks.forEach((track, idx) => {
+                const isSelected = idx === currentTrackIndex;
+                trackListContainer.innerHTML += `
+                    <div class="track-item ${isSelected ? 'active-track' : ''}" onclick="selectTrack(${idx})">
+                        <span><i class="fas ${isSelected ? 'fa-volume-high' : 'fa-music'}"></i> &nbsp; ${track.title}</span>
+                        ${isSelected ? '<i class="fas fa-check"></i>' : ''}
+                    </div>
+                `;
+            });
+        }
+
+        function selectTrack(index) {
+            currentTrackIndex = index;
+            document.getElementById('embedContainer').style.display = 'none';
+            document.getElementById('embedContainer').innerHTML = '';
+            
+            bgMusic.src = defaultTracks[index].url;
+            bgMusic.play();
+            updateMusicBtnUI(true);
+            renderPlaylistTracks();
+        }
+
+        function loadCustomAudio() {
+            const inputVal = document.getElementById('customAudioUrl').value.trim();
+            if (!inputVal) return;
+
+            const embedContainer = document.getElementById('embedContainer');
+
+            if (inputVal.includes('<iframe')) {
+                bgMusic.pause();
+                updateMusicBtnUI(false);
+
+                embedContainer.style.display = 'block';
+                embedContainer.innerHTML = inputVal;
+            } else {
+                embedContainer.style.display = 'none';
+                embedContainer.innerHTML = '';
+                
+                defaultTracks.push({ title: "Custom User Track", url: inputVal });
+                selectTrack(defaultTracks.length - 1);
+            }
+
+            document.getElementById('customAudioUrl').value = '';
+        }
+
+        function openPlaylistModal() { playlistModal.classList.add('active'); }
+        function closePlaylistModal() { playlistModal.classList.remove('active'); }
+        function closePlaylistOnOutsideClick(e) { if (e.target.id === 'playlistModal') closePlaylistModal(); }
+
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                updateMusicBtnUI(true);
+            } else {
+                bgMusic.pause();
+                updateMusicBtnUI(false);
+            }
+        }
+
+        function updateMusicBtnUI(isPlaying) {
+            if (isPlaying) {
+                musicBtn.classList.add('music-playing');
+                musicIcon.classList.remove('fa-music');
+                musicIcon.classList.add('fa-compact-disc');
+            } else {
+                musicBtn.classList.remove('music-playing');
+                musicIcon.classList.remove('fa-compact-disc');
+                musicIcon.classList.add('fa-music');
+            }
+        }
+
+        initPlaylist();
+
+        /* MINI GAMES LOGIC */
+        function switchMiniGame(game) {
+            const penTab = document.getElementById('tabPenalty');
+            const sprintTab = document.getElementById('tabSprint');
+            const juggleTab = document.getElementById('tabJuggle');
+            const makeTab = document.getElementById('tabMakeup');
+
+            const penBox = document.getElementById('penaltyGameContainer');
+            const sprintBox = document.getElementById('sprintGameContainer');
+            const juggleBox = document.getElementById('juggleGameContainer');
+            const makeBox = document.getElementById('makeupGameContainer');
+
+            penTab.className = 'game-tab-btn';
+            sprintTab.className = 'game-tab-btn';
+            juggleTab.className = 'game-tab-btn';
+            makeTab.className = 'game-tab-btn';
+
+            penBox.style.display = 'none';
+            sprintBox.style.display = 'none';
+            juggleBox.style.display = 'none';
+            makeBox.style.display = 'none';
+
+            if (game === 'penalty') {
+                penTab.className = 'game-tab-btn active-tab-boy';
+                penBox.style.display = 'block';
+            } else if (game === 'sprint') {
+                sprintTab.className = 'game-tab-btn active-tab-sprint';
+                sprintBox.style.display = 'block';
+            } else if (game === 'juggle') {
+                juggleTab.className = 'game-tab-btn active-tab-juggling';
+                juggleBox.style.display = 'block';
+            } else {
+                makeTab.className = 'game-tab-btn active-tab-girl';
+                makeBox.style.display = 'block';
+                initMakeupGame();
+            }
+        }
+
+        /* GAME 1: PENALTY SHOOTOUT */
+        let userRole = 'shooter';
+        let goalsScore = 0;
+        let savesScore = 0;
+
+        function setRole(role) {
+            userRole = role;
+            document.getElementById('roleShooter').classList.toggle('selected', role === 'shooter');
+            document.getElementById('roleKeeper').classList.toggle('selected', role === 'keeper');
+            resetPitchVisuals();
+            document.getElementById('gameStatus').textContent = `Role switched to ${role.toUpperCase()}! Select direction to play.`;
+        }
+
+        function playTurn(direction) {
+            const directions = ['left', 'center', 'right'];
+            const compDirection = directions[Math.floor(Math.random() * directions.length)];
+
+            const ballIcon = document.getElementById('ballIcon');
+            const keeperIcon = document.getElementById('keeperIcon');
+            const status = document.getElementById('gameStatus');
+
+            let ballX = '0px';
+            if (direction === 'left') ballX = '-100px';
+            if (direction === 'right') ballX = '100px';
+
+            let keeperX = '-50%';
+            let keeperTarget = userRole === 'shooter' ? compDirection : direction;
+            if (userRole === 'keeper') keeperTarget = direction;
+            
+            if (keeperTarget === 'left') keeperX = '-180%';
+            if (keeperTarget === 'right') keeperX = '80%';
+
+            ballIcon.style.transform = `translate(calc(-50% + ${ballX}), -130px)`;
+            keeperIcon.style.transform = `translateX(${keeperX})`;
+
+            setTimeout(() => {
+                if (userRole === 'shooter') {
+                    if (direction === compDirection) {
+                        status.textContent = '❌ SAVED! The goalkeeper blocked your shot!';
+                        status.style.color = '#f87171';
+                    } else {
+                        status.textContent = '⚽ GOAL! You scored!';
+                        status.style.color = '#4ade80';
+                        goalsScore++;
+                    }
+                } else {
+                    if (direction === compDirection) {
+                        status.textContent = '🧤 GREAT SAVE! You caught the ball!';
+                        status.style.color = '#4ade80';
+                        savesScore++;
+                    } else {
+                        status.textContent = '⚽ GOAL CONCEDED! The shooter outsmarted you!';
+                        status.style.color = '#f87171';
+                    }
+                }
+
+                document.getElementById('scoreBoard').textContent = `Score: ${goalsScore} Goals | Saves: ${savesScore}`;
+
+                setTimeout(resetPitchVisuals, 1500);
+            }, 500);
+        }
+
+        function resetPitchVisuals() {
+            const ballIcon = document.getElementById('ballIcon');
+            const keeperIcon = document.getElementById('keeperIcon');
+            ballIcon.style.transform = 'translateX(-50%)';
+            keeperIcon.style.transform = 'translateX(-50%)';
+        }
+
+        /* GAME 2: 10-SECOND SPEED SPRINT */
+        let sprintTimeLeft = 10.0;
+        let sprintScore = 0;
+        let sprintHighScore = 0;
+        let sprintActive = false;
+        let sprintTimerInterval = null;
+
+        function registerSprintTap() {
+            const btn = document.getElementById('sprintBtn');
+            const status = document.getElementById('sprintResult');
+
+            if (!sprintActive && sprintTimeLeft === 10.0) {
+                sprintActive = true;
+                status.textContent = '🔥 RUN RUN RUN! KEEP TAPPING!';
+                status.style.color = '#fb923c';
+
+                sprintTimerInterval = setInterval(() => {
+                    sprintTimeLeft -= 0.1;
+                    if (sprintTimeLeft <= 0) {
+                        sprintTimeLeft = 0;
+                        endSprintGame();
+                    }
+                    document.getElementById('sprintTimer').textContent = sprintTimeLeft.toFixed(1);
+                }, 100);
+            }
+
+            if (sprintActive) {
+                sprintScore += 2;
+                document.getElementById('sprintScore').textContent = sprintScore;
+
+                const progressPct = Math.min((sprintScore / 120) * 100, 100);
+                document.getElementById('sprintProgress').style.width = `${progressPct}%`;
+            }
+        }
+
+        function endSprintGame() {
+            clearInterval(sprintTimerInterval);
+            sprintActive = false;
+
+            const btn = document.getElementById('sprintBtn');
+            const status = document.getElementById('sprintResult');
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+
+            if (sprintScore > sprintHighScore) {
+                sprintHighScore = sprintScore;
+                document.getElementById('sprintHighScore').textContent = sprintHighScore;
+                status.textContent = `🏆 NEW HIGH SCORE! You ran ${sprintScore} meters!`;
+                status.style.color = '#4ade80';
+            } else {
+                status.textContent = `⏱️ TIME'S UP! Final distance: ${sprintScore} meters.`;
+                status.style.color = '#f87171';
+            }
+        }
+
+        function resetSprintGame() {
+            clearInterval(sprintTimerInterval);
+            sprintTimeLeft = 10.0;
+            sprintScore = 0;
+            sprintActive = false;
+
+            document.getElementById('sprintTimer').textContent = '10.0';
+            document.getElementById('sprintScore').textContent = '0';
+            document.getElementById('sprintProgress').style.width = '0%';
+            document.getElementById('sprintResult').textContent = '';
+
+            const btn = document.getElementById('sprintBtn');
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        }
+
+        /* GAME 3: FOOTBALL JUGGLING CHALLENGE */
+        let juggleTimeLeft = 10.0;
+        let juggleScore = 0;
+        let juggleActive = false;
+        let juggleTimerInterval = null;
+
+        function registerJuggleTap() {
+            const status = document.getElementById('juggleResult');
+
+            if (!juggleActive && juggleTimeLeft === 10.0) {
+                juggleActive = true;
+                status.textContent = '⚽ KEEP IT UP! JUGGLE!';
+                status.style.color = '#4ade80';
+
+                juggleTimerInterval = setInterval(() => {
+                    juggleTimeLeft -= 0.1;
+                    if (juggleTimeLeft <= 0) {
+                        juggleTimeLeft = 0;
+                        endJuggleGame();
+                    }
+                    document.getElementById('juggleTimer').textContent = juggleTimeLeft.toFixed(1);
+                }, 100);
+            }
+
+            if (juggleActive) {
+                juggleScore++;
+                document.getElementById('juggleScore').textContent = juggleScore;
+            }
+        }
+
+        function endJuggleGame() {
+            clearInterval(juggleTimerInterval);
+            juggleActive = false;
+            const btn = document.getElementById('juggleBtn');
+            const status = document.getElementById('juggleResult');
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            status.textContent = `⚽ FINISHED! Total juggles: ${juggleScore}`;
+            status.style.color = '#38bdf8';
+        }
+
+        function resetJuggleGame() {
+            clearInterval(juggleTimerInterval);
+            juggleTimeLeft = 10.0;
+            juggleScore = 0;
+            juggleActive = false;
+            document.getElementById('juggleTimer').textContent = '10.0';
+            document.getElementById('juggleScore').textContent = '0';
+            document.getElementById('juggleResult').textContent = '';
+            const btn = document.getElementById('juggleBtn');
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        }
+
+        /* GAME 4: MAKEUP ROUTINE CHALLENGE */
+        const correctSequence = ['Primer', 'Foundation', 'Concealer', 'Setting Powder', 'Lipstick'];
+        let userSequence = [];
+
+        function initMakeupGame() {
+            userSequence = [];
+            renderMakeupSlots();
+            renderMakeupPool();
+            document.getElementById('makeupResult').textContent = '';
+        }
+
+        function renderMakeupSlots() {
+            const container = document.getElementById('routineSlots');
+            container.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const val = userSequence[i] || 'Empty Slot';
+                const filled = !!userSequence[i];
+                container.innerHTML += `
+                    <div class="slot-row">
+                        <div><span class="slot-num">#${i+1}</span> <span class="slot-val" style="color:${filled?'#fff':'#64748b'}">${val}</span></div>
+                        ${filled ? `<button class="clear-slot-btn" onclick="removeMakeupStep(${i})"><i class="fas fa-trash"></i></button>` : ''}
+                    </div>
+                `;
+            }
+        }
+
+        function renderMakeupPool() {
+            const poolContainer = document.getElementById('makeupPool');
+            const allItems = ['Foundation', 'Primer', 'Lipstick', 'Setting Powder', 'Concealer'];
+            poolContainer.innerHTML = '';
+
+            allItems.forEach(item => {
+                const isUsed = userSequence.includes(item);
+                poolContainer.innerHTML += `
+                    <div class="makeup-item ${isUsed ? 'used' : ''}" onclick="addMakeupStep('${item}')">
+                        ${item}
+                    </div>
+                `;
+            });
+        }
+
+        function addMakeupStep(item) {
+            if (userSequence.length < 5 && !userSequence.includes(item)) {
+                userSequence.push(item);
+                renderMakeupSlots();
+                renderMakeupPool();
+            }
+        }
+
+        function removeMakeupStep(index) {
+            userSequence.splice(index, 1);
+            renderMakeupSlots();
+            renderMakeupPool();
+            document.getElementById('makeupResult').textContent = '';
+        }
+
+        function resetMakeupGame() {
+            initMakeupGame();
+        }
+
+        function checkMakeupOrder() {
+            const resultMsg = document.getElementById('makeupResult');
+            if (userSequence.length < 5) {
+                resultMsg.textContent = '⚠️ Please fill all 5 routine steps before submitting!';
+                resultMsg.style.color = '#f87171';
+                return;
+            }
+
+            const isCorrect = userSequence.every((val, idx) => val === correctSequence[idx]);
+            if (isCorrect) {
+                resultMsg.textContent = '✨ FLAWLESS LOOK! You got the makeup routine perfectly right!';
+                resultMsg.style.color = '#4ade80';
+            } else {
+                resultMsg.textContent = '❌ Oops! That sequence is incorrect. Hint: Prep first with Primer!';
+                resultMsg.style.color = '#f87171';
+            }
+        }
+
+        /* NAVIGATION & GENERAL SITE UTILITIES */
+        const galleries = {
+            squad: [
+                { url: 'images/squad1.jpg', caption: 'Night football match under the floodlights' },
+                { url: 'images/squad2.jpg', caption: 'Post-game hangout with the squad' }
+            ],
+            goal: [{ url: 'images/goal1.jpg', caption: 'Back on the pitch after ankle injury recovery' }],
+            coding: [{ url: 'images/coding1.jpg', caption: 'Building web projects and debugging at 2 AM' }],
+            special: [{ url: 'images/special1.jpg', caption: 'Interactive project launch & celebrations' }]
+        };
+
+        let currentGalleryKey = '';
+        let currentSlideIndex = 0;
+
+        function openGallery(key) {
+            if (!galleries[key]) return;
+            currentGalleryKey = key; currentSlideIndex = 0;
+            updateGalleryContent();
+            document.getElementById('galleryModal').classList.add('active');
+        }
+
+        function closeGallery() { document.getElementById('galleryModal').classList.remove('active'); }
+        function closeGalleryOnOutsideClick(e) { if (e.target.id === 'galleryModal') closeGallery(); }
+
+        function changeSlide(dir) {
+            const list = galleries[currentGalleryKey];
+            currentSlideIndex = (currentSlideIndex + dir + list.length) % list.length;
+            updateGalleryContent();
+        }
+
+        function updateGalleryContent() {
+            const item = galleries[currentGalleryKey][currentSlideIndex];
+            document.getElementById('galleryImage').src = item.url;
+            document.getElementById('galleryCaption').textContent = item.caption;
+            document.getElementById('galleryCounter').textContent = `${currentSlideIndex + 1} / ${galleries[currentGalleryKey].length}`;
+        }
+
+        function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('show'); }
+
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(sec => {
+                sec.classList.remove('active');
+                sec.style.display = 'none';
+            });
+            const target = document.getElementById(sectionId);
+            target.style.display = 'block';
+            void target.offsetWidth; 
+            target.classList.add('active');
+            document.getElementById('dropdownMenu').classList.remove('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.floating-controls')) {
+                document.getElementById('dropdownMenu').classList.remove('show');
+            }
+        }
+
+        function addReview() {
+            const nameInput = document.getElementById('revName');
+            const textInput = document.getElementById('revText');
+            const name = nameInput.value.trim();
+            const text = textInput.value.trim();
+
+            if (!name || !text) return;
+
+            const container = document.getElementById('reviewContainer');
+            const card = document.createElement('div');
+            card.className = 'review-card';
+            card.innerHTML = `<strong>${name}</strong><p>${text}</p>`;
+            container.prepend(card);
+
+            nameInput.value = ''; textInput.value = '';
+        }
+    </script>
+</body>
+</html>
