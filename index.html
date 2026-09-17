@@ -368,6 +368,7 @@
             align-items: center;
             gap: 20px;
             position: relative;
+            transition: all 0.5s ease;
         }
 
         .vip-pass-badge-preview {
@@ -430,6 +431,30 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
+        }
+
+        /* SPECIAL SARAH VIP STYLES OVERRIDES */
+        .vip-card-wrapper.sarah-special {
+            border-color: #f472b6;
+            box-shadow: 0 0 60px rgba(244, 114, 182, 0.4), inset 0 0 25px rgba(244, 114, 182, 0.2);
+            background: linear-gradient(135deg, rgba(30, 15, 30, 0.95), rgba(10, 5, 15, 0.98));
+        }
+        .sarah-special .vip-pass-badge-preview {
+            background: radial-gradient(circle at center, rgba(244, 114, 182, 0.18), rgba(0, 0, 0, 0.7));
+            border-color: #f472b6;
+        }
+        .sarah-special .vip-pass-badge-preview::before {
+            content: "ULTIMATE VIP ✨";
+            background: linear-gradient(135deg, #f472b6, #c084fc);
+            color: #fff;
+        }
+        .sarah-special .vip-avatar-circle {
+            background: linear-gradient(135deg, #f472b6, #c084fc);
+            box-shadow: 0 0 25px rgba(244, 114, 182, 0.6);
+        }
+        .sarah-special .vip-card-name {
+            color: #f472b6;
+            text-shadow: 0 0 15px rgba(244, 114, 182, 0.8);
         }
 
         /* MAIN SITE STYLES */
@@ -1177,26 +1202,26 @@
 
     <!-- VIP PASS MODAL -->
     <div id="vipModal" class="vip-modal" onclick="closeVipOnOutside(event)">
-        <div class="vip-card-wrapper">
+        <div class="vip-card-wrapper" id="vipCardWrapper">
             <div class="playlist-header" style="width: 100%; margin-bottom: 0;">
-                <h2><i class="fas fa-id-card"></i> VIP Pass Generated</h2>
+                <h2 id="vipModalTitle"><i class="fas fa-id-card"></i> VIP Pass Generated</h2>
                 <button class="clear-slot-btn" onclick="closeVipModal()" style="font-size: 20px;"><i class="fas fa-times"></i></button>
             </div>
 
             <!-- The Renderable Pass Card -->
             <div class="vip-pass-badge-preview" id="vipPassCard">
-                <div class="vip-avatar-circle">
+                <div class="vip-avatar-circle" id="vipAvatarIcon">
                     <i class="fas fa-user-astronaut"></i>
                 </div>
-                <div style="font-size: 11px; color: var(--accent); letter-spacing: 2px; font-weight: 600;">VERIFIED GUEST PASS</div>
+                <div id="vipBadgeSubtitle" style="font-size: 11px; color: var(--accent); letter-spacing: 2px; font-weight: 600;">VERIFIED GUEST PASS</div>
                 <div class="vip-card-name" id="vipCardHolderName">RADHWAN</div>
                 <div class="vip-card-footer-text">
-                    <span>ID: #VIP-2026</span>
+                    <span id="vipCardIdText">ID: #VIP-2026</span>
                     <span style="color: var(--green-accent);">Made by M-Radhwan</span>
                 </div>
             </div>
 
-            <button class="unlock-btn" onclick="downloadVipPass()">
+            <button class="unlock-btn" id="vipDownloadBtn" onclick="downloadVipPass()">
                 <i class="fas fa-download"></i> Download VIP Card
             </button>
         </div>
@@ -1608,6 +1633,7 @@
         const terminalOutput = document.getElementById('terminalOutput');
         const vipModal = document.getElementById('vipModal');
         let currentVipName = 'RADHWAN';
+        let isSpecialSarahPass = false;
 
         window.addEventListener('keydown', (e) => {
             if (e.key === '`' || e.key === '~') {
@@ -1661,10 +1687,19 @@
                 } else {
                     currentVipName = 'GUEST USER';
                 }
-                appendTerminalLine(`Generating VIP Pass for: ${currentVipName}...`);
+
+                // CHECK FOR SARAH'S SPECIAL PASS
+                if (currentVipName === 'SARAH') {
+                    isSpecialSarahPass = true;
+                    appendTerminalLine(`⭐ Special VIP Access Granted: Welcome, Sarah! ✨`);
+                } else {
+                    isSpecialSarahPass = false;
+                    appendTerminalLine(`Generating VIP Pass for: ${currentVipName}...`);
+                }
+
                 setTimeout(() => {
                     toggleTerminal(false);
-                    openVipModal(currentVipName);
+                    openVipModal(currentVipName, isSpecialSarahPass);
                 }, 500);
             } else {
                 switch(cmd) {
@@ -1739,8 +1774,34 @@
             document.getElementById('matrixOverlay').classList.remove('active');
         }
 
-        function openVipModal(name) {
+        function openVipModal(name, isSpecial) {
+            const wrapper = document.getElementById('vipCardWrapper');
+            const titleElem = document.getElementById('vipModalTitle');
+            const subtitleElem = document.getElementById('vipBadgeSubtitle');
+            const avatarIcon = document.getElementById('vipAvatarIcon').querySelector('i');
+            const cardIdText = document.getElementById('vipCardIdText');
+            const downloadBtn = document.getElementById('vipDownloadBtn');
+
             document.getElementById('vipCardHolderName').textContent = name;
+
+            if (isSpecial) {
+                wrapper.classList.add('sarah-special');
+                titleElem.innerHTML = '<i class="fas fa-crown" style="color: #f472b6;"></i> Special VIP Pass ✨';
+                subtitleElem.textContent = 'ULTIMATE GUEST PASS';
+                subtitleElem.style.color = '#f472b6';
+                avatarIcon.className = 'fas fa-gem';
+                cardIdText.textContent = 'ID: #SARAH-VIP-01';
+                downloadBtn.className = 'unlock-btn pink-btn';
+            } else {
+                wrapper.classList.remove('sarah-special');
+                titleElem.innerHTML = '<i class="fas fa-id-card"></i> VIP Pass Generated';
+                subtitleElem.textContent = 'VERIFIED GUEST PASS';
+                subtitleElem.style.color = 'var(--accent)';
+                avatarIcon.className = 'fas fa-user-astronaut';
+                cardIdText.textContent = 'ID: #VIP-2026';
+                downloadBtn.className = 'unlock-btn';
+            }
+
             vipModal.classList.add('active');
         }
 
@@ -1758,29 +1819,33 @@
             canvas.width = 600;
             canvas.height = 360;
 
-            ctx.fillStyle = '#0f172a';
+            if (isSpecialSarahPass) {
+                ctx.fillStyle = '#1e0f1e';
+            } else {
+                ctx.fillStyle = '#0f172a';
+            }
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.strokeStyle = '#38bdf8';
+            ctx.strokeStyle = isSpecialSarahPass ? '#f472b6' : '#38bdf8';
             ctx.lineWidth = 4;
             ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
 
-            ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+            ctx.fillStyle = isSpecialSarahPass ? 'rgba(244, 114, 182, 0.18)' : 'rgba(56, 189, 248, 0.15)';
             ctx.fillRect(20, 20, canvas.width - 40, 50);
 
             ctx.font = 'bold 16px Outfit, sans-serif';
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillText('⚡ VERIFIED GUEST PASS', 40, 52);
+            ctx.fillStyle = isSpecialSarahPass ? '#f472b6' : '#38bdf8';
+            ctx.fillText(isSpecialSarahPass ? '✨ ULTIMATE GUEST PASS' : '⚡ VERIFIED GUEST PASS', 40, 52);
 
-            ctx.fillStyle = '#f87171';
+            ctx.fillStyle = isSpecialSarahPass ? '#c084fc' : '#f87171';
             ctx.font = 'bold 12px Outfit, sans-serif';
-            ctx.fillText('VIP ACCESS', canvas.width - 130, 52);
+            ctx.fillText(isSpecialSarahPass ? 'SPECIAL VIP' : 'VIP ACCESS', canvas.width - 130, 52);
 
             ctx.fillStyle = '#94a3b8';
             ctx.font = '12px Outfit, sans-serif';
             ctx.fillText('CARD HOLDER:', 40, 120);
 
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = isSpecialSarahPass ? '#f472b6' : '#ffffff';
             ctx.font = 'bold 28px Press Start 2P, monospace';
             ctx.fillText(currentVipName, 40, 175);
 
@@ -1793,7 +1858,7 @@
 
             ctx.fillStyle = '#94a3b8';
             ctx.font = '14px Outfit, sans-serif';
-            ctx.fillText('ID: #VIP-2026-DXB', 40, 290);
+            ctx.fillText(isSpecialSarahPass ? 'ID: #SARAH-VIP-01' : 'ID: #VIP-2026-DXB', 40, 290);
 
             ctx.fillStyle = '#4ade80';
             ctx.font = 'bold 14px Outfit, sans-serif';
@@ -2288,3 +2353,4 @@
     </script>
 </body>
 </html>
+
