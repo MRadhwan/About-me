@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Premium Portfolio & Arcade</title>
+    <meta name="site-version" content="1.1.0" id="siteVersionMeta">
     <!-- Google Fonts & FontAwesome for Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1023,6 +1024,102 @@
             border: none !important;
         }
 
+
+        /* EXTRA ARCADE GAMES */
+        .reaction-arena {
+            position: relative;
+            height: 250px;
+            margin: 20px 0;
+            border: 1px solid rgba(56,189,248,.35);
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at 50% 50%, rgba(56,189,248,.08), transparent 55%),
+                rgba(0,0,0,.35);
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+        .reaction-target {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 0;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 0 25px var(--accent-glow);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, -50%);
+        }
+        .reaction-target.show { display: flex; animation: targetPop .16s ease-out; }
+        @keyframes targetPop {
+            from { transform: translate(-50%,-50%) scale(.55); opacity:.5; }
+            to { transform: translate(-50%,-50%) scale(1); opacity:1; }
+        }
+        .reaction-start {
+            margin-top: 15px;
+            width: 100%;
+            padding: 15px;
+            border: 0;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .memory-arena {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .memory-tile {
+            aspect-ratio: 1;
+            border: 1px solid rgba(129,140,248,.35);
+            border-radius: 14px;
+            background: rgba(255,255,255,.04);
+            color: transparent;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform .2s, background .2s, color .2s;
+        }
+        .memory-tile.flipped,
+        .memory-tile.matched {
+            background: linear-gradient(135deg, rgba(129,140,248,.3), rgba(56,189,248,.18));
+            color: #fff;
+        }
+        .memory-tile.matched {
+            border-color: var(--green-accent);
+            box-shadow: 0 0 14px var(--green-glow);
+        }
+        .memory-tile:disabled { cursor: default; }
+
+        .review-admin-panel {
+            margin-top: 35px;
+            padding: 20px;
+            border: 1px solid rgba(74,222,128,.3);
+            border-radius: 18px;
+            background: rgba(0,0,0,.25);
+        }
+        .review-admin-panel h3 { color: var(--green-accent); margin-bottom: 8px; }
+        .review-admin-panel small { color: var(--text-muted); display:block; line-height:1.5; }
+        .admin-review-list { margin-top: 15px; }
+        .admin-review-item {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 10px;
+            background: rgba(255,255,255,.03);
+        }
+        .admin-review-item .meta { color: var(--accent); font-size: 12px; margin-bottom: 5px; }
+        .admin-key-row { display:flex; gap:8px; margin-top:12px; }
+        .admin-key-row input { flex:1; padding:11px 13px; }
+        .admin-key-row button { padding:11px 15px; border-radius:10px; border:0; cursor:pointer; font-weight:700; }
+
         /* Standard Portfolio Sections */
         .memories-grid {
             display: grid;
@@ -1154,6 +1251,82 @@
             .gallery-next { right: 5px; }
             .sprint-tap-btn { font-size: 14px; padding: 22px; }
         }
+        /* SITE UPDATE SYSTEM */
+        .site-update-item {
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .site-update-item .update-status {
+            margin-left: auto;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--green-accent);
+            opacity: 0.9;
+            letter-spacing: 0.4px;
+        }
+        .site-update-item.update-available .update-status {
+            color: var(--orange-accent);
+            animation: updatePulse 1.4s infinite alternate;
+        }
+        @keyframes updatePulse {
+            from { opacity: 0.55; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1.03); }
+        }
+        .site-update-toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            transform: translate(-50%, 20px);
+            width: min(420px, calc(100vw - 32px));
+            background: rgba(10, 15, 28, 0.94);
+            border: 1px solid var(--accent);
+            border-radius: 18px;
+            padding: 16px 18px;
+            z-index: 100000;
+            box-shadow: 0 0 30px var(--accent-glow), 0 15px 45px rgba(0,0,0,.5);
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all .35s ease;
+        }
+        .site-update-toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+            pointer-events: auto;
+        }
+        .site-update-toast-title {
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+        .site-update-toast-text {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .site-update-toast-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .site-update-toast-actions button {
+            flex: 1;
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .site-update-now {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: #fff;
+        }
+        .site-update-later {
+            background: rgba(255,255,255,.07);
+            color: var(--text-main);
+            border: 1px solid var(--border-color) !important;
+        }
+
     </style>
 </head>
 <body>
@@ -1259,6 +1432,10 @@
                 <a href="#" onclick="showSection('preferences')"><i class="fas fa-star"></i> Likes & Dislikes</a>
                 <a href="#" onclick="showSection('memories')"><i class="fas fa-heart"></i> Sweet Memories</a>
                 <a href="#" onclick="showSection('reviews')"><i class="fas fa-comment-alt"></i> Reviews</a>
+                <a href="#" id="siteUpdateMenuItem" class="site-update-item" onclick="checkForSiteUpdate(true); return false;">
+                    <i class="fas fa-cloud-arrow-down"></i> Update Site
+                    <span class="update-status" id="siteUpdateStatus">CHECK</span>
+                </a>
                 <a href="https://www.instagram.com/mohd_radhwan?utm_source=qr&stkn=MTg1ZHVuZjZ3eGQzeA==" target="_blank" rel="noopener noreferrer" class="insta-link">
                     <i class="fab fa-instagram"></i> Instagram
                 </a>
@@ -1285,6 +1462,17 @@
             </div>
 
             <div id="embedContainer" class="embed-container"></div>
+        </div>
+    </div>
+
+
+    <!-- SITE UPDATE NOTIFICATION -->
+    <div id="siteUpdateToast" class="site-update-toast" role="status" aria-live="polite">
+        <div class="site-update-toast-title" id="siteUpdateToastTitle">Site is up to date</div>
+        <div class="site-update-toast-text" id="siteUpdateToastText">You're using the latest version.</div>
+        <div class="site-update-toast-actions" id="siteUpdateToastActions" style="display:none;">
+            <button class="site-update-now" onclick="applySiteUpdate()">UPDATE NOW</button>
+            <button class="site-update-later" onclick="hideSiteUpdateToast()">LATER</button>
         </div>
     </div>
 
@@ -1316,6 +1504,12 @@
                 </button>
                 <button class="game-tab-btn" id="tabMakeup" onclick="switchMiniGame('makeup')">
                     <i class="fas fa-wand-magic-sparkles"></i> Makeup
+                </button>
+                <button class="game-tab-btn" id="tabReaction" onclick="switchMiniGame('reaction')">
+                    <i class="fas fa-bolt"></i> Reaction
+                </button>
+                <button class="game-tab-btn" id="tabMemory" onclick="switchMiniGame('memory')">
+                    <i class="fas fa-brain"></i> Memory
                 </button>
             </div>
 
@@ -1375,16 +1569,19 @@
             <!-- GAME 3: FOOTBALL JUGGLING CHALLENGE -->
             <div id="juggleGameContainer" class="game-box" style="display: none; border-color: rgba(74, 222, 128, 0.4);">
                 <h3 style="color: var(--green-accent); margin-bottom: 5px;">⚽ Football Juggling Challenge</h3>
-                <p style="font-size: 14px; margin-bottom: 15px;">Keep the ball in the air! Tap as many times as you can in 10 seconds.</p>
+                <p style="font-size: 14px; margin-bottom: 15px;">⚽ Tap the moving ball before it reaches the ground! Miss it and the juggling run ends.</p>
 
                 <div style="display: flex; justify-content: space-around; margin: 15px 0; font-weight: 700; font-size: 16px;">
                     <div>⏱️ Time: <span id="juggleTimer" style="color: var(--green-accent);">10.0</span>s</div>
                     <div>⚽ Jungles: <span id="juggleScore" style="color: #38bdf8;">0</span></div>
                 </div>
 
-                <button class="juggle-tap-btn" id="juggleBtn" onclick="registerJuggleTap()">
-                    👟 TAP TO JUGGLE! ⚽
-                </button>
+                <div id="juggleArena" style="position:relative;height:260px;margin:20px 0;border:1px solid rgba(74,222,128,.3);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,rgba(74,222,128,.08),rgba(0,0,0,.4));touch-action:manipulation;">
+                    <div style="position:absolute;left:0;right:0;bottom:18px;border-top:2px dashed rgba(248,113,113,.6);"></div>
+                    <button class="juggle-tap-btn" id="juggleBtn" onclick="registerJuggleTap()" style="position:absolute;width:70px;height:70px;padding:0;margin:0;border-radius:50%;display:flex;align-items:center;justify-content:center;left:50%;transform:translateX(-50%);bottom:42px;">
+                        ⚽
+                    </button>
+                </div>
 
                 <div id="juggleResult" style="font-weight: 600; font-size: 15px; margin: 12px 0; min-height: 24px;"></div>
 
@@ -1408,6 +1605,37 @@
                     <button class="unlock-btn pink-btn" onclick="checkMakeupOrder()"><i class="fas fa-check-circle"></i> Submit Routine</button>
                     <button class="action-btn" style="border-color: var(--pink-accent);" onclick="resetMakeupGame()"><i class="fas fa-rotate"></i> Reset</button>
                 </div>
+            </div>
+
+            <!-- GAME 5: REACTION RUSH -->
+            <div id="reactionGameContainer" class="game-box" style="display:none; border-color: rgba(56,189,248,.4);">
+                <h3 style="color:var(--accent); margin-bottom:5px;">⚡ Reaction Rush</h3>
+                <p style="font-size:14px; margin-bottom:15px;">Hit the target as soon as it appears. Get 10 hits and try to beat your best time!</p>
+                <div style="display:flex; justify-content:space-around; margin:15px 0; font-weight:700; font-size:15px;">
+                    <div>🎯 Hits: <span id="reactionHits">0</span>/10</div>
+                    <div>⏱️ Time: <span id="reactionTime">0.00</span>s</div>
+                    <div>🏆 Best: <span id="reactionBest">—</span></div>
+                </div>
+                <div class="reaction-arena" id="reactionArena">
+                    <button class="reaction-target" id="reactionTarget" onclick="hitReactionTarget()">⚡</button>
+                </div>
+                <button class="reaction-start" id="reactionStartBtn" onclick="startReactionGame()">START REACTION TEST</button>
+                <div id="reactionResult" style="font-weight:600;font-size:15px;margin:12px 0;min-height:24px;"></div>
+            </div>
+
+            <!-- GAME 6: MEMORY MATCH -->
+            <div id="memoryGameContainer" class="game-box" style="display:none; border-color: rgba(129,140,248,.4);">
+                <h3 style="color:var(--secondary); margin-bottom:5px;">🧠 Neon Memory Match</h3>
+                <p style="font-size:14px; margin-bottom:15px;">Flip two tiles at a time and match all six pairs. Fewer moves = better score.</p>
+                <div style="display:flex; justify-content:space-around; margin:15px 0; font-weight:700; font-size:15px;">
+                    <div>🎯 Pairs: <span id="memoryPairs">0</span>/6</div>
+                    <div>🔄 Moves: <span id="memoryMoves">0</span></div>
+                </div>
+                <div class="memory-arena" id="memoryArena"></div>
+                <button class="action-btn" style="border-color:var(--secondary);" onclick="resetMemoryGame()">
+                    <i class="fas fa-rotate"></i> New Memory Board
+                </button>
+                <div id="memoryResult" style="font-weight:600;font-size:15px;margin:12px 0;min-height:24px;"></div>
             </div>
         </section>
 
@@ -1513,12 +1741,32 @@
             <p>Enjoyed the vibe? Leave a quick note or rating about your experience!</p>
             <div class="review-form">
                 <input type="text" id="revName" placeholder="Your Name" autocomplete="off">
+                <div style="display:flex;gap:10px;align-items:center;">
+                    <label style="color:var(--text-muted);font-size:14px;">Rating</label>
+                    <select id="revRating" style="flex:1;background:rgba(0,0,0,.25);border:1px solid var(--border-color);padding:14px;border-radius:14px;color:#fff;">
+                        <option value="5">★★★★★ — 5/5</option>
+                        <option value="4">★★★★☆ — 4/5</option>
+                        <option value="3">★★★☆☆ — 3/5</option>
+                        <option value="2">★★☆☆☆ — 2/5</option>
+                        <option value="1">★☆☆☆☆ — 1/5</option>
+                    </select>
+                </div>
                 <textarea id="revText" rows="3" placeholder="Write a review..."></textarea>
                 <button class="submit-btn" onclick="addReview()">
                     <i class="fas fa-paper-plane"></i> Post Review
                 </button>
             </div>
             <div id="reviewContainer" style="margin-top: 30px;"></div>
+
+            <div class="review-admin-panel">
+                <h3><i class="fas fa-inbox"></i> Owner Review Inbox</h3>
+                <small>Reviews are saved locally immediately. To make them visible to you from other visitors/devices, connect the Firebase configuration in the script below.</small>
+                <div class="admin-key-row">
+                    <input type="password" id="reviewAdminKey" placeholder="Owner key">
+                    <button class="submit-btn" style="padding:11px 15px;" onclick="toggleOwnerReviews()">View My Inbox</button>
+                </div>
+                <div id="adminReviewList" class="admin-review-list" style="display:none;"></div>
+            </div>
         </section>
     </main>
 
@@ -1968,40 +2216,32 @@
 
         /* MINI GAMES LOGIC */
         function switchMiniGame(game) {
-            const penTab = document.getElementById('tabPenalty');
-            const sprintTab = document.getElementById('tabSprint');
-            const juggleTab = document.getElementById('tabJuggle');
-            const makeTab = document.getElementById('tabMakeup');
+            const ids = ['Penalty','Sprint','Juggle','Makeup','Reaction','Memory'];
+            const boxes = ['penalty','sprint','juggle','makeup','reaction','memory'];
+            ids.forEach(id => {
+                const el = document.getElementById('tab' + id);
+                if (el) el.className = 'game-tab-btn';
+            });
+            boxes.forEach(id => {
+                const el = document.getElementById(id + 'GameContainer');
+                if (el) el.style.display = 'none';
+            });
 
-            const penBox = document.getElementById('penaltyGameContainer');
-            const sprintBox = document.getElementById('sprintGameContainer');
-            const juggleBox = document.getElementById('juggleGameContainer');
-            const makeBox = document.getElementById('makeupGameContainer');
+            const styles = {
+                penalty: 'active-tab-boy',
+                sprint: 'active-tab-sprint',
+                juggle: 'active-tab-juggling',
+                makeup: 'active-tab-girl',
+                reaction: 'active-tab-boy',
+                memory: 'active-tab-girl'
+            };
+            const tabNames = {penalty:'Penalty', sprint:'Sprint', juggle:'Juggle', makeup:'Makeup', reaction:'Reaction', memory:'Memory'};
+            document.getElementById('tab' + tabNames[game]).className = 'game-tab-btn ' + styles[game];
+            document.getElementById(game + 'GameContainer').style.display = 'block';
 
-            penTab.className = 'game-tab-btn';
-            sprintTab.className = 'game-tab-btn';
-            juggleTab.className = 'game-tab-btn';
-            makeTab.className = 'game-tab-btn';
-
-            penBox.style.display = 'none';
-            sprintBox.style.display = 'none';
-            juggleBox.style.display = 'none';
-            makeBox.style.display = 'none';
-
-            if (game === 'penalty') {
-                penTab.className = 'game-tab-btn active-tab-boy';
-                penBox.style.display = 'block';
-            } else if (game === 'sprint') {
-                sprintTab.className = 'game-tab-btn active-tab-sprint';
-                sprintBox.style.display = 'block';
-            } else if (game === 'juggle') {
-                juggleTab.className = 'game-tab-btn active-tab-juggling';
-                juggleBox.style.display = 'block';
-            } else {
-                makeTab.className = 'game-tab-btn active-tab-girl';
-                makeBox.style.display = 'block';
-                initMakeupGame();
-            }
+            if (game === 'makeup') initMakeupGame();
+            if (game === 'reaction') resetReactionGame();
+            if (game === 'memory') resetMemoryGame();
         }
 
         /* GAME 1: PENALTY SHOOTOUT */
@@ -2149,44 +2389,77 @@
         let juggleScore = 0;
         let juggleActive = false;
         let juggleTimerInterval = null;
+        let juggleFallTimer = null;
+        let juggleBallY = 42;
+
+        function placeJuggleBall() {
+            const btn = document.getElementById('juggleBtn');
+            const arena = document.getElementById('juggleArena');
+            const maxX = Math.max(40, arena.clientWidth - 40);
+            const x = 40 + Math.random() * (maxX - 40);
+            juggleBallY = 42;
+            btn.style.left = `${x}px`;
+            btn.style.bottom = `${juggleBallY}px`;
+            btn.style.transform = 'translateX(-50%)';
+        }
+
+        function startJuggleFall() {
+            clearInterval(juggleFallTimer);
+            let y = 42;
+            const fallDuration = Math.max(650, 1250 - juggleScore * 35);
+            const started = performance.now();
+
+            juggleFallTimer = setInterval(() => {
+                const elapsed = performance.now() - started;
+                const p = Math.min(elapsed / fallDuration, 1);
+                y = 42 - p * 35;
+                juggleBallY = y;
+                const btn = document.getElementById('juggleBtn');
+                btn.style.bottom = `${Math.max(7, y)}px`;
+                if (p >= 1) {
+                    clearInterval(juggleFallTimer);
+                    if (juggleActive) endJuggleGame(true);
+                }
+            }, 16);
+        }
 
         function registerJuggleTap() {
-            const status = document.getElementById('juggleResult');
-
             if (!juggleActive && juggleTimeLeft === 10.0) {
                 juggleActive = true;
-                status.textContent = '⚽ KEEP IT UP! JUGGLE!';
-                status.style.color = '#4ade80';
-
+                document.getElementById('juggleResult').textContent = '⚽ KEEP IT UP! TAP THE BALL BEFORE IT DROPS!';
+                document.getElementById('juggleResult').style.color = '#4ade80';
                 juggleTimerInterval = setInterval(() => {
-                    juggleTimeLeft -= 0.1;
-                    if (juggleTimeLeft <= 0) {
-                        juggleTimeLeft = 0;
-                        endJuggleGame();
-                    }
+                    juggleTimeLeft = Math.max(0, juggleTimeLeft - 0.1);
                     document.getElementById('juggleTimer').textContent = juggleTimeLeft.toFixed(1);
+                    if (juggleTimeLeft <= 0) endJuggleGame(false);
                 }, 100);
-            }
-
-            if (juggleActive) {
+                placeJuggleBall();
+            } else if (juggleActive) {
                 juggleScore++;
                 document.getElementById('juggleScore').textContent = juggleScore;
+                clearInterval(juggleFallTimer);
+                placeJuggleBall();
+                startJuggleFall();
             }
         }
 
-        function endJuggleGame() {
+        function endJuggleGame(missed = false) {
             clearInterval(juggleTimerInterval);
+            clearInterval(juggleFallTimer);
             juggleActive = false;
             const btn = document.getElementById('juggleBtn');
             const status = document.getElementById('juggleResult');
             btn.disabled = true;
             btn.style.opacity = '0.5';
-            status.textContent = `⚽ FINISHED! Total juggles: ${juggleScore}`;
-            status.style.color = '#38bdf8';
+            status.textContent = missed
+                ? `💥 TOO LATE! The ball hit the ground. Final juggles: ${juggleScore}`
+                : `⚽ TIME! Final juggles: ${juggleScore}`;
+            status.style.color = missed ? '#f87171' : '#38bdf8';
         }
 
         function resetJuggleGame() {
             clearInterval(juggleTimerInterval);
+            clearInterval(juggleFallTimer);
             juggleTimeLeft = 10.0;
             juggleScore = 0;
             juggleActive = false;
@@ -2196,51 +2469,70 @@
             const btn = document.getElementById('juggleBtn');
             btn.disabled = false;
             btn.style.opacity = '1';
+            placeJuggleBall();
         }
 
         /* GAME 4: MAKEUP ROUTINE CHALLENGE */
-        const correctSequence = ['Primer', 'Foundation', 'Concealer', 'Setting Powder', 'Lipstick'];
+        const makeupChallenges = [
+            { name:'Everyday Base', sequence:['Primer','Foundation','Concealer','Setting Powder','Lipstick'] },
+            { name:'Soft Glam', sequence:['Moisturizer','Primer','Foundation','Blush','Highlighter'] },
+            { name:'Quick Look', sequence:['Sunscreen','Concealer','Blush','Mascara','Lip Gloss'] },
+            { name:'Party Prep', sequence:['Primer','Foundation','Blush','Highlighter','Lipstick'] },
+            { name:'Fresh Face', sequence:['Moisturizer','Sunscreen','Concealer','Blush','Lip Balm'] }
+        ];
+        let currentMakeupChallenge = null;
         let userSequence = [];
 
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
         function initMakeupGame() {
+            const previous = currentMakeupChallenge ? currentMakeupChallenge.name : '';
+            const choices = makeupChallenges.filter(c => c.name !== previous);
+            currentMakeupChallenge = choices[Math.floor(Math.random() * choices.length)];
             userSequence = [];
+            document.getElementById('makeupResult').textContent = '';
+            const title = document.querySelector('#makeupGameContainer h3');
+            if (title) title.innerHTML = `💄 ${currentMakeupChallenge.name} — Makeup Order`;
             renderMakeupSlots();
             renderMakeupPool();
-            document.getElementById('makeupResult').textContent = '';
         }
 
         function renderMakeupSlots() {
             const container = document.getElementById('routineSlots');
             container.innerHTML = '';
-            for (let i = 0; i < 5; i++) {
+            const count = currentMakeupChallenge ? currentMakeupChallenge.sequence.length : 5;
+            for (let i = 0; i < count; i++) {
                 const val = userSequence[i] || 'Empty Slot';
                 const filled = !!userSequence[i];
                 container.innerHTML += `
                     <div class="slot-row">
                         <div><span class="slot-num">#${i+1}</span> <span class="slot-val" style="color:${filled?'#fff':'#64748b'}">${val}</span></div>
                         ${filled ? `<button class="clear-slot-btn" onclick="removeMakeupStep(${i})"><i class="fas fa-trash"></i></button>` : ''}
-                    </div>
-                `;
+                    </div>`;
             }
         }
 
         function renderMakeupPool() {
             const poolContainer = document.getElementById('makeupPool');
-            const allItems = ['Foundation', 'Primer', 'Lipstick', 'Setting Powder', 'Concealer'];
+            const items = currentMakeupChallenge ? currentMakeupChallenge.sequence : [];
             poolContainer.innerHTML = '';
-
-            allItems.forEach(item => {
+            shuffleArray(items).forEach(item => {
                 const isUsed = userSequence.includes(item);
-                poolContainer.innerHTML += `
-                    <div class="makeup-item ${isUsed ? 'used' : ''}" onclick="addMakeupStep('${item}')">
-                        ${item}
-                    </div>
-                `;
+                const safe = item.replace(/'/g, "\\'");
+                poolContainer.innerHTML += `<div class="makeup-item ${isUsed ? 'used' : ''}" onclick="addMakeupStep('${safe}')">${item}</div>`;
             });
         }
 
         function addMakeupStep(item) {
-            if (userSequence.length < 5 && !userSequence.includes(item)) {
+            if (!currentMakeupChallenge) return;
+            if (userSequence.length < currentMakeupChallenge.sequence.length && !userSequence.includes(item)) {
                 userSequence.push(item);
                 renderMakeupSlots();
                 renderMakeupPool();
@@ -2254,25 +2546,138 @@
             document.getElementById('makeupResult').textContent = '';
         }
 
-        function resetMakeupGame() {
-            initMakeupGame();
-        }
+        function resetMakeupGame() { initMakeupGame(); }
 
         function checkMakeupOrder() {
             const resultMsg = document.getElementById('makeupResult');
-            if (userSequence.length < 5) {
-                resultMsg.textContent = '⚠️ Please fill all 5 routine steps before submitting!';
+            const target = currentMakeupChallenge.sequence;
+            if (userSequence.length < target.length) {
+                resultMsg.textContent = '⚠️ Fill every step before submitting!';
                 resultMsg.style.color = '#f87171';
                 return;
             }
-
-            const isCorrect = userSequence.every((val, idx) => val === correctSequence[idx]);
+            const isCorrect = userSequence.every((val, idx) => val === target[idx]);
             if (isCorrect) {
-                resultMsg.textContent = '✨ FLAWLESS LOOK! You got the makeup routine perfectly right!';
+                resultMsg.textContent = '✨ FLAWLESS! New challenge loading…';
                 resultMsg.style.color = '#4ade80';
             } else {
-                resultMsg.textContent = '❌ Oops! That sequence is incorrect. Hint: Prep first with Primer!';
+                resultMsg.textContent = '❌ Not quite! Try again — a fresh challenge appears after Submit.';
                 resultMsg.style.color = '#f87171';
+            }
+            // Every valid submission creates a different challenge.
+            setTimeout(initMakeupGame, 650);
+        }
+
+        /* GAME 5: REACTION RUSH */
+        let reactionHits = 0, reactionStart = 0, reactionRunning = false, reactionTimer = null;
+        let reactionBest = Number(localStorage.getItem('reactionBestMs') || 0);
+
+        function startReactionGame() {
+            reactionHits = 0; reactionStart = performance.now(); reactionRunning = true;
+            document.getElementById('reactionHits').textContent = '0';
+            document.getElementById('reactionTime').textContent = '0.00';
+            document.getElementById('reactionResult').textContent = '👀 WAIT…';
+            document.getElementById('reactionStartBtn').disabled = true;
+            scheduleReactionTarget();
+        }
+        function scheduleReactionTarget() {
+            const target = document.getElementById('reactionTarget');
+            target.classList.remove('show');
+            setTimeout(() => {
+                if (!reactionRunning) return;
+                const arena = document.getElementById('reactionArena');
+                target.style.left = `${12 + Math.random()*76}%`;
+                target.style.top = `${16 + Math.random()*68}%`;
+                target.classList.add('show');
+            }, 350 + Math.random()*900);
+        }
+        function hitReactionTarget() {
+            if (!reactionRunning) return;
+            const now = performance.now();
+            reactionHits++;
+            document.getElementById('reactionHits').textContent = reactionHits;
+            document.getElementById('reactionTime').textContent = ((now-reactionStart)/1000).toFixed(2);
+            if (reactionHits >= 10) {
+                reactionRunning = false;
+                document.getElementById('reactionTarget').classList.remove('show');
+                const total = now - reactionStart;
+                document.getElementById('reactionTime').textContent = (total/1000).toFixed(2);
+                if (!reactionBest || total < reactionBest) {
+                    reactionBest = total;
+                    localStorage.setItem('reactionBestMs', String(total));
+                    document.getElementById('reactionBest').textContent = (total/1000).toFixed(2) + 's';
+                    document.getElementById('reactionResult').textContent = '🏆 NEW BEST TIME!';
+                } else {
+                    document.getElementById('reactionResult').textContent = '⚡ RUN COMPLETE!';
+                }
+                document.getElementById('reactionStartBtn').disabled = false;
+                return;
+            }
+            scheduleReactionTarget();
+        }
+        function resetReactionGame() {
+            reactionRunning = false; clearInterval(reactionTimer);
+            document.getElementById('reactionHits').textContent = '0';
+            document.getElementById('reactionTime').textContent = '0.00';
+            document.getElementById('reactionBest').textContent = reactionBest ? (reactionBest/1000).toFixed(2)+'s' : '—';
+            document.getElementById('reactionResult').textContent = '';
+            document.getElementById('reactionTarget').classList.remove('show');
+            document.getElementById('reactionStartBtn').disabled = false;
+        }
+
+        /* GAME 6: NEON MEMORY MATCH */
+        const memorySymbols = ['⚽','🎮','⚡','🧠','🎵','🔥'];
+        let memoryBoard = [], memoryFirst = null, memoryLock = false, memoryPairs = 0, memoryMoves = 0;
+
+        function resetMemoryGame() {
+            memoryBoard = shuffleArray([...memorySymbols, ...memorySymbols]);
+            memoryFirst = null; memoryLock = false; memoryPairs = 0; memoryMoves = 0;
+            document.getElementById('memoryPairs').textContent = '0';
+            document.getElementById('memoryMoves').textContent = '0';
+            document.getElementById('memoryResult').textContent = '';
+            renderMemoryBoard();
+        }
+        function renderMemoryBoard() {
+            const arena = document.getElementById('memoryArena');
+            arena.innerHTML = '';
+            memoryBoard.forEach((symbol, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'memory-tile';
+                btn.textContent = symbol;
+                btn.dataset.index = index;
+                btn.onclick = () => flipMemoryTile(index, btn);
+                arena.appendChild(btn);
+            });
+        }
+        function flipMemoryTile(index, btn) {
+            if (memoryLock || btn.classList.contains('flipped') || btn.classList.contains('matched')) return;
+            btn.classList.add('flipped');
+            if (memoryFirst === null) {
+                memoryFirst = {index, btn};
+                return;
+            }
+            memoryMoves++;
+            document.getElementById('memoryMoves').textContent = memoryMoves;
+            const second = {index, btn};
+            if (memoryBoard[memoryFirst.index] === memoryBoard[second.index]) {
+                memoryFirst.btn.classList.add('matched');
+                second.btn.classList.add('matched');
+                memoryPairs++;
+                document.getElementById('memoryPairs').textContent = memoryPairs;
+                memoryFirst = null;
+                if (memoryPairs === memorySymbols.length) {
+                    document.getElementById('memoryResult').textContent = `🧠 BOARD CLEARED in ${memoryMoves} moves!`;
+                    document.getElementById('memoryResult').style.color = '#4ade80';
+                }
+            } else {
+                memoryLock = true;
+                const first = memoryFirst;
+                setTimeout(() => {
+                    first.btn.classList.remove('flipped');
+                    second.btn.classList.remove('flipped');
+                    memoryFirst = null;
+                    memoryLock = false;
+                }, 650);
             }
         }
 
@@ -2334,22 +2739,252 @@
             }
         }
 
-        function addReview() {
+        /* REVIEWS — local inbox + optional Firebase sync */
+        const REVIEW_STORAGE_KEY = 'radhwan_reviews_v2';
+        const OWNER_REVIEW_KEY = 'RADHWAN-OWNER-2026';
+
+        // Paste your Firebase Web App config here to sync reviews across visitors/devices.
+        // The site still works locally when this is left empty.
+        const FIREBASE_CONFIG = null;
+        // Example:
+        // const FIREBASE_CONFIG = {
+        //   apiKey: '...',
+        //   authDomain: 'your-project.firebaseapp.com',
+        //   databaseURL: 'https://your-project-default-rtdb.firebaseio.com',
+        //   projectId: 'your-project',
+        //   storageBucket: 'your-project.appspot.com',
+        //   messagingSenderId: '...',
+        //   appId: '...'
+        // };
+
+        function getLocalReviews() {
+            try { return JSON.parse(localStorage.getItem(REVIEW_STORAGE_KEY) || '[]'); }
+            catch (e) { return []; }
+        }
+        function saveLocalReviews(reviews) {
+            try { localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify(reviews)); } catch(e) {}
+        }
+        function escapeReview(value) {
+            return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+        }
+        function renderReviews(reviews = getLocalReviews()) {
+            const container = document.getElementById('reviewContainer');
+            container.innerHTML = '';
+            if (!reviews.length) {
+                container.innerHTML = '<p style="text-align:center;color:var(--text-muted);">No reviews yet. Be the first!</p>';
+                return;
+            }
+            reviews.forEach(review => {
+                const card = document.createElement('div');
+                card.className = 'review-card';
+                card.innerHTML = `<strong>${escapeReview(review.name)}</strong>
+                    <div style="color:#facc15;margin:5px 0;">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div>
+                    <p>${escapeReview(review.text)}</p>
+                    <small style="color:var(--text-muted);">${escapeReview(review.date)}</small>`;
+                container.appendChild(card);
+            });
+        }
+
+        async function syncReviewToFirebase(review) {
+            if (!FIREBASE_CONFIG || !FIREBASE_CONFIG.databaseURL) return;
+            try {
+                const base = FIREBASE_CONFIG.databaseURL.replace(/\/$/,'');
+                await fetch(`${base}/reviews.json`, {
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify(review)
+                });
+            } catch(e) {
+                console.warn('Review sync unavailable:', e);
+            }
+        }
+
+        async function addReview() {
             const nameInput = document.getElementById('revName');
             const textInput = document.getElementById('revText');
+            const ratingInput = document.getElementById('revRating');
             const name = nameInput.value.trim();
-            const text = textInput.value.trim();
+            const reviewText = textInput.value.trim();
+            const rating = Number(ratingInput.value) || 5;
+            if (!name || !reviewText) {
+                return;
+            }
 
-            if (!name || !text) return;
+            const review = {
+                name,
+                text: reviewText,
+                rating: Math.min(5, Math.max(1, rating)),
+                date: new Date().toLocaleString()
+            };
+            const reviews = getLocalReviews();
+            reviews.unshift(review);
+            saveLocalReviews(reviews);
+            renderReviews(reviews);
+            await syncReviewToFirebase(review);
 
-            const container = document.getElementById('reviewContainer');
-            const card = document.createElement('div');
-            card.className = 'review-card';
-            card.innerHTML = `<strong>${name}</strong><p>${text}</p>`;
-            container.prepend(card);
-
-            nameInput.value = ''; textInput.value = '';
+            nameInput.value = '';
+            textInput.value = '';
+            ratingInput.value = '5';
         }
+
+        async function loadOwnerReviews() {
+            const local = getLocalReviews();
+            let reviews = local;
+            if (FIREBASE_CONFIG && FIREBASE_CONFIG.databaseURL) {
+                try {
+                    const base = FIREBASE_CONFIG.databaseURL.replace(/\/$/,'');
+                    const res = await fetch(`${base}/reviews.json`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data) reviews = Object.values(data).sort((a,b) => String(b.date).localeCompare(String(a.date)));
+                    }
+                } catch(e) {}
+            }
+            const list = document.getElementById('adminReviewList');
+            list.innerHTML = reviews.length ? reviews.map(r => `
+                <div class="admin-review-item">
+                    <div class="meta">${escapeReview(r.name)} · ${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)} · ${escapeReview(r.date)}</div>
+                    <div>${escapeReview(r.text)}</div>
+                </div>`).join('') : '<small>No reviews found.</small>';
+        }
+
+        async function toggleOwnerReviews() {
+            const key = document.getElementById('reviewAdminKey').value;
+            const panel = document.getElementById('adminReviewList');
+            if (key !== OWNER_REVIEW_KEY) {
+                panel.style.display = 'block';
+                panel.innerHTML = '<small style="color:#f87171;">Incorrect owner key.</small>';
+                return;
+            }
+            panel.style.display = 'block';
+            panel.innerHTML = '<small>Loading reviews…</small>';
+            await loadOwnerReviews();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => renderReviews());
+
+
+        /* SITE UPDATE SYSTEM
+           Increase SITE_VERSION whenever you publish a new version.
+           The menu can then detect the newer deployed HTML and refresh it.
+        */
+        const SITE_VERSION = '1.1.0';
+        const SITE_VERSION_KEY = 'radhwan_site_version';
+
+        function compareSiteVersions(a, b) {
+            const pa = String(a).split('.').map(n => parseInt(n, 10) || 0);
+            const pb = String(b).split('.').map(n => parseInt(n, 10) || 0);
+            const len = Math.max(pa.length, pb.length);
+            for (let i = 0; i < len; i++) {
+                if ((pa[i] || 0) > (pb[i] || 0)) return 1;
+                if ((pa[i] || 0) < (pb[i] || 0)) return -1;
+            }
+            return 0;
+        }
+
+        function getStoredSiteVersion() {
+            return localStorage.getItem(SITE_VERSION_KEY) || SITE_VERSION;
+        }
+
+        function setSiteVersion(version) {
+            try { localStorage.setItem(SITE_VERSION_KEY, version); } catch (e) {}
+        }
+
+        function setUpdateStatus(text, available = false) {
+            const item = document.getElementById('siteUpdateMenuItem');
+            const status = document.getElementById('siteUpdateStatus');
+            if (!item || !status) return;
+            status.textContent = text;
+            item.classList.toggle('update-available', available);
+        }
+
+        function showSiteUpdateToast(title, message, updateAvailable = false) {
+            const toast = document.getElementById('siteUpdateToast');
+            const titleEl = document.getElementById('siteUpdateToastTitle');
+            const textEl = document.getElementById('siteUpdateToastText');
+            const actions = document.getElementById('siteUpdateToastActions');
+            if (!toast) return;
+
+            titleEl.textContent = title;
+            textEl.textContent = message;
+            actions.style.display = updateAvailable ? 'flex' : 'none';
+            toast.classList.add('show');
+            clearTimeout(window.siteUpdateToastTimer);
+            window.siteUpdateToastTimer = setTimeout(() => {
+                if (!updateAvailable) hideSiteUpdateToast();
+            }, 4500);
+        }
+
+        function hideSiteUpdateToast() {
+            const toast = document.getElementById('siteUpdateToast');
+            if (toast) toast.classList.remove('show');
+        }
+
+        async function checkForSiteUpdate(manual = false) {
+            setUpdateStatus('CHECKING…');
+
+            try {
+                const url = new URL(window.location.href);
+                url.searchParams.set('_site_update_check', Date.now());
+
+                const response = await fetch(url.toString(), {
+                    method: 'GET',
+                    cache: 'no-store',
+                    credentials: 'same-origin',
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
+
+                if (!response.ok) throw new Error('Update check failed');
+
+                const latestHtml = await response.text();
+                const match = latestHtml.match(/<meta[^>]+id=["']siteVersionMeta["'][^>]+content=["']([^"']+)["']/i);
+                const latestVersion = match ? match[1] : SITE_VERSION;
+
+                if (compareSiteVersions(latestVersion, SITE_VERSION) > 0) {
+                    setUpdateStatus('NEW', true);
+                    showSiteUpdateToast(
+                        '✨ New Site Update Available',
+                        `Version ${latestVersion} is available. Update now to load the latest site.`
+                        , true
+                    );
+                    window.pendingSiteVersion = latestVersion;
+                    return true;
+                }
+
+                setUpdateStatus('UP TO DATE');
+                if (manual) {
+                    showSiteUpdateToast('✓ Site is up to date', `You're using version ${SITE_VERSION}.`);
+                }
+                return false;
+            } catch (error) {
+                setUpdateStatus('RETRY');
+                if (manual) {
+                    showSiteUpdateToast(
+                        'Update check unavailable',
+                        'The site could not check for a newer version right now. Please try again.'
+                    );
+                }
+                return false;
+            }
+        }
+
+        function applySiteUpdate() {
+            hideSiteUpdateToast();
+            setSiteVersion(window.pendingSiteVersion || SITE_VERSION);
+
+            // Add a cache-busting parameter so the browser requests the newest document.
+            const url = new URL(window.location.href);
+            url.searchParams.set('_site_updated', Date.now());
+            window.location.replace(url.toString());
+        }
+
+        // Record the version currently running and check quietly after startup.
+        document.addEventListener('DOMContentLoaded', () => {
+            setSiteVersion(SITE_VERSION);
+            setUpdateStatus('CHECK');
+            setTimeout(() => { placeJuggleBall(); checkForSiteUpdate(false); }, 1800);
+        });
+
     </script>
 </body>
 </html>
