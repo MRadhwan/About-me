@@ -1767,7 +1767,6 @@
                 <h3><i class="fas fa-inbox"></i> Owner Review Inbox</h3>
                 <small>Private inbox. Visitors can submit reviews, but only the authenticated owner account can read them.</small>
                 <div class="admin-key-row" style="flex-wrap:wrap;">
-                    <input type="email" id="reviewOwnerEmail" placeholder="Owner email" autocomplete="username" value="radrasgamingchannel13@gmail.com">
                     <input type="password" id="reviewOwnerPassword" placeholder="Firebase Auth password" autocomplete="current-password">
                     <button class="submit-btn" style="padding:11px 15px;" onclick="toggleOwnerReviews()">Sign In &amp; View Inbox</button>
                 </div>
@@ -2893,17 +2892,12 @@
         }
 
         async function ownerSignIn() {
-            const emailInput = document.getElementById('reviewOwnerEmail');
             const passwordInput = document.getElementById('reviewOwnerPassword');
-            const email = emailInput.value.trim().toLowerCase();
             const password = passwordInput.value;
-            if (email !== OWNER_EMAIL) {
-                throw new Error('OWNER_EMAIL_MISMATCH');
-            }
             if (!password) throw new Error('MISSING_PASSWORD');
 
             const data = await firebaseAuth('accounts:signInWithPassword', {
-                email,
+                email: OWNER_EMAIL,
                 password,
                 returnSecureToken:true
             });
@@ -2952,7 +2946,7 @@
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '1.2.0';
+        const SITE_VERSION = '1.5.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
