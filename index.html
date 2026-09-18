@@ -1332,6 +1332,375 @@
             flex: 1 1 220px;
             min-width: 0;
         }
+
+        /* FINAL POLISH */
+        html { scroll-behavior: smooth; }
+        .theme-switcher {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 12px 0 20px;
+        }
+        .theme-btn {
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,.05);
+            color: inherit;
+            border-radius: 999px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .theme-btn.active { background: rgba(255,255,255,.14); }
+        .back-to-top {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 9998;
+            width: 44px;
+            height: 44px;
+            border: 0;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: rgba(0,0,0,.78);
+            color: #fff;
+            font-size: 18px;
+        }
+        .back-to-top.show { display: flex; }
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            z-index: 10000;
+            background: currentColor;
+        }
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity .55s ease, transform .55s ease;
+        }
+        .reveal-on-scroll.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .passport-progress-wrap {
+            margin: 12px 0 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            background: rgba(255,255,255,.04);
+        }
+        .passport-progress-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .passport-progress-bar {
+            height: 9px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(255,255,255,.09);
+        }
+        .passport-progress-fill {
+            width: 0;
+            height: 100%;
+            border-radius: inherit;
+            transition: width .6s ease;
+            background: currentColor;
+        }
+        .welcome-pop {
+            position: fixed;
+            left: 50%;
+            top: 18px;
+            transform: translate(-50%, -130%);
+            z-index: 10001;
+            max-width: calc(100% - 30px);
+            padding: 15px 18px;
+            border-radius: 16px;
+            background: rgba(0,0,0,.9);
+            color: #fff;
+            text-align: center;
+            box-shadow: 0 12px 35px rgba(0,0,0,.25);
+            transition: transform .4s ease;
+        }
+        .welcome-pop.show { transform: translate(-50%, 0); }
+        body.theme-light {
+            --bg-color: #f5f7fb;
+            --text-color: #172033;
+            --text-muted: #5d687c;
+            --border-color: rgba(20,30,50,.14);
+        }
+        body.theme-light .extra-card,
+        body.theme-light .fun-fact-card,
+        body.theme-light .passport-progress-wrap {
+            background: rgba(0,0,0,.025);
+        }
+        body.theme-gaming {
+            filter: saturate(1.08);
+        }
+        @media (max-width: 700px) {
+            .extras-grid { grid-template-columns: 1fr; }
+            .theme-switcher { margin-top: 8px; }
+            .back-to-top { right: 12px; bottom: 12px; }
+        }
+
+
+        @media (max-width: 700px) {
+            .floating-controls {
+                top: 12px;
+                padding: 0 12px;
+                align-items: flex-start;
+            }
+            .audio-controls-group { gap: 7px; }
+            .control-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 17px;
+            }
+            .dropdown-content {
+                position: fixed;
+                top: 66px;
+                right: 12px;
+                left: auto;
+                width: min(310px, calc(100vw - 24px));
+                max-height: calc(100vh - 82px);
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 16px;
+                z-index: 1500;
+            }
+            .dropdown-content a {
+                padding: 13px 17px;
+                font-size: 14px;
+                min-height: 48px;
+            }
+            .dropdown-content a:hover { padding-left: 21px; }
+        }
+
+        /* INTERACTIVE EXTRAS */
+        .extras-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-top: 22px;
+        }
+        .extra-card {
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,.045);
+            border-radius: 20px;
+            padding: 22px;
+        }
+        .extra-card h3 { margin: 0 0 8px; }
+        .extra-card p { color: var(--text-muted); line-height: 1.6; }
+        .random-fact-box {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 16px;
+            background: rgba(255,255,255,.05);
+            padding: 15px;
+            margin: 14px 0;
+            font-weight: 600;
+        }
+        .extra-btn {
+            border: 0;
+            border-radius: 12px;
+            padding: 11px 15px;
+            cursor: pointer;
+            font-weight: 700;
+            background: rgba(255,255,255,.12);
+            color: inherit;
+        }
+        .extra-btn:hover { transform: translateY(-1px); }
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 8px 0;
+        }
+        .quiz-result {
+            margin-top: 14px;
+            font-weight: 700;
+            min-height: 24px;
+        }
+        .secret-message {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.07);
+            line-height: 1.6;
+        }
+        .secret-message.show { display: block; }
+        .stat-row { margin: 14px 0; }
+        .stat-head {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 7px;
+            font-size: 13px;
+        }
+        .stat-bar {
+            height: 9px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.09);
+            overflow: hidden;
+        }
+        .stat-fill {
+            height: 100%;
+            width: 0;
+            border-radius: inherit;
+            transition: width 1s ease;
+            background: currentColor;
+        }
+        .achievement-toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translate(-50%, 120px);
+            z-index: 9999;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: rgba(0,0,0,.88);
+            color: #fff;
+            opacity: 0;
+            transition: .35s ease;
+            pointer-events: none;
+            text-align: center;
+        }
+        .achievement-toast.show {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
+        /* FUN FACTS */
+        .fun-facts-intro {
+            color: var(--text-muted);
+            max-width: 760px;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+        .fun-facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 16px;
+        }
+        .fun-fact-card {
+            position: relative;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,.045);
+            border-radius: 18px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform .2s ease, background .2s ease, border-color .2s ease;
+            overflow: hidden;
+        }
+        .fun-fact-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,.07);
+            border-color: rgba(255,255,255,.18);
+        }
+        .fun-fact-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+        .fun-fact-card h3 {
+            margin: 0 0 7px;
+            font-size: 16px;
+        }
+        .fun-fact-card p {
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.55;
+            font-size: 13px;
+        }
+        .fun-fact-hint {
+            margin-top: 12px;
+            font-size: 11px;
+            color: var(--text-muted);
+            opacity: .75;
+        }
+        .fun-fact-card.revealed {
+            border-color: rgba(255,255,255,.25);
+        }
+        .fun-fact-card.revealed .fun-fact-hint {
+            display: none;
+        }
+
+        /* VISITOR PASSPORT */
+        .passport-intro {
+            color: var(--text-muted);
+            margin-bottom: 22px;
+            line-height: 1.6;
+        }
+        .passport-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            margin-bottom: 22px;
+            border: 1px solid rgba(56,189,248,.2);
+            border-radius: 16px;
+            background: rgba(56,189,248,.05);
+        }
+        .passport-progress-bar {
+            flex: 1;
+            height: 9px;
+            background: rgba(255,255,255,.08);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .passport-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+            border-radius: 99px;
+            transition: width .5s ease;
+        }
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+            gap: 14px;
+        }
+        .visitor-badge {
+            position: relative;
+            padding: 20px 14px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            background: rgba(255,255,255,.035);
+            transition: transform .25s ease, border-color .25s ease, opacity .25s ease;
+        }
+        .visitor-badge.unlocked {
+            border-color: rgba(74,222,128,.45);
+            box-shadow: 0 0 22px rgba(74,222,128,.08);
+        }
+        .visitor-badge.locked { opacity: .48; filter: grayscale(.35); }
+        .visitor-badge:hover { transform: translateY(-3px); }
+        .visitor-badge-icon { font-size: 30px; margin-bottom: 10px; }
+        .visitor-badge h3 { font-size: 15px; margin-bottom: 5px; }
+        .visitor-badge p { color: var(--text-muted); font-size: 12px; line-height: 1.4; }
+        .badge-status {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+        .unlocked .badge-status { color: var(--green-accent); background: rgba(74,222,128,.1); }
+        .locked .badge-status { color: var(--text-muted); background: rgba(255,255,255,.06); }
     </style>
 </head>
 <body>
@@ -1436,6 +1805,9 @@
                 <a href="#" onclick="showSection('tips')"><i class="fas fa-lightbulb"></i> Tips & Tricks</a>
                 <a href="#" onclick="showSection('preferences')"><i class="fas fa-star"></i> Likes & Dislikes</a>
                 <a href="#" onclick="showSection('memories')"><i class="fas fa-heart"></i> Sweet Memories</a>
+                <a href="#" onclick="showSection('passport')"><i class="fas fa-id-badge"></i> Visitor Passport</a>
+                <a href="#" onclick="showSection('funfacts')"><i class="fas fa-lightbulb"></i> Fun Facts</a>
+                <a href="#" onclick="showSection('extras')"><i class="fas fa-gamepad"></i> Fun Zone</a>
                 <a href="#" onclick="showSection('reviews')"><i class="fas fa-comment-alt"></i> Reviews</a>
                 <a href="#" id="siteUpdateMenuItem" class="site-update-item" onclick="checkForSiteUpdate(true); return false;">
                     <i class="fas fa-cloud-arrow-down"></i> Update Site
@@ -1740,6 +2112,111 @@
             </div>
         </section>
 
+        <!-- FUN FACTS -->
+        <section id="funfacts" class="page-section">
+            <h1><i class="fas fa-lightbulb"></i> Fun Facts About Me</h1>
+            <p class="fun-facts-intro">A few random things about me. Tap a card to reveal the fact. 😎</p>
+            <div class="fun-facts-grid">
+                <div class="fun-fact-card" onclick="this.classList.add('revealed')">
+                    <div class="fun-fact-icon">⚽</div>
+                    <h3>Football</h3>
+                    <p>My favourite footballer is <strong>Cristiano Ronaldo</strong>.</p>
+                    <div class="fun-fact-hint">Tap to reveal</div>
+                </div>
+                <div class="fun-fact-card" onclick="this.classList.add('revealed')">
+                    <div class="fun-fact-icon">🎮</div>
+                    <h3>Gaming</h3>
+                    <p>My favourite games are <strong>eFootball</strong> and <strong>Resident Evil</strong>.</p>
+                    <div class="fun-fact-hint">Tap to reveal</div>
+                </div>
+                <div class="fun-fact-card" onclick="this.classList.add('revealed')">
+                    <div class="fun-fact-icon">🍛</div>
+                    <h3>Food</h3>
+                    <p>My favourite food is <strong>Mandhi</strong>.</p>
+                    <div class="fun-fact-hint">Tap to reveal</div>
+                </div>
+                <div class="fun-fact-card" onclick="this.classList.add('revealed')">
+                    <div class="fun-fact-icon">😂</div>
+                    <h3>Something Weird</h3>
+                    <p>I do <strong>these stuffs</strong>. 😂</p>
+                    <div class="fun-fact-hint">Tap to reveal</div>
+                </div>
+                <div class="fun-fact-card" onclick="this.classList.add('revealed')">
+                    <div class="fun-fact-icon">🎵</div>
+                    <h3>On Repeat</h3>
+                    <p>A song I never get tired of is <strong>“Golden Brown”</strong>.</p>
+                    <div class="fun-fact-hint">Tap to reveal</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FUN ZONE -->
+        <section id="extras" class="page-section">
+            <h1><i class="fas fa-gamepad"></i> Fun Zone</h1>
+            <div class="theme-switcher" aria-label="Theme selector">
+                <button class="theme-btn" data-theme="dark" onclick="setSiteTheme('dark')">🌙 Dark</button>
+                <button class="theme-btn" data-theme="light" onclick="setSiteTheme('light')">☀️ Light</button>
+                <button class="theme-btn" data-theme="gaming" onclick="setSiteTheme('gaming')">🎮 Gaming</button>
+            </div>
+            <p class="fun-facts-intro">A few interactive extras for visitors who want to explore a little more. 👀</p>
+
+            <div class="extras-grid">
+                <div class="extra-card">
+                    <h3>🎲 Random Me</h3>
+                    <p>Press the button for a random fact about me.</p>
+                    <div id="randomFact" class="random-fact-box">Tap the button 👇</div>
+                    <button class="extra-btn" onclick="showRandomFact()">🎲 Random Fact</button>
+                </div>
+
+                <div class="extra-card">
+                    <h3>📊 My Stats</h3>
+                    <p>My totally unofficial personal stats. 😂</p>
+                    <div class="stat-row"><div class="stat-head"><span>⚽ Football</span><strong>99</strong></div><div class="stat-bar"><div class="stat-fill" style="width:99%"></div></div></div>
+                    <div class="stat-row"><div class="stat-head"><span>🎮 Gaming</span><strong>95</strong></div><div class="stat-bar"><div class="stat-fill" style="width:95%"></div></div></div>
+                    <div class="stat-row"><div class="stat-head"><span>🍛 Mandhi</span><strong>100</strong></div><div class="stat-bar"><div class="stat-fill" style="width:100%"></div></div></div>
+                    <div class="stat-row"><div class="stat-head"><span>🎵 Music</span><strong>87</strong></div><div class="stat-bar"><div class="stat-fill" style="width:87%"></div></div></div>
+                </div>
+
+                <div class="extra-card">
+                    <h3>🕵️ Secret Finder</h3>
+                    <p>There is a hidden surprise somewhere on this page. Try the button if you think you've found it.</p>
+                    <button class="extra-btn" onclick="unlockSecret()">🔓 Check for Secret</button>
+                    <div id="secretMessage" class="secret-message">
+                        🎉 <strong>SECRET FOUND!</strong><br>
+                        You found the hidden surprise. Your Explorer skills are officially suspicious. 😂
+                    </div>
+                </div>
+
+                <div class="extra-card">
+                    <h3>🧠 How Well Do You Know Me?</h3>
+                    <p id="quizQuestion"><strong>Question 1:</strong> Who is my favourite footballer?</p>
+                    <button class="extra-btn quiz-option" onclick="answerQuiz(0, false)">A) Lionel Messi</button>
+                    <button class="extra-btn quiz-option" onclick="answerQuiz(0, true)">B) Cristiano Ronaldo</button>
+                    <button class="extra-btn quiz-option" onclick="answerQuiz(0, false)">C) Neymar</button>
+                    <button class="extra-btn quiz-option" onclick="answerQuiz(0, false)">D) Kylian Mbappé</button>
+                    <div id="quizResult" class="quiz-result"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISITOR PASSPORT -->
+        <section id="passport" class="page-section">
+            <h1><i class="fas fa-id-badge"></i> Visitor Passport</h1>
+            <div class="passport-progress-wrap">
+                <div class="passport-progress-head">
+                    <span>🏆 Badge Progress</span>
+                    <span id="passportProgressText">0 / 8</span>
+                </div>
+                <div class="passport-progress-bar"><div id="passportProgressFill" class="passport-progress-fill"></div></div>
+            </div>
+            <p class="passport-intro">Welcome to the site! Explore, play, and discover hidden stuff to unlock your visitor badges. Your badges are saved on this device.</p>
+            <div class="passport-progress">
+                <strong id="badgeProgressText">0 / 6 badges</strong>
+                <div class="passport-progress-bar"><div class="passport-progress-fill" id="badgeProgressFill"></div></div>
+            </div>
+            <div class="badge-grid" id="visitorBadgeGrid"></div>
+        </section>
+
         <!-- REVIEWS -->
         <section id="reviews" class="page-section">
             <h1>Visitor Reviews</h1>
@@ -1901,6 +2378,7 @@
             if (open) {
                 terminalModal.classList.add('active');
                 terminalInput.focus();
+                if (typeof unlockBadge === 'function') unlockBadge('secret');
             } else {
                 terminalModal.classList.remove('active');
             }
@@ -2734,9 +3212,10 @@
             });
             const target = document.getElementById(sectionId);
             target.style.display = 'block';
-            void target.offsetWidth; 
+            void target.offsetWidth;
             target.classList.add('active');
             document.getElementById('dropdownMenu').classList.remove('show');
+            if (typeof recordPassportSectionVisit === 'function') recordPassportSectionVisit(sectionId);
         }
 
         window.onclick = function(event) {
@@ -2744,6 +3223,65 @@
                 document.getElementById('dropdownMenu').classList.remove('show');
             }
         }
+
+
+        /* VISITOR PASSPORT — local achievements */
+        const PASSPORT_KEY = 'radhwan_visitor_passport_v1';
+        const PASSPORT_BADGES = [
+            { id:'welcome', icon:'fa-hand-sparkles', title:'Welcome', desc:'Visit the site for the first time.' },
+            { id:'explorer', icon:'fa-compass', title:'Explorer', desc:'Visit 3 different sections.' },
+            { id:'gamer', icon:'fa-gamepad', title:'Gamer', desc:'Open the Mini Games section.' },
+            { id:'reviewer', icon:'fa-comment-dots', title:'Reviewer', desc:'Leave a review.' },
+            { id:'nightowl', icon:'fa-moon', title:'Night Owl', desc:'Visit the site after 9 PM.' },
+            { id:'secret', icon:'fa-user-secret', title:'Secret Finder', desc:'Open the hidden terminal.' }
+        ];
+        function getPassportState() {
+            try { return JSON.parse(localStorage.getItem(PASSPORT_KEY) || '{"unlocked":{},"sections":[]}'); }
+            catch(e) { return {unlocked:{}, sections:[]}; }
+        }
+        function savePassportState(state) {
+            try { localStorage.setItem(PASSPORT_KEY, JSON.stringify(state)); } catch(e) {}
+        }
+        function unlockBadge(id) {
+            const state = getPassportState();
+            if (!state.unlocked[id]) {
+                state.unlocked[id] = Date.now();
+                savePassportState(state);
+                renderPassport();
+            }
+        }
+        function recordPassportSectionVisit(sectionId) {
+            const state = getPassportState();
+            state.sections = Array.isArray(state.sections) ? state.sections : [];
+            if (!state.sections.includes(sectionId)) state.sections.push(sectionId);
+            savePassportState(state);
+            if (state.sections.length >= 3) unlockBadge('explorer');
+            if (sectionId === 'minigames') unlockBadge('gamer');
+            renderPassport();
+        }
+        function renderPassport() {
+            const grid = document.getElementById('visitorBadgeGrid');
+            if (!grid) return;
+            const state = getPassportState();
+            const count = PASSPORT_BADGES.filter(b => state.unlocked[b.id]).length;
+            const text = document.getElementById('badgeProgressText');
+            const fill = document.getElementById('badgeProgressFill');
+            if (text) text.textContent = `${count} / ${PASSPORT_BADGES.length} badges`;
+            if (fill) fill.style.width = `${(count / PASSPORT_BADGES.length) * 100}%`;
+            grid.innerHTML = PASSPORT_BADGES.map(b => {
+                const on = !!state.unlocked[b.id];
+                return `<div class="visitor-badge ${on ? 'unlocked' : 'locked'}">
+                    <div class="visitor-badge-icon"><i class="fas ${b.icon}"></i></div>
+                    <h3>${b.title}</h3><p>${b.desc}</p>
+                    <span class="badge-status">${on ? 'UNLOCKED ✓' : 'LOCKED'}</span>
+                </div>`;
+            }).join('');
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            unlockBadge('welcome');
+            if (new Date().getHours() >= 21) unlockBadge('nightowl');
+            renderPassport();
+        });
 
         /* REVIEWS — Firebase Realtime Database + Firebase Authentication */
         const REVIEW_STORAGE_KEY = 'radhwan_reviews_v2';
@@ -2865,6 +3403,7 @@
             if (!synced) {
                 alert('The review was saved on this device, but could not be sent to the owner inbox. Please try again when online.');
             }
+            unlockBadge('reviewer');
 
             nameInput.value = '';
             textInput.value = '';
@@ -2946,7 +3485,7 @@
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '1.5.0';
+        const SITE_VERSION = '1.1.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
@@ -3063,6 +3602,161 @@
             setTimeout(() => { placeJuggleBall(); checkForSiteUpdate(false); }, 1800);
         });
 
+    </script>
+    <div id="achievementToast" class="achievement-toast"></div>
+
+    <script>
+    (function () {
+        const funFacts = [
+            "My favourite footballer is Cristiano Ronaldo. ⚽",
+            "My favourite games are eFootball and Resident Evil. 🎮",
+            "My favourite food is Mandhi. 🍛",
+            "Something weird I do is... these stuffs. 😂",
+            "A song I never get tired of is “Golden Brown”. 🎵"
+        ];
+
+        function toast(message) {
+            const el = document.getElementById('achievementToast');
+            if (!el) return;
+            el.textContent = message;
+            el.classList.add('show');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+        }
+
+        window.showRandomFact = function () {
+            const box = document.getElementById('randomFact');
+            const fact = funFacts[Math.floor(Math.random() * funFacts.length)];
+            if (box) box.textContent = fact;
+            localStorage.setItem('radhwan_random_fact_used', '1');
+            toast('🎲 Random fact unlocked!');
+        };
+
+        window.unlockSecret = function () {
+            const secret = document.getElementById('secretMessage');
+            if (secret) secret.classList.add('show');
+            localStorage.setItem('radhwan_secret_found', '1');
+            toast('🕵️ Secret Finder badge unlocked!');
+        };
+
+        window.answerQuiz = function (question, correct) {
+            const result = document.getElementById('quizResult');
+            if (correct) {
+                if (result) result.textContent = '✅ Correct! You know me well. 🏆';
+                localStorage.setItem('radhwan_quiz_passed', '1');
+                toast('🏆 Quiz badge unlocked!');
+            } else {
+                if (result) result.textContent = '❌ Not quite! Try again. 😄';
+            }
+        };
+
+        // Animate the personal stat bars when Fun Zone is opened.
+        document.addEventListener('click', function (event) {
+            const target = event.target.closest && event.target.closest('[onclick*="showSection(\'extras\')"]');
+            if (!target) return;
+            setTimeout(() => {
+                document.querySelectorAll('#extras .stat-fill').forEach(el => {
+                    const w = el.style.width;
+                    el.style.width = '0';
+                    requestAnimationFrame(() => { el.style.width = w; });
+                });
+            }, 120);
+        });
+    })();
+    </script>
+
+    <div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
+    <button id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+    <div id="welcomePop" class="welcome-pop">👋 Welcome to my little corner of the internet!</div>
+
+    <script>
+    (function () {
+        const THEME_KEY = 'radhwan_site_theme';
+
+        window.setSiteTheme = function (theme) {
+            document.body.classList.remove('theme-light', 'theme-gaming');
+            if (theme === 'light') document.body.classList.add('theme-light');
+            if (theme === 'gaming') document.body.classList.add('theme-gaming');
+            localStorage.setItem(THEME_KEY, theme);
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+        };
+
+        const savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
+        window.setSiteTheme(savedTheme);
+
+        function updateScrollUI() {
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+            const progress = document.getElementById('scrollProgress');
+            const topBtn = document.getElementById('backToTop');
+            if (progress) progress.style.width = pct + '%';
+            if (topBtn) topBtn.classList.toggle('show', window.scrollY > 450);
+        }
+        window.addEventListener('scroll', updateScrollUI, {passive:true});
+        updateScrollUI();
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {threshold: .12});
+
+        document.querySelectorAll('section, .extra-card, .fun-fact-card').forEach(el => {
+            el.classList.add('reveal-on-scroll');
+            observer.observe(el);
+        });
+
+        // First-visit welcome message, shown only once per browser.
+        if (!localStorage.getItem('radhwan_welcome_seen')) {
+            setTimeout(() => {
+                const welcome = document.getElementById('welcomePop');
+                if (welcome) {
+                    welcome.classList.add('show');
+                    setTimeout(() => welcome.classList.remove('show'), 3200);
+                }
+            }, 700);
+            localStorage.setItem('radhwan_welcome_seen', '1');
+        }
+
+        // Keep badge progress useful even if the passport implementation changes.
+        function updatePassportProgress() {
+            const total = 8;
+            let unlocked = 1; // Welcome
+            if (localStorage.getItem('radhwan_random_fact_used')) unlocked++;
+            if (localStorage.getItem('radhwan_secret_found')) unlocked++;
+            if (localStorage.getItem('radhwan_quiz_passed')) unlocked++;
+            if (localStorage.getItem('radhwan_reviews_submitted')) unlocked++;
+            if (localStorage.getItem('radhwan_game_played')) unlocked++;
+            if (localStorage.getItem('radhwan_music_played')) unlocked++;
+            if (localStorage.getItem('radhwan_story_read')) unlocked++;
+            const text = document.getElementById('passportProgressText');
+            const fill = document.getElementById('passportProgressFill');
+            if (text) text.textContent = Math.min(unlocked, total) + ' / ' + total;
+            if (fill) fill.style.width = Math.min(unlocked, total) / total * 100 + '%';
+        }
+        updatePassportProgress();
+        window.addEventListener('storage', updatePassportProgress);
+        setInterval(updatePassportProgress, 1200);
+    })();
+    </script>
+
+    <script>
+    (function () {
+        document.addEventListener('click', function (e) {
+            const t = e.target.closest && e.target.closest('button, a');
+            if (!t) return;
+            const label = (t.textContent || '').toLowerCase();
+            if (/review|post review|submit review/.test(label)) localStorage.setItem('radhwan_reviews_submitted', '1');
+            if (/play|game|score|start/.test(label)) localStorage.setItem('radhwan_game_played', '1');
+            if (/music|song|audio/.test(label)) localStorage.setItem('radhwan_music_played', '1');
+            if (/story|about/.test(label)) localStorage.setItem('radhwan_story_read', '1');
+        });
+    })();
     </script>
 </body>
 </html>
