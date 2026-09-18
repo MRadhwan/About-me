@@ -1701,6 +1701,56 @@
         }
         .unlocked .badge-status { color: var(--green-accent); background: rgba(74,222,128,.1); }
         .locked .badge-status { color: var(--text-muted); background: rgba(255,255,255,.06); }
+    
+        /* Hidden Football Life secret */
+        .football-secret-corner {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 50%;
+            background: transparent;
+            color: rgba(255,255,255,.12);
+            cursor: pointer;
+            z-index: 5;
+            font-size: 18px;
+            padding: 0;
+            transition: color .2s ease, transform .2s ease;
+        }
+        .football-secret-corner:hover, .football-secret-corner:focus-visible {
+            color: var(--accent);
+            transform: scale(1.12);
+            outline: none;
+        }
+        #football { position: relative; }
+        .secret-page-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 22px;
+            background: rgba(3,6,18,.92);
+            backdrop-filter: blur(10px);
+        }
+        .secret-page-overlay.show { display: flex; }
+        .secret-page-card {
+            width: min(680px, 100%);
+            border: 1px solid rgba(72,220,255,.45);
+            border-radius: 26px;
+            padding: 34px 24px;
+            text-align: center;
+            background: linear-gradient(145deg, rgba(18,28,55,.98), rgba(10,14,30,.98));
+            box-shadow: 0 24px 80px rgba(0,0,0,.5);
+        }
+        .secret-page-card .secret-big { font-size: 56px; margin-bottom: 8px; }
+        .secret-page-card h2 { margin: 8px 0 12px; }
+        .secret-page-card p { color: var(--text-muted); line-height: 1.7; }
+        .secret-close { margin-top: 18px; }
+
     </style>
 </head>
 <body>
@@ -2034,6 +2084,9 @@
             Now that I lived and had my moments in football, I decided now that I am growing up, I have responsibilities and work to do... and can't always be out there giving time to my favorite sport. Do I regret that I wasted my time? Absolutely not. Indeed, I wish I could go back and congratulate myself for choosing this sport and making me who I am today. All I have for this game and for the people I played it with is respect and love... which stays no matter how far I go from them or the game. Whenever I get the time, I will always come back to this exact moment and push through everything just like I did, and score for myself and for a future.</p>
 
             <p style="color: var(--accent); font-weight: 600; text-transform: uppercase;">"NEVER LET YOURSELF DOWN. IF YOU DO, YOU NEVER SEE WHAT'S AHEAD."</p>
+
+            <!-- Tiny hidden secret in the corner. -->
+            <button class="football-secret-corner" type="button" aria-label="Hidden football secret" onclick="openFootballSecret()">⚽</button>
         </section>
 
         <!-- GAME LIFE -->
@@ -2179,11 +2232,10 @@
 
                 <div class="extra-card">
                     <h3>🕵️ Secret Finder</h3>
-                    <p>There is a hidden surprise somewhere on this page. Try the button if you think you've found it.</p>
-                    <button class="extra-btn" onclick="unlockSecret()">🔓 Check for Secret</button>
+                    <p>The secret is <strong>not</strong> in Fun Zone. Somewhere in <strong>Football Life</strong>, there is a tiny hidden corner. 👀</p>
+                    <button class="extra-btn" onclick="findSecretHint()">🔎 Give Me a Hint</button>
                     <div id="secretMessage" class="secret-message">
-                        🎉 <strong>SECRET FOUND!</strong><br>
-                        You found the hidden surprise. Your Explorer skills are officially suspicious. 😂
+                        👀 Look around the corners of the Football Life page...
                     </div>
                 </div>
 
@@ -3485,7 +3537,7 @@
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '1.6.0';
+        const SITE_VERSION = '2.0.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
@@ -3632,12 +3684,30 @@
             toast('🎲 Random fact unlocked!');
         };
 
-        window.unlockSecret = function () {
+        window.findSecretHint = function () {
             const secret = document.getElementById('secretMessage');
             if (secret) secret.classList.add('show');
+            const football = document.getElementById('football');
+            if (football) football.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            toast('🔎 Hint: check the corners of Football Life...');
+        };
+
+        window.openFootballSecret = function () {
+            const page = document.getElementById('footballSecretPage');
+            if (page) page.classList.add('show');
             localStorage.setItem('radhwan_secret_found', '1');
             toast('🕵️ Secret Finder badge unlocked!');
         };
+
+        window.closeFootballSecret = function () {
+            const page = document.getElementById('footballSecretPage');
+            if (page) page.classList.remove('show');
+        };
+
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') window.closeFootballSecret();
+        });
 
         window.answerQuiz = function (question, correct) {
             const result = document.getElementById('quizResult');
@@ -3758,6 +3828,17 @@
         });
     })();
     </script>
+
+    <div id="footballSecretPage" class="secret-page-overlay" role="dialog" aria-modal="true" aria-labelledby="secretPageTitle">
+        <div class="secret-page-card">
+            <div class="secret-big">👀</div>
+            <h2 id="secretPageTitle">Well.. well... look who found me.</h2>
+            <p>You actually found the tiny secret hiding in Football Life. 😂</p>
+            <p>Explorer badge unlocked. You weren't supposed to find that so easily. 🏆</p>
+            <button class="extra-btn secret-close" type="button" onclick="closeFootballSecret()">← Back to the site</button>
+        </div>
+    </div>
+
 </body>
 </html>
 
