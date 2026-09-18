@@ -1327,6 +1327,11 @@
             border: 1px solid var(--border-color) !important;
         }
 
+        .review-admin-panel .admin-key-row input[type="email"],
+        .review-admin-panel .admin-key-row input[type="password"] {
+            flex: 1 1 220px;
+            min-width: 0;
+        }
     </style>
 </head>
 <body>
@@ -1760,11 +1765,13 @@
 
             <div class="review-admin-panel">
                 <h3><i class="fas fa-inbox"></i> Owner Review Inbox</h3>
-                <small>Reviews are saved locally immediately. To make them visible to you from other visitors/devices, connect the Firebase configuration in the script below.</small>
-                <div class="admin-key-row">
-                    <input type="password" id="reviewAdminKey" placeholder="Owner key">
-                    <button class="submit-btn" style="padding:11px 15px;" onclick="toggleOwnerReviews()">View My Inbox</button>
+                <small>Private inbox. Visitors can submit reviews, but only the authenticated owner account can read them.</small>
+                <div class="admin-key-row" style="flex-wrap:wrap;">
+                    <input type="email" id="reviewOwnerEmail" placeholder="Owner email" autocomplete="username" value="radrasgamingchannel13@gmail.com">
+                    <input type="password" id="reviewOwnerPassword" placeholder="Firebase Auth password" autocomplete="current-password">
+                    <button class="submit-btn" style="padding:11px 15px;" onclick="toggleOwnerReviews()">Sign In &amp; View Inbox</button>
                 </div>
+                <small id="reviewAuthStatus" style="display:block;margin-top:8px;"></small>
                 <div id="adminReviewList" class="admin-review-list" style="display:none;"></div>
             </div>
         </section>
@@ -2739,23 +2746,26 @@
             }
         }
 
-        /* REVIEWS — local inbox + optional Firebase sync */
+        /* REVIEWS — Firebase Realtime Database + Firebase Authentication */
         const REVIEW_STORAGE_KEY = 'radhwan_reviews_v2';
-        const OWNER_REVIEW_KEY = 'RADHWAN-OWNER-2026';
+        const OWNER_EMAIL = 'radrasgamingchannel13@gmail.com';
 
-        // Paste your Firebase Web App config here to sync reviews across visitors/devices.
-        // The site still works locally when this is left empty.
-        const FIREBASE_CONFIG = null;
-        // Example:
-        // const FIREBASE_CONFIG = {
-        //   apiKey: '...',
-        //   authDomain: 'your-project.firebaseapp.com',
-        //   databaseURL: 'https://your-project-default-rtdb.firebaseio.com',
-        //   projectId: 'your-project',
-        //   storageBucket: 'your-project.appspot.com',
-        //   messagingSenderId: '...',
-        //   appId: '...'
-        // };
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyAJqrkhFkJ6SYOk3fjy8Chkwup9axBJpRE",
+            authDomain: "radhwan-website.firebaseapp.com",
+            projectId: "radhwan-website",
+            storageBucket: "radhwan-website.firebasestorage.app",
+            messagingSenderId: "382137843696",
+            appId: "1:382137843696:web:2ee8f84a6182fff73d2735",
+            measurementId: "G-VX6J1Q3K8S",
+            databaseURL: "https://radhwan-website-default-rtdb.firebaseio.com/"
+        };
+
+        // This page uses Firebase's REST APIs, so no Firebase SDK is required.
+        // IMPORTANT: Firebase API keys are identifiers, not passwords. Never put an
+        // account password, service-account key, or private key in this HTML.
+        let visitorIdToken = null;
+        let ownerIdToken = null;
 
         function getLocalReviews() {
             try { return JSON.parse(localStorage.getItem(REVIEW_STORAGE_KEY) || '[]'); }
@@ -2777,25 +2787,53 @@
             reviews.forEach(review => {
                 const card = document.createElement('div');
                 card.className = 'review-card';
+                const safeRating = Math.min(5, Math.max(1, Number(review.rating) || 5));
                 card.innerHTML = `<strong>${escapeReview(review.name)}</strong>
-                    <div style="color:#facc15;margin:5px 0;">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div>
+                    <div style="color:#facc15;margin:5px 0;">${'★'.repeat(safeRating)}${'☆'.repeat(5-safeRating)}</div>
                     <p>${escapeReview(review.text)}</p>
                     <small style="color:var(--text-muted);">${escapeReview(review.date)}</small>`;
                 container.appendChild(card);
             });
         }
 
+        async function firebaseAuth(endpoint, payload) {
+            const response = await fetch(`https://identitytoolkit.googleapis.com/v1/${endpoint}?key=${encodeURIComponent(FIREBASE_CONFIG.apiKey)}`, {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                const code = data?.error?.message || 'AUTHENTICATION_FAILED';
+                throw new Error(code);
+            }
+            return data;
+        }
+
+        async function ensureAnonymousAuth() {
+            if (visitorIdToken) return visitorIdToken;
+            const data = await firebaseAuth('accounts:signUp', {returnSecureToken:true});
+            visitorIdToken = data.idToken;
+            return visitorIdToken;
+        }
+
         async function syncReviewToFirebase(review) {
-            if (!FIREBASE_CONFIG || !FIREBASE_CONFIG.databaseURL) return;
             try {
+                const token = await ensureAnonymousAuth();
                 const base = FIREBASE_CONFIG.databaseURL.replace(/\/$/,'');
-                await fetch(`${base}/reviews.json`, {
+                const response = await fetch(`${base}/reviews.json?auth=${encodeURIComponent(token)}`, {
                     method:'POST',
                     headers:{'Content-Type':'application/json'},
                     body:JSON.stringify(review)
                 });
+                if (!response.ok) {
+                    const data = await response.json().catch(() => ({}));
+                    throw new Error(data?.error || `HTTP_${response.status}`);
+                }
+                return true;
             } catch(e) {
                 console.warn('Review sync unavailable:', e);
+                return false;
             }
         }
 
@@ -2806,59 +2844,105 @@
             const name = nameInput.value.trim();
             const reviewText = textInput.value.trim();
             const rating = Number(ratingInput.value) || 5;
-            if (!name || !reviewText) {
-                return;
-            }
+            if (!name || !reviewText) return;
+            if (name.length > 80 || reviewText.length > 1000) return;
 
             const review = {
                 name,
                 text: reviewText,
                 rating: Math.min(5, Math.max(1, rating)),
-                date: new Date().toLocaleString()
+                date: new Date().toLocaleString(),
+                createdAt: Date.now()
             };
+
+            // Keep the visitor's own review visible locally, while Firebase remains
+            // private: only the owner account is allowed to read the database.
             const reviews = getLocalReviews();
             reviews.unshift(review);
             saveLocalReviews(reviews);
             renderReviews(reviews);
-            await syncReviewToFirebase(review);
+
+            const synced = await syncReviewToFirebase(review);
+            if (!synced) {
+                alert('The review was saved on this device, but could not be sent to the owner inbox. Please try again when online.');
+            }
 
             nameInput.value = '';
             textInput.value = '';
             ratingInput.value = '5';
         }
 
-        async function loadOwnerReviews() {
-            const local = getLocalReviews();
-            let reviews = local;
-            if (FIREBASE_CONFIG && FIREBASE_CONFIG.databaseURL) {
-                try {
-                    const base = FIREBASE_CONFIG.databaseURL.replace(/\/$/,'');
-                    const res = await fetch(`${base}/reviews.json`);
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data) reviews = Object.values(data).sort((a,b) => String(b.date).localeCompare(String(a.date)));
-                    }
-                } catch(e) {}
+        function setReviewAuthStatus(message, isError = false) {
+            const el = document.getElementById('reviewAuthStatus');
+            if (!el) return;
+            el.textContent = message;
+            el.style.color = isError ? '#f87171' : 'var(--text-muted)';
+        }
+
+        function authErrorMessage(error) {
+            const code = String(error?.message || '');
+            const messages = {
+                INVALID_LOGIN_CREDENTIALS: 'Incorrect owner email or password.',
+                EMAIL_NOT_FOUND: 'Incorrect owner email or password.',
+                INVALID_PASSWORD: 'Incorrect owner email or password.',
+                USER_DISABLED: 'This Firebase Authentication account is disabled.',
+                OPERATION_NOT_ALLOWED: 'Email/Password sign-in is not enabled in Firebase Authentication.',
+                TOO_MANY_ATTEMPTS_TRY_LATER: 'Too many attempts. Please wait and try again.'
+            };
+            return messages[code] || 'Owner sign-in failed. Check Firebase Authentication and try again.';
+        }
+
+        async function ownerSignIn() {
+            const emailInput = document.getElementById('reviewOwnerEmail');
+            const passwordInput = document.getElementById('reviewOwnerPassword');
+            const email = emailInput.value.trim().toLowerCase();
+            const password = passwordInput.value;
+            if (email !== OWNER_EMAIL) {
+                throw new Error('OWNER_EMAIL_MISMATCH');
             }
+            if (!password) throw new Error('MISSING_PASSWORD');
+
+            const data = await firebaseAuth('accounts:signInWithPassword', {
+                email,
+                password,
+                returnSecureToken:true
+            });
+            ownerIdToken = data.idToken;
+            return ownerIdToken;
+        }
+
+        async function loadOwnerReviews() {
+            if (!ownerIdToken) throw new Error('NOT_AUTHENTICATED');
+            const base = FIREBASE_CONFIG.databaseURL.replace(/\/$/,'');
+            const response = await fetch(`${base}/reviews.json?auth=${encodeURIComponent(ownerIdToken)}`);
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data?.error || `HTTP_${response.status}`);
+
+            const reviews = data ? Object.entries(data).map(([id, review]) => ({...review, id})) : [];
+            reviews.sort((a,b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
             const list = document.getElementById('adminReviewList');
             list.innerHTML = reviews.length ? reviews.map(r => `
                 <div class="admin-review-item">
-                    <div class="meta">${escapeReview(r.name)} · ${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)} · ${escapeReview(r.date)}</div>
+                    <div class="meta">${escapeReview(r.name)} · ${'★'.repeat(Math.min(5, Math.max(1, Number(r.rating)||5)))}${'☆'.repeat(5-Math.min(5, Math.max(1, Number(r.rating)||5)))} · ${escapeReview(r.date)}</div>
                     <div>${escapeReview(r.text)}</div>
                 </div>`).join('') : '<small>No reviews found.</small>';
         }
 
         async function toggleOwnerReviews() {
-            const key = document.getElementById('reviewAdminKey').value;
             const panel = document.getElementById('adminReviewList');
-            if (key !== OWNER_REVIEW_KEY) {
-                panel.style.display = 'block';
-                panel.innerHTML = '<small style="color:#f87171;">Incorrect owner key.</small>';
-                return;
-            }
             panel.style.display = 'block';
-            panel.innerHTML = '<small>Loading reviews…</small>';
-            await loadOwnerReviews();
+            panel.innerHTML = '<small>Signing in and loading private reviews…</small>';
+            setReviewAuthStatus('Authenticating…');
+            try {
+                await ownerSignIn();
+                await loadOwnerReviews();
+                setReviewAuthStatus('Owner authenticated. Reviews loaded from Firebase.');
+                document.getElementById('reviewOwnerPassword').value = '';
+            } catch(e) {
+                console.error(e);
+                panel.innerHTML = '<small style="color:#f87171;">Could not load the private inbox.</small>';
+                setReviewAuthStatus(authErrorMessage(e), true);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => renderReviews());
@@ -2868,7 +2952,7 @@
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '1.1.0';
+        const SITE_VERSION = '1.2.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
@@ -2988,4 +3072,5 @@
     </script>
 </body>
 </html>
+
 
