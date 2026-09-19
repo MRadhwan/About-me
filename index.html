@@ -2598,6 +2598,96 @@
     }
 }
 </style>
+
+<style>
+/* DESKTOP ARCADE LAYOUT FIX
+   Keeps normal portfolio pages compact while giving the Mini Games page
+   enough horizontal space so the six game tabs and game boards do not wrap
+   awkwardly on desktop screens. Mobile rules below 700px remain unchanged. */
+@media (min-width: 701px) {
+    main {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px 24px;
+    }
+
+    .page-section {
+        width: 100%;
+        max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Mini Games gets a wider desktop canvas instead of being squeezed into
+       the same narrow width used by the reading/portfolio pages. */
+    #minigames {
+        max-width: 1040px;
+        padding: 50px 48px;
+    }
+
+    #minigames .game-nav-tabs {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px;
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+    #minigames .game-tab-btn {
+        width: 100%;
+        min-width: 0;
+        padding: 12px 8px;
+        white-space: nowrap;
+        font-size: 13px;
+    }
+
+    #minigames .game-box {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 32px 36px;
+    }
+
+    #minigames .memory-arena {
+        width: min(100%, 760px);
+        margin: 20px auto;
+        gap: 12px;
+    }
+
+    #minigames .memory-tile {
+        min-width: 0;
+        font-size: 28px;
+    }
+
+    #minigames .reaction-arena {
+        width: min(100%, 800px);
+        margin: 20px auto;
+    }
+
+    #minigames .pitch-container,
+    #minigames .sprint-track,
+    #minigames .direction-controls {
+        width: min(100%, 800px);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #minigames .sprint-tap-btn,
+    #minigames .juggle-tap-btn,
+    #minigames .reaction-start {
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Very wide desktop monitors: prevent the arcade card from becoming oversized. */
+@media (min-width: 1200px) {
+    #minigames { max-width: 1080px; }
+}
+</style>
+
 </head>
 <body>
 
@@ -4633,7 +4723,7 @@
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '3.0.0';
+        const SITE_VERSION = '4.0.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
