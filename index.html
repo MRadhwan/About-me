@@ -276,14 +276,81 @@
         }
         .terminal-body {
             flex: 1;
-            padding: 20px;
+            padding: 18px 20px;
             overflow-y: auto;
             color: var(--green-accent);
-            font-size: 20px;
-            line-height: 1.4;
+            font-size: 18px;
+            line-height: 1.35;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 7px;
+        }
+        .terminal-help {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 2px 0 6px;
+        }
+        .terminal-help-title {
+            font-size: 14px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #d9ffe7;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(74,222,128,.22);
+        }
+        .terminal-help-group {
+            padding: 10px 12px;
+            border: 1px solid rgba(74,222,128,.16);
+            border-radius: 10px;
+            background: rgba(74,222,128,.035);
+        }
+        .terminal-help-label {
+            display: block;
+            color: rgba(220,255,231,.72);
+            font-size: 13px;
+            margin-bottom: 6px;
+            letter-spacing: .6px;
+        }
+        .terminal-help-commands {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .terminal-help-cmd {
+            display: inline-block;
+            padding: 6px 10px;
+            border: 1px solid rgba(74,222,128,.28);
+            border-radius: 8px;
+            background: rgba(0,0,0,.25);
+            color: var(--green-accent);
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .terminal-help-cmd:hover, .terminal-help-cmd:focus-visible {
+            background: rgba(74,222,128,.12);
+            border-color: rgba(74,222,128,.65);
+            box-shadow: 0 0 12px rgba(74,222,128,.12);
+            outline: none;
+        }
+        .terminal-help-cmd:active { transform: scale(.96); }
+        .terminal-help-tip {
+            padding: 9px 11px;
+            border-left: 3px solid var(--green-accent);
+            background: rgba(74,222,128,.05);
+            color: rgba(220,255,231,.8);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        @media (max-width: 600px) {
+            .terminal-body { font-size: 16px; padding: 15px 14px; }
+            .terminal-help { gap: 9px; }
+            .terminal-help-group { padding: 9px 10px; }
+            .terminal-help-cmd { font-size: 14px; padding: 3px 7px; }
+            .terminal-help-label, .terminal-help-tip { font-size: 12px; }
         }
         .terminal-input-row {
             display: flex;
@@ -1751,6 +1818,318 @@
         .secret-page-card p { color: var(--text-muted); line-height: 1.7; }
         .secret-close { margin-top: 18px; }
 
+
+        /* TERMINAL DRAMA WARNING */
+        .terminal-warning {
+            position: fixed; inset: 0; z-index: 100001; display: none;
+            align-items: center; justify-content: center; padding: 20px;
+            background: rgba(8, 0, 0, .82); backdrop-filter: blur(8px);
+        }
+        .terminal-warning.show { display:flex; animation: warningFade .2s ease; }
+        .terminal-warning-card {
+            width:min(560px,100%); text-align:center; padding:34px 24px;
+            border:2px solid #ff4545; border-radius:24px;
+            background:linear-gradient(145deg,#2a0909,#100507);
+            box-shadow:0 0 70px rgba(255,50,50,.35);
+            animation: warningShake .42s ease;
+        }
+        .warning-icon { font-size:64px; margin-bottom:8px; animation: warningPulse 1s infinite; }
+        .terminal-warning-card h2 { margin:8px 0 10px; font-size:clamp(26px,6vw,42px); }
+        .terminal-warning-card p { color:#ffdede; line-height:1.6; margin:0 0 20px; }
+        .warning-close { border:1px solid #ff6666; background:#ff3030; color:#fff; border-radius:12px; padding:10px 18px; cursor:pointer; font-weight:800; }
+        @keyframes warningFade { from{opacity:0} to{opacity:1} }
+        @keyframes warningShake { 0%,100%{transform:translateX(0) rotate(0)} 20%{transform:translateX(-8px) rotate(-1deg)} 40%{transform:translateX(8px) rotate(1deg)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+        @keyframes warningPulse { 50%{transform:scale(1.12)} }
+
+
+
+        /* DANGER / HEARTBREAK MODE — clean circular control */
+        #dangerButton {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 99990;
+            width: 62px;
+            height: 62px;
+            padding: 0;
+            border: 1.5px solid rgba(255, 92, 108, .72);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(14, 8, 12, .88);
+            color: #ff6b7d;
+            font-size: 26px;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 8px 28px rgba(0,0,0,.32), 0 0 0 1px rgba(255,70,90,.06), 0 0 22px rgba(255,45,75,.14);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #dangerButton::before {
+            content: '⚠';
+            transform: translateY(-1px);
+            font-size: 27px;
+            font-weight: 900;
+            text-shadow: 0 0 12px rgba(255,70,90,.25);
+        }
+        #dangerButton::after {
+            content: none;
+        }
+        #dangerButton:hover, #dangerButton:focus-visible {
+            transform: scale(1.06);
+            border-color: rgba(255, 112, 125, .95);
+            background: rgba(28, 9, 15, .94);
+            box-shadow: 0 10px 32px rgba(0,0,0,.38), 0 0 0 6px rgba(255,50,80,.06), 0 0 30px rgba(255,40,80,.22);
+            outline: none;
+        }
+        #dangerButton:active { transform: scale(.94); }
+        #dangerButton[aria-pressed="true"] {
+            border-color: rgba(255, 70, 90, .95);
+            color: #ff8291;
+        }
+        body.heartbreak-mode #dangerButton { animation: dangerPulse 1.5s ease-in-out infinite; }
+        @keyframes dangerPulse {
+            50% { box-shadow: 0 10px 32px rgba(0,0,0,.38), 0 0 0 7px rgba(255,50,80,.07), 0 0 32px rgba(255,40,80,.25); }
+        }
+
+        #pixelBreakLayer {
+            position: fixed;
+            inset: 0;
+            z-index: 99970;
+            pointer-events: none;
+            opacity: 0;
+            overflow: hidden;
+            transition: opacity .3s ease;
+            background:
+                radial-gradient(circle at 50% 50%, transparent 42%, rgba(255,45,70,.05) 70%, rgba(10,0,5,.26) 100%);
+        }
+        body.heartbreak-mode #pixelBreakLayer { opacity: min(.86, calc(var(--break-level, 0) / 14)); }
+
+        .break-fracture {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+        .break-fracture line,
+        .break-fracture polyline {
+            fill: none;
+            stroke: rgba(235,240,255,.72);
+            stroke-width: 1.25;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 0 3px rgba(255,255,255,.18));
+        }
+        .break-fracture .fracture-shadow {
+            stroke: rgba(255,55,80,.26);
+            stroke-width: 3.5;
+            filter: none;
+        }
+        .break-impact {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border: 1px solid rgba(255,255,255,.55);
+            border-radius: 50%;
+            transform: translate(-50%,-50%) scale(.2);
+            opacity: 0;
+            box-shadow: 0 0 18px rgba(255,70,90,.22);
+            animation: breakImpact .55s ease-out forwards;
+        }
+        @keyframes breakImpact {
+            25% { opacity: .9; }
+            100% { opacity: 0; transform: translate(-50%,-50%) scale(7); }
+        }
+        body.heartbreak-mode .site-break-shake {
+            animation: breakJitter calc(.42s - min(var(--break-level, 0), 10) * .018s) infinite alternate;
+        }
+        @keyframes breakJitter {
+            from { filter: none; transform: translate(0,0); }
+            to { filter: contrast(1.012) saturate(1.03); transform: translate(.5px,-.4px); }
+        }
+
+        #dangerWarning {
+            position: fixed;
+            left: 50%;
+            top: 15%;
+            transform: translateX(-50%) translateY(-14px);
+            z-index: 100002;
+            opacity: 0;
+            pointer-events: none;
+            padding: 16px 22px;
+            border: 1px solid rgba(255,100,120,.68);
+            border-radius: 18px;
+            background: rgba(14,5,9,.9);
+            color: #fff;
+            text-align: center;
+            box-shadow: 0 18px 60px rgba(0,0,0,.34), 0 0 34px rgba(255,50,80,.18);
+            backdrop-filter: blur(12px);
+            transition: opacity .3s ease, transform .3s ease;
+            width: min(440px, calc(100% - 34px));
+        }
+        #dangerWarning.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        #dangerWarning strong { display:block; font-size: clamp(17px, 5vw, 25px); margin-bottom: 5px; }
+        #dangerWarning span { color:#ffd5dc; font-size:13px; }
+
+        #siteBrokenOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100005;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(2,2,5,.76);
+            backdrop-filter: blur(10px);
+        }
+        #siteBrokenOverlay.show { display:flex; }
+        .broken-card {
+            width: min(560px,100%);
+            padding: 34px 24px;
+            text-align:center;
+            border: 1px solid rgba(255,90,110,.72);
+            border-radius: 26px;
+            background: linear-gradient(145deg, rgba(25,7,13,.97), rgba(7,7,11,.97));
+            box-shadow: 0 24px 90px rgba(0,0,0,.55), 0 0 60px rgba(255,40,70,.2);
+        }
+        .broken-icon { font-size: 56px; margin-bottom: 8px; }
+        .broken-card h2 { margin: 8px 0 10px; font-size: clamp(25px, 6vw, 40px); }
+        .broken-card p { color:#ffcbd3; line-height:1.65; margin-bottom:20px; }
+        .repair-btn { border:1px solid #ff687c; background:#ff3e5d; color:#fff; border-radius:12px; padding:11px 18px; cursor:pointer; font-weight:900; }
+
+        @media (max-width: 600px) {
+            #dangerButton { right: 12px; bottom: 14px; width: 60px; height: 60px; font-size: 25px; }
+        }
+
+    
+
+        /* SARAH SECRET MODE */
+        body.sarah-mode {
+            --bg-color: #100c18;
+            --card-bg: rgba(35, 25, 48, 0.55);
+            --border-color: rgba(255, 255, 255, 0.12);
+            --text-main: #fff9ff;
+            --text-muted: #c7b8cc;
+        }
+        body.sarah-mode[data-sarah-theme="singing"] { --accent:#e879f9; --accent-glow:rgba(232,121,249,.38); --secondary:#a78bfa; --pink-accent:#fb7185; --pink-glow:rgba(251,113,133,.34); }
+        body.sarah-mode[data-sarah-theme="photography"] { --accent:#fb923c; --accent-glow:rgba(251,146,60,.38); --secondary:#fbbf24; --pink-accent:#f59e0b; --pink-glow:rgba(245,158,11,.28); }
+        body.sarah-mode[data-sarah-theme="reading"] { --accent:#f59e0b; --accent-glow:rgba(245,158,11,.34); --secondary:#d97706; --pink-accent:#fde68a; --pink-glow:rgba(253,230,138,.25); --bg-color:#17120b; }
+        body.sarah-mode[data-sarah-theme="travelling"] { --accent:#2dd4bf; --accent-glow:rgba(45,212,191,.38); --secondary:#38bdf8; --pink-accent:#60a5fa; --pink-glow:rgba(96,165,230,.28); --bg-color:#07151a; }
+        body.sarah-mode {
+            background-image: radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--accent) 10%, transparent) 0, transparent 32%), radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--secondary) 8%, transparent) 0, transparent 34%);
+            transition: background-color .7s ease, color .5s ease, background-image .7s ease;
+        }
+
+        /* Each Sarah vibe gets its own atmosphere, not just a colour swap. */
+        body.sarah-mode::before {
+            content:""; position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.9;
+            transition:opacity .7s ease, background .7s ease;
+        }
+        body.sarah-mode[data-sarah-theme="singing"]::before {
+            opacity:.55;
+            background:radial-gradient(circle at 15% 18%, rgba(232,121,249,.16), transparent 25%),
+                       radial-gradient(circle at 85% 75%, rgba(167,139,250,.13), transparent 30%),
+                       repeating-linear-gradient(90deg, transparent 0 52px, rgba(255,255,255,.025) 53px 54px);
+        }
+        body.sarah-mode[data-sarah-theme="photography"]::before {
+            opacity:.7;
+            background:radial-gradient(circle at 50% 42%, transparent 0 30%, rgba(0,0,0,.22) 78%, rgba(0,0,0,.55) 100%),
+                       linear-gradient(135deg, rgba(251,146,60,.08), transparent 42%, rgba(251,191,36,.08));
+        }
+        body.sarah-mode[data-sarah-theme="reading"]::before {
+            opacity:.5;
+            background:repeating-linear-gradient(0deg, rgba(245,158,11,.025) 0 1px, transparent 1px 5px),
+                       radial-gradient(circle at 50% 20%, rgba(245,158,11,.13), transparent 38%);
+        }
+        body.sarah-mode[data-sarah-theme="travelling"]::before {
+            opacity:.6;
+            background:linear-gradient(135deg, rgba(45,212,191,.08), transparent 35%, rgba(56,189,248,.10)),
+                       radial-gradient(circle at 78% 18%, rgba(96,165,250,.16), transparent 28%);
+        }
+        /* Keep the original site layout/positioning intact in Sarah Mode. */
+        body.sarah-mode::before { z-index:0; }
+        body.sarah-mode #sarahThemePanel, body.sarah-mode #sarahModeToast { z-index:48001; }
+
+        /* Tiny theme-specific details on the page. */
+        body.sarah-mode[data-sarah-theme="singing"] .section-title::after { content:'  ♪ ♫'; color:var(--accent); font-size:.55em; vertical-align:middle; }
+        body.sarah-mode[data-sarah-theme="photography"] .section-title::after { content:'  ◉'; color:var(--accent); font-size:.55em; vertical-align:middle; }
+        body.sarah-mode[data-sarah-theme="reading"] .section-title::after { content:'  ✦'; color:var(--accent); font-size:.55em; vertical-align:middle; }
+        body.sarah-mode[data-sarah-theme="travelling"] .section-title::after { content:'  ✈'; color:var(--accent); font-size:.55em; vertical-align:middle; }
+        body.sarah-mode .section, body.sarah-mode .card, body.sarah-mode .feature-card, body.sarah-mode .glass-card,
+        body.sarah-mode .about-card, body.sarah-mode .fun-card, body.sarah-mode .review-card {
+            transition: background .5s ease, border-color .5s ease, box-shadow .5s ease;
+        }
+        body.sarah-mode .section-title, body.sarah-mode h1, body.sarah-mode h2, body.sarah-mode h3 { text-shadow: 0 0 18px var(--accent-glow); }
+        body.sarah-mode .sarah-theme-panel {
+            box-shadow: 0 14px 45px rgba(0,0,0,.35), 0 0 28px var(--accent-glow);
+        }
+        .sarah-theme-panel {
+            position: fixed; left: 18px; bottom: 18px; z-index: 48000;
+            display:none; align-items:center; gap:7px; padding:9px;
+            border:1px solid rgba(255,255,255,.13); border-radius:18px;
+            background:rgba(8,10,16,.78); backdrop-filter:blur(18px);
+            box-shadow:0 10px 35px rgba(0,0,0,.28); transition:all .4s ease;
+        }
+        body.sarah-mode .sarah-theme-panel { display:flex; }
+        .sarah-theme-panel::before { content:'Sarah’s themes'; color:rgba(255,255,255,.68); font-size:11px; font-weight:700; margin:0 4px 0 5px; white-space:nowrap; }
+        .sarah-exit-btn {
+            width:34px; height:34px; margin-left:2px; border-radius:50%; border:1px solid rgba(255,255,255,.18);
+            background:rgba(255,255,255,.04); color:rgba(255,255,255,.78); cursor:pointer; font-size:15px;
+            display:grid; place-items:center; transition:transform .2s ease, background .2s ease, border-color .2s ease;
+        }
+        .sarah-exit-btn:hover { transform:scale(1.06); background:rgba(255,70,90,.12); border-color:rgba(255,100,120,.55); color:#fff; }
+        .sarah-theme-btn {
+            width:38px; height:38px; border-radius:50%; border:1px solid rgba(255,255,255,.15);
+            background:rgba(255,255,255,.05); color:#fff; cursor:pointer; font-size:16px;
+            display:grid; place-items:center; transition:transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+        }
+        .sarah-theme-btn:hover { transform:translateY(-2px) scale(1.05); }
+        .sarah-theme-btn.active { background:color-mix(in srgb, var(--accent) 22%, transparent); border-color:var(--accent); box-shadow:0 0 18px var(--accent-glow); }
+        .sarah-mode-toast {
+            position:fixed; top:18px; left:50%; transform:translateX(-50%) translateY(-20px);
+            z-index:48001; opacity:0; pointer-events:none; padding:10px 15px; border-radius:999px;
+            background:rgba(8,10,16,.82); border:1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+            color:#fff; backdrop-filter:blur(15px); font-size:13px; font-weight:700; transition:.35s ease;
+        }
+        .sarah-mode-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+        @media (max-width:600px) {
+            .sarah-theme-panel { left:50%; bottom:12px; transform:translateX(-50%); padding:7px; gap:5px; }
+            .sarah-theme-panel::before { display:none; }
+            .sarah-theme-btn { width:40px; height:40px; }
+        }
+
+
+        /* SARAH VIBE CURSOR / TOUCH ICON */
+        .sarah-vibe-cursor {
+            position: fixed !important; left: 0; top: 0; z-index: 2147483647 !important;
+            width: 50px; height: 50px; border-radius: 50%;
+            display: grid !important; place-items: center; pointer-events: none !important;
+            visibility: hidden; opacity: 0; transform: translate(-50%, -50%) scale(.72);
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+            backdrop-filter: none;
+            transition: opacity .12s ease, transform .12s ease, left .03s linear, top .03s linear;
+            font-size: 26px; line-height: 1; user-select:none; -webkit-user-select:none;
+        }
+        .sarah-vibe-cursor.show { visibility: visible !important; opacity: 1 !important; transform: translate(-50%, -50%) scale(1); }
+        .sarah-vibe-cursor.touch { animation: sarahTouchPop .95s cubic-bezier(.2,.8,.2,1) forwards; }
+        @keyframes sarahTouchPop {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(.65); }
+            35% { opacity: 1; transform: translate(-50%, -50%) scale(1.28); }
+            70% { opacity: .92; transform: translate(-50%, -50%) scale(1.05); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+        }
+        body.sarah-mode { cursor: none; }
+        body.sarah-mode button, body.sarah-mode a, body.sarah-mode input, body.sarah-mode textarea, body.sarah-mode select { cursor: none; }
+        @media (hover:none), (pointer:coarse) {
+            body.sarah-mode { cursor: auto; }
+            body.sarah-mode button, body.sarah-mode a, body.sarah-mode input, body.sarah-mode textarea, body.sarah-mode select { cursor: auto; }
+        }
+
     </style>
 </head>
 <body>
@@ -1763,7 +2142,7 @@
             </div>
             <div class="arcade-title">SYSTEM LOCKED</div>
             <div class="passcode-box">
-                <input type="password" id="passInput" class="passcode-input" maxlength="4" placeholder="••••" autocomplete="off" autofocus>
+                <input type="password" id="passInput" class="passcode-input" maxlength="4" inputmode="numeric" placeholder="••••" autocomplete="off" autofocus>
                 <div id="errorMsg" class="error-msg"></div>
                 <button class="unlock-btn" onclick="verifyPasscode()">
                     <i class="fas fa-key"></i> UNLOCK SYSTEM
@@ -1788,6 +2167,17 @@
                 <span>&gt;</span>
                 <input type="text" id="terminalInput" autocomplete="off" placeholder="type a command...">
             </div>
+        </div>
+    </div>
+
+    <!-- TERMINAL FEELINGS WARNING -->
+    <div id="terminalWarning" class="terminal-warning" onclick="closeTerminalWarning(event)">
+        <div class="terminal-warning-card">
+            <div class="warning-icon">⚠️</div>
+            <h2>WHAT DID I DOO!!!?? 😭</h2>
+            <p>You really typed <strong>"I hate u"</strong> into my terminal...<br>
+            Bro, what did I do to deserve this? 💀</p>
+            <button class="warning-close" onclick="closeTerminalWarning()">I'M SORRY 😭</button>
         </div>
     </div>
 
@@ -2336,15 +2726,21 @@
             }, 300);
         }
 
+        // Reliable passcode submission: Enter works on desktop and mobile keyboards.
+        let passcodeUnlocked = false;
         passInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                verifyPasscode();
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!passcodeUnlocked) verifyPasscode();
             }
-        });
+        }, true);
 
         function verifyPasscode() {
+            if (passcodeUnlocked) return;
             const val = passInput.value.trim();
             if (val === '2008') {
+                passcodeUnlocked = true;
                 errorMsg.textContent = '';
                 triggerShatterEffect(() => {
                     lockScreen.style.display = 'none';
@@ -2417,6 +2813,10 @@
         const vipModal = document.getElementById('vipModal');
         let currentVipName = 'RADHWAN';
         let isSpecialSarahPass = false;
+        let terminalHistory = [];
+        let terminalHistoryIndex = -1;
+        const terminalBoot = Date.now();
+        const terminalCommands = ['help','about','bio','whoami','pwd','ls','date','time','uptime','neofetch','football','gaming','music','food','stats','badges','fact','secret','theme','reviews','echo','fortune','ping','matrix','vip [name]','sudo','hack','clear','history','exit'];
 
         window.addEventListener('keydown', (e) => {
             if (e.key === '`' || e.key === '~') {
@@ -2429,27 +2829,74 @@
         function toggleTerminal(open) {
             if (open) {
                 terminalModal.classList.add('active');
-                terminalInput.focus();
+                setTimeout(() => terminalInput.focus(), 40);
                 if (typeof unlockBadge === 'function') unlockBadge('secret');
-            } else {
-                terminalModal.classList.remove('active');
-            }
+            } else terminalModal.classList.remove('active');
         }
 
-        function closeTerminalOnOutside(e) {
-            if (e.target.id === 'terminalModal') toggleTerminal(false);
+        function closeTerminalOnOutside(e) { if (e.target.id === 'terminalModal') toggleTerminal(false); }
+
+        function runTerminalCommand(rawCmd) {
+            const command = String(rawCmd || '').trim();
+            if (!command) return;
+            terminalHistory.push(command);
+            if (terminalHistory.length > 30) terminalHistory.shift();
+            terminalHistoryIndex = terminalHistory.length;
+            appendTerminalLine(`> ${command}`);
+            processCommand(command.toLowerCase(), command);
+            terminalInput.value = '';
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
         }
+
+        terminalOutput.addEventListener('click', (e) => {
+            const button = e.target.closest('.terminal-help-cmd');
+            if (!button) return;
+            const command = button.dataset.command || button.textContent.trim();
+            const needsArgument = button.dataset.needsArg === 'true';
+
+            if (needsArgument) {
+                // Put the command in the input, but do not execute it yet.
+                terminalInput.value = command;
+                terminalInput.focus();
+                try { terminalInput.setSelectionRange(terminalInput.value.length, terminalInput.value.length); } catch (_) {}
+                return;
+            }
+
+            runTerminalCommand(command);
+            setTimeout(() => terminalInput.focus(), 0);
+        });
 
         terminalInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                const rawCmd = terminalInput.value.trim();
-                const cmd = rawCmd.toLowerCase();
-                appendTerminalLine(`> ${rawCmd}`);
-                processCommand(cmd, rawCmd);
-                terminalInput.value = '';
-                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                e.preventDefault();
+                runTerminalCommand(terminalInput.value);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (terminalHistoryIndex > 0) terminalHistoryIndex--;
+                terminalInput.value = terminalHistory[terminalHistoryIndex] || '';
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (terminalHistoryIndex < terminalHistory.length - 1) terminalHistoryIndex++;
+                else terminalHistoryIndex = terminalHistory.length;
+                terminalInput.value = terminalHistory[terminalHistoryIndex] || '';
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const partial = terminalInput.value.trim().toLowerCase();
+                const match = terminalCommands.find(c => c.startsWith(partial) && c !== partial);
+                if (match) terminalInput.value = match;
             }
         });
+
+        function showTerminalWarning() {
+            const warning = document.getElementById('terminalWarning');
+            warning.classList.add('show');
+            if (typeof unlockBadge === 'function') unlockBadge('secret');
+        }
+        function closeTerminalWarning(e) {
+            if (!e || e.target.id === 'terminalWarning' || e.target.classList.contains('warning-close')) {
+                document.getElementById('terminalWarning').classList.remove('show');
+            }
+        }
 
         function appendTerminalLine(text) {
             const div = document.createElement('div');
@@ -2457,55 +2904,178 @@
             terminalOutput.appendChild(div);
         }
 
+        function appendTerminalHelp() {
+            const wrap = document.createElement('div');
+            wrap.className = 'terminal-help';
+            wrap.innerHTML = `
+                <div class="terminal-help-title">System Commands</div>
+                <div class="terminal-help-group">
+                    <span class="terminal-help-label">📌 Info & navigation</span>
+                    <div class="terminal-help-commands">
+                        ${['about','bio','whoami','pwd','ls','date','time','uptime','neofetch'].map(c => '<button type="button" class="terminal-help-cmd" data-command="' + c + '">' + c + '</button>').join('')}
+                    </div>
+                </div>
+                <div class="terminal-help-group">
+                    <span class="terminal-help-label">⚽ Personal</span>
+                    <div class="terminal-help-commands">
+                        ${['football','gaming','music','food','stats','badges','fact','secret','reviews'].map(c => '<button type="button" class="terminal-help-cmd" data-command="' + c + '">' + c + '</button>').join('')}
+                    </div>
+                </div>
+                <div class="terminal-help-group">
+                    <span class="terminal-help-label">🛠️ Tools & fun</span>
+                    <div class="terminal-help-commands">
+                        ${[['echo [text]','echo ',true],['fortune','fortune',false],['ping [host]','ping ',true],['calc [math]','calc ',true],['history','history',false],['matrix','matrix',false],['vip [name]','vip ',true]].map(([label,command,needsArg]) => '<button type="button" class="terminal-help-cmd" data-command="' + command.replace(/"/g,'&quot;') + '" data-needs-arg="' + needsArg + '">' + label + '</button>').join('')}
+                    </div>
+                </div>
+                <div class="terminal-help-group">
+                    <span class="terminal-help-label">🔐 System</span>
+                    <div class="terminal-help-commands">
+                        ${[['theme','theme dark'],['sudo','sudo'],['hack','hack'],['clear','clear'],['exit','exit']].map(([label,command]) => '<button type="button" class="terminal-help-cmd" data-command="' + command + '">' + label + '</button>').join('')}
+                    </div>
+                </div>
+                <div class="terminal-help-tip">↑/↓ history &nbsp;•&nbsp; Tab autocomplete &nbsp;•&nbsp; <b>&#96;</b> toggle terminal</div>
+            `;
+            terminalOutput.appendChild(wrap);
+        }
+        function terminalRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+        function terminalStats() {
+            const keys = ['radhwan_random_fact_used','radhwan_secret_found','radhwan_quiz_passed','radhwan_reviews_submitted','radhwan_game_played','radhwan_music_played','radhwan_story_read'];
+            return keys.filter(k => localStorage.getItem(k)).length + 1;
+        }
+        function terminalFact() {
+            const facts = [
+                'Favourite footballer: Cristiano Ronaldo.',
+                'Favourite games: eFootball and Resident Evil.',
+                'Favourite food: Mandhi. 🍛',
+                'Song that never gets old: Golden Brown. 🎵',
+                'Football rating: 99. Gaming rating: 95. Mandhi rating: 100.'
+            ];
+            appendTerminalLine(terminalRandom(facts));
+            localStorage.setItem('radhwan_random_fact_used','1');
+        }
+        function terminalCalc(expr) {
+            if (!/^[0-9+\-*/().%\s]+$/.test(expr)) return appendTerminalLine('calc: only basic arithmetic is allowed.');
+            try {
+                const result = Function('"use strict"; return (' + expr + ')')();
+                appendTerminalLine('= ' + result);
+            } catch { appendTerminalLine('calc: invalid expression.'); }
+        }
+
         function processCommand(cmd, rawCmd) {
-            if (cmd === 'help') {
-                appendTerminalLine('Available commands: bio, football, skills, matrix, vip [name], clear, exit');
-            } else if (cmd === 'matrix') {
-                appendTerminalLine('Launching Matrix Digital Rain...');
-                toggleTerminal(false);
-                setTimeout(startMatrixRain, 300);
-            } else if (cmd.startsWith('vip')) {
-                const parts = rawCmd.split(' ');
-                if (parts.length > 1) {
-                    currentVipName = parts.slice(1).join(' ').toUpperCase();
-                } else {
-                    currentVipName = 'GUEST USER';
-                }
-
-                // CHECK FOR SARAH'S SPECIAL PASS
-                if (currentVipName === 'SARAH') {
-                    isSpecialSarahPass = true;
-                    appendTerminalLine(`⭐ Special VIP Access Granted: Welcome, Sarah! ✨`);
-                } else {
-                    isSpecialSarahPass = false;
-                    appendTerminalLine(`Generating VIP Pass for: ${currentVipName}...`);
-                }
-
-                setTimeout(() => {
-                    toggleTerminal(false);
-                    openVipModal(currentVipName, isSpecialSarahPass);
-                }, 500);
-            } else {
-                switch(cmd) {
-                    case 'bio':
-                        appendTerminalLine('Radhwan // 12th CBSE Commerce student from Kerala/Sharjah. Passionate coder & gamer.');
-                        break;
-                    case 'football':
-                        appendTerminalLine('Football position: Left winger / Striker. Inspired by Cristiano Ronaldo.');
-                        break;
-                    case 'skills':
-                        appendTerminalLine('HTML/CSS/JS, Python, Gaming, Linux terminal & Web Architecture.');
-                        break;
-                    case 'clear':
-                        terminalOutput.innerHTML = '';
-                        break;
-                    case 'exit':
-                        toggleTerminal(false);
-                        break;
-                    default:
-                        if (cmd !== '') appendTerminalLine(`Command not recognized: '${cmd}'. Type 'help' for options.`);
-                }
+            const arg = rawCmd.slice(rawCmd.indexOf(' ') + 1).trim();
+            const normalized = rawCmd.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+            if (/^i hate (u|you)$/.test(normalized)) {
+                appendTerminalLine('⚠️ EMOTIONAL DAMAGE DETECTED.');
+                setTimeout(showTerminalWarning, 120);
+                return;
             }
+            if (normalized === 'sarah') {
+                activateSarahMode();
+                return;
+            }
+            if (cmd === 'help') {
+                appendTerminalHelp();
+            } else if (cmd === 'about') {
+                appendTerminalLine('RADHWAN // personal site terminal');
+                appendTerminalLine('Build: HTML + CSS + JavaScript + Firebase backend');
+                appendTerminalLine('Status: ONLINE • Mode: visitor');
+            } else if (cmd === 'whoami') {
+                appendTerminalLine('guest@radhwan — curious visitor detected. 👀');
+            } else if (cmd === 'pwd') appendTerminalLine('/home/guest/radhwan-site');
+            else if (cmd === 'ls') appendTerminalLine('about/  football/  gaming/  music/  fun-zone/  passport/  reviews/  secrets/');
+            else if (cmd === 'date' || cmd === 'time') appendTerminalLine(new Date().toString());
+            else if (cmd === 'uptime') appendTerminalLine('Terminal session uptime: ' + Math.floor((Date.now()-terminalBoot)/1000) + 's');
+            else if (cmd === 'neofetch') {
+                appendTerminalLine('╭────────────────────────────╮');
+                appendTerminalLine('│ RADHWAN OS  •  WEB EDITION │');
+                appendTerminalLine('│ Host: GitHub Pages         │');
+                appendTerminalLine('│ Backend: Firebase          │');
+                appendTerminalLine('│ Shell: Radhwan Terminal    │');
+                appendTerminalLine('│ Theme: ' + (localStorage.getItem('radhwan_site_theme') || 'dark') + '              │');
+                appendTerminalLine('╰────────────────────────────╯');
+            } else if (cmd === 'bio') appendTerminalLine('Radhwan // coder, gamer, football fan & builder of this little corner of the internet.');
+            else if (cmd === 'football') appendTerminalLine('Position: Left winger / Striker • Inspired by Cristiano Ronaldo • Rating: 99');
+            else if (cmd === 'gaming') appendTerminalLine('eFootball + Resident Evil • Gaming rating: 95 🎮');
+            else if (cmd === 'music') appendTerminalLine('Current forever-vibe: Golden Brown 🎵');
+            else if (cmd === 'food') appendTerminalLine('Mandhi detected. Rating: 100/100. 🍛');
+            else if (cmd === 'stats') {
+                appendTerminalLine('Football 99 | Gaming 95 | Mandhi 100 | Music 87');
+            } else if (cmd === 'badges') {
+                appendTerminalLine('Visitor Passport progress: ' + terminalStats() + ' / 8');
+            } else if (cmd === 'fact' || cmd === 'random') terminalFact();
+            else if (cmd === 'secret') {
+                appendTerminalLine('🔎 The terminal is not the deepest secret. Check Football Life corners...');
+                localStorage.setItem('radhwan_secret_hint_used','1');
+            } else if (cmd === 'theme') {
+                const t = arg.toLowerCase();
+                if (['dark','light','gaming'].includes(t)) { if (typeof setSiteTheme === 'function') setSiteTheme(t); appendTerminalLine('Theme switched to ' + t + '.'); }
+                else appendTerminalLine('Usage: theme dark | theme light | theme gaming');
+            } else if (cmd === 'reviews') appendTerminalLine('Visitor reviews are powered by Firebase and private to the owner.');
+            else if (cmd === 'echo') appendTerminalLine(arg || '');
+            else if (cmd === 'fortune') appendTerminalLine(terminalRandom(['Keep exploring. 👀','You found the terminal. Now find something nobody else notices.','404: boring website not found. 😂','A hidden detail is waiting somewhere...','Your next command might unlock something.']));
+            else if (cmd === 'ping') appendTerminalLine('PONG • browser-local response • ' + Math.floor(Math.random()*20+5) + 'ms');
+            else if (cmd.startsWith('calc ')) terminalCalc(arg);
+            else if (cmd === 'history') terminalHistory.forEach((h,i) => appendTerminalLine((i+1) + '  ' + h));
+            else if (cmd === 'matrix') { appendTerminalLine('Launching Matrix Digital Rain...'); toggleTerminal(false); setTimeout(startMatrixRain, 300); }
+            else if (cmd.startsWith('vip')) {
+                currentVipName = arg ? arg.toUpperCase() : 'GUEST USER';
+                isSpecialSarahPass = currentVipName === 'SARAH';
+                appendTerminalLine(isSpecialSarahPass ? '⭐ Special VIP Access Granted: Welcome, Sarah! ✨' : 'Generating VIP Pass for: ' + currentVipName + '...');
+                setTimeout(() => { toggleTerminal(false); openVipModal(currentVipName, isSpecialSarahPass); }, 500);
+            } else if (cmd === 'sudo') appendTerminalLine('guest is not in the sudoers file. This incident will be reported to... absolutely nobody. 😂');
+            else if (cmd === 'hack') { appendTerminalLine('Initializing totally-legit hacking sequence...'); setTimeout(() => appendTerminalLine('ACCESS DENIED: Nice try, hacker. 😎'), 500); }
+            else if (cmd === 'clear') terminalOutput.innerHTML = '';
+            else if (cmd === 'exit') toggleTerminal(false);
+            else if (cmd !== '') appendTerminalLine(`Command not recognized: '${cmd}'. Type 'help' for options.`);
+        }
+
+
+
+        /* SARAH SECRET THEME MODE */
+        function activateSarahMode() {
+            document.body.classList.add('sarah-mode');
+            document.body.setAttribute('data-sarah-theme', 'singing');
+            updateSarahThemeButtons('singing');
+            showSarahToast('✨ Sarah mode unlocked — choose a vibe');
+            appendTerminalLine('✨ SARAH MODE ACTIVATED. Singing • Photography • Reading • Travelling');
+            appendTerminalLine('Tap the theme buttons to switch the whole site.');
+        }
+
+        function setSarahTheme(theme) {
+            const allowed = ['singing','photography','reading','travelling'];
+            if (!allowed.includes(theme)) return;
+            document.body.classList.add('sarah-mode');
+            document.body.setAttribute('data-sarah-theme', theme);
+            updateSarahThemeButtons(theme);
+            const names = {
+                singing:'Singing 🎤 • music, lights & rhythm',
+                photography:'Photography 📷 • lens, focus & glow',
+                reading:'Reading 📚 • warm pages & quiet mode',
+                travelling:'Travelling ✈️ • sky, routes & adventure'
+            };
+            showSarahToast(names[theme]);
+        }
+
+        function exitSarahMode() {
+            document.body.classList.remove('sarah-mode');
+            document.body.removeAttribute('data-sarah-theme');
+            showSarahToast('Sarah mode closed 👋');
+        }
+
+        function updateSarahThemeButtons(theme) {
+            document.querySelectorAll('.sarah-theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+        }
+
+        let sarahToastTimer = null;
+        function showSarahToast(message) {
+            const toast = document.getElementById('sarahModeToast');
+            if (!toast) return;
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(sarahToastTimer);
+            sarahToastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
         }
 
         /* MATRIX RAIN ANIMATION ENGINE */
@@ -2802,17 +3372,23 @@
             const status = document.getElementById('gameStatus');
 
             let ballX = '0px';
-            if (direction === 'left') ballX = '-100px';
-            if (direction === 'right') ballX = '100px';
+            if (userRole === 'shooter') {
+                // As the shooter, YOU control where the ball goes.
+                if (direction === 'left') ballX = '-100px';
+                if (direction === 'right') ballX = '100px';
+                ballIcon.style.transform = `translate(calc(-50% + ${ballX}), -130px)`;
+            } else {
+                // As the goalkeeper, the CPU shooter controls the ball.
+                // Your button press ONLY controls the keeper's dive direction.
+                if (compDirection === 'left') ballX = '-100px';
+                if (compDirection === 'right') ballX = '100px';
+                ballIcon.style.transform = `translate(calc(-50% + ${ballX}), -130px)`;
+            }
 
             let keeperX = '-50%';
-            let keeperTarget = userRole === 'shooter' ? compDirection : direction;
-            if (userRole === 'keeper') keeperTarget = direction;
-            
+            const keeperTarget = userRole === 'shooter' ? compDirection : direction;
             if (keeperTarget === 'left') keeperX = '-180%';
             if (keeperTarget === 'right') keeperX = '80%';
-
-            ballIcon.style.transform = `translate(calc(-50% + ${ballX}), -130px)`;
             keeperIcon.style.transform = `translateX(${keeperX})`;
 
             setTimeout(() => {
@@ -3537,7 +4113,7 @@
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '2.0.0';
+        const SITE_VERSION = '2.5.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
@@ -3838,6 +4414,265 @@
             <button class="extra-btn secret-close" type="button" onclick="closeFootballSecret()">← Back to the site</button>
         </div>
     </div>
+
+
+
+    <!-- DANGER BUTTON -->
+    <button id="dangerButton" type="button" onclick="activateHeartbreakMode(event)" title="Danger mode" aria-label="Activate danger mode" aria-pressed="false"></button>
+
+    <div id="pixelBreakLayer" aria-hidden="true"></div>
+    <div id="dangerWarning" role="alert" aria-live="assertive">
+        <strong>⚠️ PLEASE STOP</strong>
+        <span>I dont hate u... why are you breaking my website? 😭</span>
+    </div>
+
+    <div id="siteBrokenOverlay" role="dialog" aria-modal="true" aria-labelledby="brokenTitle">
+        <div class="broken-card">
+            <div class="broken-icon">💔💥</div>
+            <h2 id="brokenTitle">YOU BROKE THE WEBSITE 😭</h2>
+            <p>Please stop,I dont hate u.<br>Look what you did to my pixels... 💀</p>
+            <button class="repair-btn" type="button" onclick="repairHeartbreakMode()">🛠️ Repair Everything</button>
+        </div>
+    </div>
+
+
+
+    <script>
+    /* HEARTBREAK / DANGER MODE */
+    (function () {
+        const MAX_BREAK = 12;
+        let breakLevel = 0;
+        let heartbreakActive = false;
+        let warningShown = false;
+        let broken = false;
+        let warningTimer = null;
+
+        function setBreakLevel(level) {
+            breakLevel = Math.max(0, Math.min(MAX_BREAK, level));
+            document.body.style.setProperty('--break-level', breakLevel);
+        }
+
+        function addFracture(x, y) {
+            const layer = document.getElementById('pixelBreakLayer');
+            if (!layer) return;
+
+            let svg = layer.querySelector('.break-fracture');
+            if (!svg) {
+                svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.classList.add('break-fracture');
+                svg.setAttribute('viewBox', '0 0 ' + window.innerWidth + ' ' + window.innerHeight);
+                svg.setAttribute('preserveAspectRatio', 'none');
+                layer.appendChild(svg);
+            }
+
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const impact = document.createElement('div');
+            impact.className = 'break-impact';
+            impact.style.left = x + 'px';
+            impact.style.top = y + 'px';
+            layer.appendChild(impact);
+            setTimeout(() => impact.remove(), 650);
+
+            const mainAngle = Math.random() * Math.PI * 2;
+            const branches = 5 + Math.floor(Math.random() * 4);
+            const radius = Math.min(w, h) * (.16 + breakLevel * .018);
+
+            for (let b = 0; b < branches; b++) {
+                const angle = mainAngle + (Math.PI * 2 / branches) * b + (Math.random() - .5) * .55;
+                const length = radius * (.72 + Math.random() * .55);
+                const x2 = x + Math.cos(angle) * length;
+                const y2 = y + Math.sin(angle) * length;
+                const mx = x + Math.cos(angle + (Math.random() - .5) * .22) * length * .52;
+                const my = y + Math.sin(angle + (Math.random() - .5) * .22) * length * .52;
+
+                const shadow = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                shadow.setAttribute('class', 'fracture-shadow');
+                shadow.setAttribute('points', `${x},${y} ${mx},${my} ${x2},${y2}`);
+                svg.appendChild(shadow);
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                line.setAttribute('points', `${x},${y} ${mx},${my} ${x2},${y2}`);
+                svg.appendChild(line);
+
+                if (b % 2 === 0) {
+                    const branchT = .48 + Math.random() * .22;
+                    const bx = x + (x2 - x) * branchT;
+                    const by = y + (y2 - y) * branchT;
+                    const branchAngle = angle + (Math.random() > .5 ? 1 : -1) * (.55 + Math.random() * .5);
+                    const branchLen = length * (.22 + Math.random() * .2);
+                    const bx2 = bx + Math.cos(branchAngle) * branchLen;
+                    const by2 = by + Math.sin(branchAngle) * branchLen;
+                    const branch = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    branch.setAttribute('x1', bx);
+                    branch.setAttribute('y1', by);
+                    branch.setAttribute('x2', bx2);
+                    branch.setAttribute('y2', by2);
+                    svg.appendChild(branch);
+                }
+            }
+        }
+
+        function showBreakWarning() {
+            const warning = document.getElementById('dangerWarning');
+            if (!warning) return;
+            warning.classList.add('show');
+            clearTimeout(warningTimer);
+            warningTimer = setTimeout(() => warning.classList.remove('show'), 2800);
+        }
+
+        window.activateHeartbreakMode = function (event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            if (heartbreakActive) return;
+            heartbreakActive = true;
+            document.getElementById('dangerButton')?.setAttribute('aria-pressed', 'true');
+            document.body.classList.add('heartbreak-mode');
+            setBreakLevel(1);
+            showBreakWarning();
+        };
+
+        function countHeartbreakTouch(event) {
+            if (!heartbreakActive || broken) return;
+            const target = event.target;
+            if (!target || target.closest('#dangerButton, #siteBrokenOverlay, #dangerWarning, #terminalWarning, #matrixOverlay')) return;
+
+            setBreakLevel(breakLevel + 1);
+            addFracture(event.clientX || window.innerWidth / 2, event.clientY || window.innerHeight / 2);
+
+            if (breakLevel >= 7 && !warningShown) {
+                warningShown = true;
+                showBreakWarning();
+            }
+            if (breakLevel >= 10) {
+                document.body.classList.add('site-break-shake');
+            }
+            if (breakLevel >= MAX_BREAK) {
+                broken = true;
+                document.body.classList.remove('site-break-shake');
+                document.getElementById('siteBrokenOverlay')?.classList.add('show');
+            }
+        }
+
+        window.repairHeartbreakMode = function () {
+            heartbreakActive = false;
+            document.getElementById('dangerButton')?.setAttribute('aria-pressed', 'false');
+            broken = false;
+            warningShown = false;
+            setBreakLevel(0);
+            document.body.classList.remove('heartbreak-mode', 'site-break-shake');
+            document.getElementById('siteBrokenOverlay')?.classList.remove('show');
+            document.getElementById('dangerWarning')?.classList.remove('show');
+            const layer = document.getElementById('pixelBreakLayer');
+            if (layer) layer.innerHTML = '';
+        };
+
+        window.addEventListener('resize', function () {
+            const svg = document.querySelector('.break-fracture');
+            if (svg) svg.setAttribute('viewBox', '0 0 ' + window.innerWidth + ' ' + window.innerHeight);
+        });
+
+        document.addEventListener('pointerdown', countHeartbreakTouch, { capture: true, passive: true });
+    })();
+
+
+        /* SARAH VIBE CURSOR / TOUCH ICON ENGINE */
+        (function initSarahVibeCursor() {
+            const cursor = document.getElementById('sarahVibeCursor');
+            // The cursor element is declared just after this script. Wait until the DOM
+            // has finished parsing so the element actually exists before binding events.
+            if (!cursor) {
+                document.addEventListener('DOMContentLoaded', initSarahVibeCursor, { once: true });
+                return;
+            }
+            const icons = {
+                singing: '🎤',
+                photography: '📷',
+                reading: '📚',
+                travelling: '✈️'
+            };
+            function currentSarahIcon() {
+                return icons[document.body.getAttribute('data-sarah-theme')] || '🎤';
+            }
+            function syncSarahCursor() {
+                cursor.textContent = currentSarahIcon();
+            }
+            function moveSarahCursor(x, y) {
+                cursor.style.left = x + 'px';
+                cursor.style.top = y + 'px';
+                cursor.classList.add('show');
+            }
+            function touchSarahCursor(x, y) {
+                syncSarahCursor();
+                cursor.style.left = x + 'px';
+                cursor.style.top = y + 'px';
+                cursor.classList.remove('touch');
+                void cursor.offsetWidth;
+                cursor.classList.add('touch');
+                cursor.classList.add('show');
+            }
+            window.updateSarahVibeCursor = syncSarahCursor;
+            document.addEventListener('pointermove', function(e) {
+                if (!document.body.classList.contains('sarah-mode')) return;
+                if (e.pointerType === 'touch') return;
+                syncSarahCursor();
+                moveSarahCursor(e.clientX, e.clientY);
+            }, { passive:true });
+            let lastTouchTime = 0;
+            document.addEventListener('pointerdown', function(e) {
+                if (!document.body.classList.contains('sarah-mode')) return;
+                syncSarahCursor();
+                if (e.pointerType === 'touch') {
+                    lastTouchTime = Date.now();
+                    touchSarahCursor(e.clientX, e.clientY);
+                } else {
+                    moveSarahCursor(e.clientX, e.clientY);
+                }
+            }, { passive:true });
+            // Explicit touch fallback for mobile browsers/WebViews that do not reliably expose pointer events.
+            document.addEventListener('touchstart', function(e) {
+                if (!document.body.classList.contains('sarah-mode')) return;
+                const t = e.changedTouches && e.changedTouches[0];
+                if (!t) return;
+                if (Date.now() - lastTouchTime < 80) return;
+                lastTouchTime = Date.now();
+                touchSarahCursor(t.clientX, t.clientY);
+            }, { passive:true });
+            window.addEventListener('blur', function() { cursor.classList.remove('show', 'touch'); });
+            const originalSetSarahTheme = window.setSarahTheme;
+            if (typeof originalSetSarahTheme === 'function') {
+                window.setSarahTheme = function(theme) {
+                    originalSetSarahTheme(theme);
+                    syncSarahCursor();
+                };
+            }
+            const originalExitSarahMode = window.exitSarahMode;
+            if (typeof originalExitSarahMode === 'function') {
+                window.exitSarahMode = function() {
+                    originalExitSarahMode();
+                    cursor.classList.remove('show', 'touch');
+                };
+            }
+            syncSarahCursor();
+        })();
+    </script>
+
+
+
+    <!-- SARAH VIBE CURSOR -->
+    <div id="sarahVibeCursor" class="sarah-vibe-cursor" aria-hidden="true">🎤</div>
+
+    <!-- SARAH SECRET THEME SWITCHER (only appears after typing "Sarah" in terminal) -->
+    <div id="sarahThemePanel" class="sarah-theme-panel" aria-label="Sarah theme switcher">
+        <button class="sarah-theme-btn active" data-theme="singing" onclick="setSarahTheme('singing')" title="Singing">🎤</button>
+        <button class="sarah-theme-btn" data-theme="photography" onclick="setSarahTheme('photography')" title="Photography">📷</button>
+        <button class="sarah-theme-btn" data-theme="reading" onclick="setSarahTheme('reading')" title="Reading">📚</button>
+        <button class="sarah-theme-btn" data-theme="travelling" onclick="setSarahTheme('travelling')" title="Travelling">✈️</button>
+        <button class="sarah-exit-btn" onclick="exitSarahMode()" title="Exit Sarah Mode" aria-label="Exit Sarah Mode">×</button>
+    </div>
+    <div id="sarahModeToast" class="sarah-mode-toast"></div>
 
 </body>
 </html>
