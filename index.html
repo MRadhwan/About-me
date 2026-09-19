@@ -2131,16 +2131,30 @@
 
         /* SARAH VIBE CURSOR / TOUCH ICON */
         .sarah-vibe-cursor {
-            position: fixed !important; left: 0; top: 0; z-index: 2147483647 !important;
-            width: 50px; height: 50px; border-radius: 50%;
-            display: grid !important; place-items: center; pointer-events: none !important;
-            visibility: hidden; opacity: 0; transform: translate(-50%, -50%) scale(.72);
+            position: fixed !important;
+            left: 0; top: 0;
+            z-index: 2147483647 !important;
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            display: grid !important;
+            place-items: center;
+            pointer-events: none !important;
+            visibility: hidden;
+            opacity: 0;
+            transform: translate3d(-50%, -50%, 0) scale(.72);
             background: transparent;
             border: 0;
             box-shadow: none;
             backdrop-filter: none;
-            transition: opacity .12s ease, transform .12s ease, left .03s linear, top .03s linear;
-            font-size: 26px; line-height: 1; user-select:none; -webkit-user-select:none;
+            /* Do not animate left/top. Chrome can leave a JS cursor visually
+               behind when layout/transition layers are changing. */
+            transition: opacity .12s ease, transform .12s ease;
+            will-change: left, top, transform, opacity;
+            contain: layout style paint;
+            font-size: 26px;
+            line-height: 1;
+            user-select:none;
+            -webkit-user-select:none;
         }
         .sarah-vibe-cursor.show { visibility: visible !important; opacity: 1 !important; transform: translate(-50%, -50%) scale(1); }
         .sarah-vibe-cursor.touch { animation: sarahTouchPop .95s cubic-bezier(.2,.8,.2,1) forwards; }
@@ -2159,6 +2173,10 @@
 
 
         /* SARAH TRANSITIONS — each vibe has its own visual language */
+        #sarahTransitionOverlay,
+        #sarahTransitionOverlay * {
+            pointer-events: none !important;
+        }
         #sarahTransitionOverlay::before,
         #sarahTransitionOverlay::after { content:""; position:absolute; inset:0; pointer-events:none; opacity:0; }
         /* Singing: soft, hazy music atmosphere — no sharp page edges. */
@@ -2510,6 +2528,18 @@
   main { padding-left: 10px !important; padding-right: 10px !important; }
   .page-section { padding-left: 12px; padding-right: 12px; }
   body { font-size: 14px; }
+}
+</style>
+<style>
+/* Desktop cursor/transition safety: decorative layers must never become the
+   mouse hit-test surface. This prevents Chrome from making the custom cursor
+   appear frozen when the Sarah theme changes or a page transition runs. */
+@media (min-width: 701px) {
+    #sarahTransitionOverlay,
+    #sarahTransitionOverlay *,
+    .sarah-vibe-cursor {
+        pointer-events: none !important;
+    }
 }
 </style>
 <style>
@@ -4723,7 +4753,7 @@
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '4.0.0';
+        const SITE_VERSION = '5.0.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
@@ -5191,47 +5221,55 @@
         /* SARAH VIBE CURSOR / TOUCH ICON ENGINE */
         (function initSarahVibeCursor() {
             const cursor = document.getElementById('sarahVibeCursor');
-            // The cursor element is declared just after this script. Wait until the DOM
-            // has finished parsing so the element actually exists before binding events.
             if (!cursor) {
                 document.addEventListener('DOMContentLoaded', initSarahVibeCursor, { once: true });
                 return;
             }
+
             const icons = {
                 singing: '🎤',
                 photography: '📷',
                 reading: '📚',
                 travelling: '✈️'
             };
+
             function currentSarahIcon() {
                 return icons[document.body.getAttribute('data-sarah-theme')] || '🎤';
             }
+
             function syncSarahCursor() {
                 cursor.textContent = currentSarahIcon();
             }
+
             function moveSarahCursor(x, y) {
-                cursor.style.left = x + 'px';
-                cursor.style.top = y + 'px';
+                /* clientX/clientY + fixed positioning keeps the cursor tied to the
+                   viewport even while the page/section is scrolling or animating. */
+                cursor.style.left = `${x}px`;
+                cursor.style.top = `${y}px`;
                 cursor.classList.add('show');
             }
+
             function touchSarahCursor(x, y) {
                 syncSarahCursor();
-                cursor.style.left = x + 'px';
-                cursor.style.top = y + 'px';
+                moveSarahCursor(x, y);
                 cursor.classList.remove('touch');
                 void cursor.offsetWidth;
                 cursor.classList.add('touch');
-                cursor.classList.add('show');
             }
+
             window.updateSarahVibeCursor = syncSarahCursor;
-            document.addEventListener('pointermove', function(e) {
+
+            /* Listen on window rather than a particular page/container. This avoids
+               the cursor stopping when a section, transition layer, canvas, or other
+               stacking context changes underneath the pointer. */
+            window.addEventListener('pointermove', function(e) {
                 if (!document.body.classList.contains('sarah-mode')) return;
                 if (e.pointerType === 'touch') return;
                 syncSarahCursor();
                 moveSarahCursor(e.clientX, e.clientY);
-            }, { passive:true });
-            let lastTouchTime = 0;
-            document.addEventListener('pointerdown', function(e) {
+            }, { passive: true, capture: true });
+
+            window.addEventListener('pointerdown', function(e) {
                 if (!document.body.classList.contains('sarah-mode')) return;
                 syncSarahCursor();
                 if (e.pointerType === 'touch') {
@@ -5240,17 +5278,25 @@
                 } else {
                     moveSarahCursor(e.clientX, e.clientY);
                 }
-            }, { passive:true });
-            // Explicit touch fallback for mobile browsers/WebViews that do not reliably expose pointer events.
-            document.addEventListener('touchstart', function(e) {
+            }, { passive: true, capture: true });
+
+            let lastTouchTime = 0;
+            window.addEventListener('touchstart', function(e) {
                 if (!document.body.classList.contains('sarah-mode')) return;
                 const t = e.changedTouches && e.changedTouches[0];
                 if (!t) return;
                 if (Date.now() - lastTouchTime < 80) return;
                 lastTouchTime = Date.now();
                 touchSarahCursor(t.clientX, t.clientY);
-            }, { passive:true });
-            window.addEventListener('blur', function() { cursor.classList.remove('show', 'touch'); });
+            }, { passive: true, capture: true });
+
+            window.addEventListener('mouseout', function(e) {
+                if (!e.relatedTarget) cursor.classList.remove('show', 'touch');
+            });
+            window.addEventListener('blur', function() {
+                cursor.classList.remove('show', 'touch');
+            });
+
             const originalSetSarahTheme = window.setSarahTheme;
             if (typeof originalSetSarahTheme === 'function') {
                 window.setSarahTheme = function(theme) {
@@ -5258,6 +5304,7 @@
                     syncSarahCursor();
                 };
             }
+
             const originalExitSarahMode = window.exitSarahMode;
             if (typeof originalExitSarahMode === 'function') {
                 window.exitSarahMode = function() {
@@ -5265,8 +5312,8 @@
                     cursor.classList.remove('show', 'touch');
                 };
             }
-            syncSarahCursor();
         })();
+
     </script>
 
 
