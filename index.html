@@ -2102,6 +2102,33 @@
         }
 
 
+
+        /* SARAH THEME TRANSITIONS */
+        #sarahTransitionOverlay {
+            position: fixed; inset: 0; z-index: 47000; pointer-events: none;
+            display: none; overflow: hidden; perspective: 1200px;
+        }
+        #sarahTransitionOverlay.active { display: block; }
+        .sarah-transition-lyrics { position:absolute; inset:0; display:grid; place-items:center; text-align:center; opacity:0; }
+        .sarah-transition-lyrics span { display:block; color:#fff; font-weight:900; font-size:clamp(24px,7vw,64px); letter-spacing:.08em; text-shadow:0 0 28px rgba(232,121,249,.65); transform:translateY(30px) scale(.9); opacity:0; }
+        #sarahTransitionOverlay.singing .sarah-transition-lyrics { animation:sarahLyricsWrap 1.05s ease forwards; }
+        #sarahTransitionOverlay.singing .sarah-transition-lyrics span { animation:sarahLyrics 1.05s cubic-bezier(.2,.8,.2,1) forwards; }
+        @keyframes sarahLyricsWrap { 0%,100%{opacity:0} 18%,78%{opacity:1} }
+        @keyframes sarahLyrics { 0%{opacity:0;transform:translateY(30px) scale(.9)} 28%{opacity:1;transform:translateY(0) scale(1)} 72%{opacity:1;transform:translateY(-5px) scale(1.02)} 100%{opacity:0;transform:translateY(-45px) scale(1.08)} }
+        .sarah-page { position:absolute; top:0; bottom:0; width:52%; background:linear-gradient(115deg,#fff8e8,#ead7ad); box-shadow:0 0 45px rgba(0,0,0,.35); transform-origin:left center; }
+        .sarah-page.left { left:0; transform:rotateY(90deg); }
+        .sarah-page.right { right:0; transform-origin:right center; transform:rotateY(-90deg); }
+        #sarahTransitionOverlay.reading .sarah-page.left { animation:sarahPageLeft .9s cubic-bezier(.55,.05,.25,.95) forwards; }
+        #sarahTransitionOverlay.reading .sarah-page.right { animation:sarahPageRight .9s cubic-bezier(.55,.05,.25,.95) forwards; }
+        @keyframes sarahPageLeft { 0%{transform:rotateY(0)} 100%{transform:rotateY(-90deg)} }
+        @keyframes sarahPageRight { 0%{transform:rotateY(0)} 100%{transform:rotateY(90deg)} }
+        .sarah-camera-flash { position:absolute; inset:0; background:#fff; opacity:0; }
+        #sarahTransitionOverlay.photography .sarah-camera-flash { animation:sarahCameraFlash .42s ease-out forwards; }
+        @keyframes sarahCameraFlash { 0%{opacity:0} 18%{opacity:.28} 35%{opacity:.08} 100%{opacity:0} }
+        .sarah-plane { position:absolute; left:-12vw; bottom:-10vh; font-size:clamp(48px,9vw,100px); filter:drop-shadow(0 8px 18px rgba(0,0,0,.25)); opacity:0; transform:rotate(-18deg) scale(.75); }
+        #sarahTransitionOverlay.travelling .sarah-plane { animation:sarahPlaneFlight 1.05s cubic-bezier(.2,.7,.2,1) forwards; }
+        @keyframes sarahPlaneFlight { 0%{opacity:0;left:-12vw;bottom:-10vh;transform:rotate(-18deg) scale(.75)} 12%{opacity:1} 82%{opacity:1} 100%{opacity:0;left:112vw;bottom:112vh;transform:rotate(-18deg) scale(1.05)} }
+
         /* SARAH VIBE CURSOR / TOUCH ICON */
         .sarah-vibe-cursor {
             position: fixed !important; left: 0; top: 0; z-index: 2147483647 !important;
@@ -2130,7 +2157,447 @@
             body.sarah-mode button, body.sarah-mode a, body.sarah-mode input, body.sarah-mode textarea, body.sarah-mode select { cursor: auto; }
         }
 
-    </style>
+
+        /* SARAH TRANSITIONS — each vibe has its own visual language */
+        #sarahTransitionOverlay::before,
+        #sarahTransitionOverlay::after { content:""; position:absolute; inset:0; pointer-events:none; opacity:0; }
+        /* Singing: soft, hazy music atmosphere — no sharp page edges. */
+        #sarahTransitionOverlay.singing::before {
+            opacity:1;
+            background:
+                radial-gradient(circle at 50% 48%, rgba(232,121,249,.20), transparent 24%),
+                radial-gradient(circle at 20% 75%, rgba(167,139,250,.12), transparent 28%),
+                radial-gradient(circle at 82% 25%, rgba(251,113,133,.10), transparent 25%);
+            filter:blur(18px);
+            animation:sarahSingingHaze 1.05s ease forwards;
+        }
+        #sarahTransitionOverlay.singing::after {
+            opacity:.7;
+            background:radial-gradient(ellipse at center, transparent 25%, rgba(15,8,24,.28) 100%);
+            animation:sarahSoftVignette 1.05s ease forwards;
+        }
+        @keyframes sarahSingingHaze { 0%{transform:scale(.92);opacity:0} 30%{opacity:1} 100%{transform:scale(1.12);opacity:0} }
+        @keyframes sarahSoftVignette { 0%,100%{opacity:0} 25%,75%{opacity:.7} }
+
+        /* Photography: dark camera/lens feel instead of a white flash block. */
+        #sarahTransitionOverlay.photography::before {
+            opacity:1;
+            background:radial-gradient(circle at center, transparent 0 16%, rgba(251,146,60,.08) 28%, rgba(8,8,10,.62) 100%);
+            animation:sarahLensPulse .52s ease-out forwards;
+        }
+        @keyframes sarahLensPulse { 0%{transform:scale(.72);opacity:0} 45%{transform:scale(1);opacity:1} 100%{transform:scale(1.12);opacity:0} }
+        #sarahTransitionOverlay.photography .sarah-camera-flash {
+            background:rgba(255,245,225,.9);
+            animation:sarahCameraFlashSoft .42s ease-out forwards;
+        }
+        @keyframes sarahCameraFlashSoft { 0%{opacity:0} 18%{opacity:.10} 32%{opacity:.035} 100%{opacity:0} }
+
+        /* Reading keeps the page-turn, but makes it warmer and softer. */
+        #sarahTransitionOverlay.reading::before {
+            opacity:.32;
+            background:radial-gradient(circle at center, rgba(255,241,194,.14), transparent 52%);
+        }
+        .sarah-page { background:linear-gradient(115deg,#f7ecd3,#d9bf91); box-shadow:0 0 32px rgba(88,55,18,.22); filter:saturate(.86); }
+
+        /* Travelling: airy sky wash + soft route streak, not a page edge. */
+        #sarahTransitionOverlay.travelling::before {
+            opacity:1;
+            background:
+                radial-gradient(circle at 78% 18%, rgba(186,230,253,.18), transparent 25%),
+                linear-gradient(135deg, rgba(45,212,191,.12), rgba(56,189,248,.06) 48%, rgba(7,21,26,.20));
+            animation:sarahTravelWash 1.05s ease forwards;
+        }
+        #sarahTransitionOverlay.travelling::after {
+            opacity:.45;
+            background:linear-gradient(145deg, transparent 42%, rgba(255,255,255,.12) 43%, transparent 44%);
+            transform:translate(-18%,18%);
+            animation:sarahRouteStreak 1.05s ease forwards;
+        }
+        @keyframes sarahTravelWash { 0%{opacity:0;transform:scale(.96)} 30%{opacity:1} 100%{opacity:0;transform:scale(1.08)} }
+        @keyframes sarahRouteStreak { 0%{opacity:0;transform:translate(-30%,30%)} 35%{opacity:.45} 100%{opacity:0;transform:translate(30%,-30%)} }
+
+        /* Only Reading uses the physical page edges. */
+        #sarahTransitionOverlay.singing .sarah-page,
+        #sarahTransitionOverlay.photography .sarah-page,
+        #sarahTransitionOverlay.travelling .sarah-page { display:none; }
+
+        /* MOBILE — compact layout, safe areas, no horizontal overflow, thumb-first controls. */
+        @media (max-width: 700px) {
+            html, body { width:100%; max-width:100%; overflow-x:hidden; }
+            body { min-width:0; }
+            main { box-sizing:border-box; width:100%; padding-left:12px; padding-right:12px; }
+            .page-section { box-sizing:border-box; width:100%; max-width:100%; overflow:hidden; padding:24px 15px; }
+            .page-section > * { max-width:100%; }
+            img, canvas, video, iframe { max-width:100%; height:auto; }
+            .section-title { font-size:clamp(22px,6.5vw,30px); line-height:1.15; }
+            .section-subtitle, main small, main label { font-size:13px; line-height:1.5; }
+            main p { overflow-wrap:anywhere; }
+
+            /* Cards/grids collapse before they become cramped. */
+            .grid, .cards-grid, .features-grid, .stats-grid, .extras-grid,
+            .fun-facts-grid, .memories-grid { grid-template-columns:1fr !important; }
+            .badge-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+            .review-form, .review-card, .info-card, .fun-fact-card, .memory-card { min-width:0; }
+
+            /* Floating controls stay clear of the status bar and notches. */
+            .floating-controls { top:max(8px,env(safe-area-inset-top)); left:0; right:0; padding:0 9px; }
+            .dropdown-content { max-width:calc(100vw - 18px); max-height:70dvh; overflow-y:auto; overscroll-behavior:contain; }
+            .sarah-theme-panel { bottom:max(9px,calc(env(safe-area-inset-bottom) + 5px)); }
+            #dangerButton { right:10px; bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px)); }
+
+            /* Modals use almost the full screen without clipping their buttons. */
+            .terminal-modal, .vip-modal, .playlist-modal, .gallery-modal { padding:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom)); }
+            .terminal-box { height:min(82dvh,680px); max-height:calc(100dvh - 16px); }
+            .terminal-body { overflow-x:hidden; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+            .terminal-input-row input { min-width:0; }
+            .game-box, .card, .info-card { overflow:hidden; }
+            .direction-controls { grid-template-columns:repeat(3,minmax(0,1fr)); }
+            .action-btn, .role-btn, .game-tab-btn { min-height:46px; }
+
+            /* Sarah transition stays soft on phones; no hard rectangular flash. */
+            #sarahTransitionOverlay { perspective:900px; }
+            #sarahTransitionOverlay::before { filter:blur(12px); }
+            .sarah-transition-lyrics span { font-size:clamp(20px,7.5vw,38px); letter-spacing:.045em; padding:0 18px; text-shadow:0 0 20px rgba(232,121,249,.42); }
+            .sarah-page { width:58%; }
+            .sarah-plane { font-size:clamp(48px,15vw,78px); }
+        }
+
+        @media (max-width:420px) {
+            main { padding-left:9px; padding-right:9px; }
+            .page-section { padding:22px 12px; border-radius:18px; }
+            .badge-grid { gap:7px; }
+            .visitor-badge { padding:13px 7px; }
+            .visitor-badge p { font-size:10.5px; }
+            .sarah-theme-panel { gap:3px; padding:5px; }
+            .sarah-theme-btn, .sarah-exit-btn { width:38px; height:38px; flex-basis:38px; font-size:16px; }
+        }
+
+        /* MOBILE PERFORMANCE + TOUCH POLISH */
+        @media (max-width: 700px) {
+            :root { --mobile-pad: 14px; }
+            html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+            body {
+                min-height: 100dvh;
+                align-items: flex-start;
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            main {
+                width: 100%;
+                max-width: none;
+                padding: 74px var(--mobile-pad) 28px;
+                margin-top: 0;
+            }
+            .page-section {
+                width: 100%;
+                border-radius: 20px;
+                padding: 28px 18px;
+                box-shadow: 0 18px 40px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08);
+            }
+            .page-section.active > * { animation-duration: .42s; }
+            h1 { font-size: clamp(27px, 8vw, 34px); line-height: 1.12; letter-spacing: -.5px; margin-bottom: 15px; }
+            h2 { font-size: clamp(21px, 6vw, 28px); }
+            h3 { font-size: 17px; }
+            p { font-size: 15px; line-height: 1.65; }
+            button, a, input, textarea, select { touch-action: manipulation; }
+            button { -webkit-tap-highlight-color: transparent; }
+
+            .floating-controls {
+                top: max(9px, env(safe-area-inset-top));
+                padding: 0 10px;
+            }
+            .audio-controls-group { gap: 6px; }
+            .control-btn { width: 42px; height: 42px; font-size: 16px; }
+            #menuBtn { width: 44px; height: 44px; }
+
+            .dropdown-content {
+                top: 60px;
+                right: 10px;
+                width: min(320px, calc(100vw - 20px));
+                max-height: min(72dvh, 560px);
+                border-radius: 16px;
+            }
+            .dropdown-content a { min-height: 46px; padding: 12px 15px; font-size: 14px; }
+
+            .terminal-modal, .vip-modal, .playlist-modal, .gallery-modal { padding: 10px; }
+            .terminal-box {
+                width: 100%;
+                max-width: none;
+                height: min(78dvh, 620px);
+                max-height: calc(100dvh - 20px);
+                border-radius: 14px;
+            }
+            .terminal-topbar { padding: 10px 12px; font-size: 14px; }
+            .terminal-body { padding: 13px 11px; font-size: 15px; line-height: 1.35; }
+            .terminal-input-row { padding: 10px 11px; gap: 7px; }
+            .terminal-input-row input { font-size: 20px; min-width: 0; }
+            .terminal-help-commands { gap: 5px; }
+            .terminal-help-cmd { min-height: 34px; padding: 6px 8px; font-size: 13px; }
+
+            .vip-card-wrapper, .playlist-card { max-width: 100%; padding: 20px 16px; border-radius: 20px; }
+            .vip-pass-badge-preview { padding: 20px 14px; }
+            .vip-card-name { font-size: 11px; max-width: 100%; }
+
+            .game-nav-tabs { gap: 7px; margin-bottom: 17px; }
+            .game-tab-btn {
+                flex: 1 1 calc(50% - 7px);
+                min-width: 0;
+                min-height: 44px;
+                padding: 10px 7px;
+                font-size: 12px;
+            }
+            .game-box { padding: 18px 12px; border-radius: 16px; }
+            .role-selector { gap: 8px; margin: 15px 0; }
+            .role-btn { flex: 1; min-height: 44px; padding: 10px 8px; font-size: 13px; }
+            .pitch-container { height: 190px; margin: 15px 0; }
+            .goal-post { width: 82%; height: 66px; }
+            .direction-controls { gap: 7px; margin-top: 12px; }
+            .action-btn { min-height: 46px; padding: 11px 7px; font-size: 13px; }
+            .sprint-tap-btn { min-height: 82px; margin: 15px 0; font-size: 12px; padding: 18px 10px; }
+            .juggle-tap-btn { min-width: 72px; min-height: 72px; }
+            .reaction-arena { height: 210px; }
+            .reaction-target { width: 58px; height: 58px; }
+            .memory-arena { gap: 7px; }
+            .memory-tile { border-radius: 11px; font-size: 20px; }
+            .makeup-step-pool { gap: 7px; }
+            .makeup-item { min-height: 42px; padding: 9px 11px; }
+
+            .memories-grid, .extras-grid, .fun-facts-grid { grid-template-columns: 1fr; gap: 13px; }
+            .memory-card, .extra-card, .fun-fact-card { padding: 17px; border-radius: 16px; }
+            .badge-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; }
+            .visitor-badge { padding: 15px 9px; border-radius: 15px; }
+            .visitor-badge-icon { font-size: 25px; }
+            .visitor-badge h3 { font-size: 13px; }
+            .visitor-badge p { font-size: 11px; }
+
+            .gallery-container { width: 100%; }
+            .gallery-img { max-height: 58dvh; border-radius: 14px; }
+            .gallery-close { top: -2px; right: 2px; font-size: 28px; z-index: 2; }
+            .gallery-nav { width: 42px; height: 42px; }
+            .gallery-prev { left: 5px; }
+            .gallery-next { right: 5px; }
+
+            input, textarea { width: 100%; font-size: 16px; padding: 13px 14px; }
+            .admin-key-row { flex-direction: column; }
+            .admin-key-row button { min-height: 44px; }
+            .site-update-toast { bottom: max(18px, calc(env(safe-area-inset-bottom) + 10px)); width: calc(100vw - 24px); }
+            .site-update-toast-actions button { min-height: 44px; }
+            .achievement-toast { bottom: max(18px, calc(env(safe-area-inset-bottom) + 10px)); width: calc(100vw - 28px); }
+
+            .sarah-theme-panel {
+                left: 50%;
+                bottom: max(10px, calc(env(safe-area-inset-bottom) + 6px));
+                padding: 6px;
+                gap: 5px;
+                max-width: calc(100vw - 20px);
+            }
+            .sarah-theme-btn, .sarah-exit-btn { width: 42px; height: 42px; flex: 0 0 42px; font-size: 17px; }
+            .sarah-mode-toast { top: max(10px, calc(env(safe-area-inset-top) + 6px)); max-width: calc(100vw - 28px); text-align:center; }
+
+            #sarahTransitionOverlay { perspective: 850px; }
+            .sarah-transition-lyrics span { font-size: clamp(22px, 8vw, 42px); padding: 0 20px; }
+            .sarah-page { width: 56%; }
+            .sarah-plane { font-size: clamp(52px, 17vw, 82px); }
+            .sarah-vibe-cursor { width: 42px; height: 42px; font-size: 23px; }
+
+            #dangerButton { right: 10px; bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px)); width: 56px; height: 56px; }
+            #dangerWarning { top: max(76px, calc(env(safe-area-inset-top) + 64px)); width: calc(100vw - 24px); padding: 13px 15px; }
+            .broken-card, .terminal-warning-card { width: calc(100vw - 24px); padding: 26px 17px; border-radius: 20px; }
+
+            .ambient-glow { width: 70vw; height: 70vw; filter: blur(80px); opacity: .26; }
+        }
+
+        /* Mobile text alignment polish */
+        @media (max-width: 700px) {
+            main p, main small, main label, main .text-muted, main .game-box > p,
+            main .page-section > p, main .gallery-caption, main .section-subtitle,
+            main .game-status, main .game-result, main .review-meta, main .review-text,
+            main .card-description, main .fun-fact-desc, main .badge-description,
+            main .passport-note, main .terminal-help-tip {
+                text-align: center !important;
+            }
+
+            main .game-box, main .card, main .info-card, main .fun-fact-card,
+            main .visitor-badge, main .review-card {
+                text-align: center;
+            }
+
+            .terminal-body { text-align: left; }
+            .terminal-help { text-align: left; }
+            .dropdown-content { text-align: left; }
+        }
+
+        @media (max-width: 420px) {
+            main { padding-left: 10px; padding-right: 10px; }
+            .page-section { padding: 24px 14px; }
+            .floating-controls { padding-left: 7px; padding-right: 7px; }
+            .control-btn { width: 40px; height: 40px; }
+            .audio-controls-group { gap: 4px; }
+            .game-tab-btn { font-size: 11px; }
+            .pitch-container { height: 175px; }
+            .direction-controls { gap: 5px; }
+            .action-btn { font-size: 12px; }
+            .badge-grid { grid-template-columns: 1fr 1fr; }
+            .sarah-theme-btn, .sarah-exit-btn { width: 39px; height: 39px; flex-basis: 39px; }
+            .sarah-theme-panel { gap: 3px; }
+        }
+
+        @media (hover: none), (pointer: coarse) {
+            .ambient-glow { animation: none; }
+            .control-btn:hover, .memory-card:hover, .fun-fact-card:hover, .visitor-badge:hover,
+            .sarah-theme-btn:hover, #dangerButton:hover { transform: none; }
+            .dropdown-content a:hover { padding-left: 15px; }
+            .sarah-transition-lyrics span { text-shadow: 0 0 18px rgba(232,121,249,.5); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        }
+
+    
+/* Final mobile comfort pass */
+@media (max-width: 700px) {
+  html {
+    overflow-x: hidden;
+    scroll-padding-top: 70px;
+    -webkit-overflow-scrolling: touch;
+  }
+  body {
+    overflow-x: hidden;
+    min-height: 100dvh;
+    text-align: center;
+    touch-action: pan-y;
+  }
+  main {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+  .page-section {
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  main p, main small, main label, main li,
+  main .section-subtitle, main .card-description,
+  main .fun-fact-desc, main .badge-description,
+  main .passport-note, main .review-meta, main .review-text,
+  main .game-status, main .game-result, main .gallery-caption {
+    text-align: center !important;
+  }
+  main input, main textarea, main select {
+    text-align: center;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .card, .info-card, .game-box, .review-card, .fun-fact-card,
+  .visitor-badge, .page-section {
+    text-align: center;
+  }
+  /* Let the whole document move naturally on touch; don't trap the page in panels. */
+  .terminal, .terminal-window, .terminal-body, .game-box, .pitch-container,
+  .modal-content, .dropdown-content {
+    overscroll-behavior: auto;
+  }
+  .terminal-body { text-align: left; }
+  .terminal-help { text-align: left; }
+  .dropdown-content { text-align: left; }
+}
+@media (max-width: 420px) {
+  main { padding-left: 10px !important; padding-right: 10px !important; }
+  .page-section { padding-left: 12px; padding-right: 12px; }
+  body { font-size: 14px; }
+}
+</style>
+<style>
+/* Mobile card breathing room */
+@media (max-width: 700px) {
+    main {
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+    }
+    .page-section {
+        width: calc(100% - 8px) !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+        box-sizing: border-box;
+    }
+    .card, .info-card, .game-box, .fun-fact-card, .visitor-badge,
+    .review-card, .terminal-window, .memory-game, .reaction-game,
+    .juggling-game, .gallery-card {
+        max-width: calc(100% - 8px);
+        margin-left: auto !important;
+        margin-right: auto !important;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 420px) {
+    main {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+    .page-section {
+        width: calc(100% - 6px) !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
+</style>
+<style>
+/* MOBILE: every section is a normal scrollable page */
+@media (max-width: 700px) {
+    html {
+        height: auto !important;
+        min-height: 100%;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        overscroll-behavior-y: auto !important;
+    }
+    body {
+        display: block !important;
+        height: auto !important;
+        min-height: 100dvh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        position: relative !important;
+        touch-action: pan-y !important;
+        align-items: initial !important;
+        justify-content: initial !important;
+    }
+    main {
+        display: block !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        position: relative !important;
+    }
+    .page-section,
+    .page-section.active {
+        position: relative !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        overflow-y: visible !important;
+        transform: none !important;
+        touch-action: pan-y !important;
+    }
+    .page-section.active {
+        display: block !important;
+    }
+    /* Keep only the actual lock screen fixed; content pages must move with the document. */
+    #lockScreen {
+        position: fixed !important;
+    }
+}
+</style>
 </head>
 <body>
 
@@ -2489,11 +2956,25 @@
         </section>
 
         <!-- TIPS & TRICKS -->
-        <section id="tips" class="page-section">
-            <h1>Tips & Tricks</h1>
-            <p style="color: var(--accent); font-weight: 500; font-size: 19px; line-height: 1.6;">
-                "None... just live the life you want. Listen when you need, ignore when you know it's wrong. Move forward with a goal so when you stop, you realize why you walked."
-            </p>
+        <section id="tips" class="page-section tips-page">
+            <div class="tips-tricks-card">
+                <h2>Tips & Tricks</h2>
+                <p>
+                    "None... just live the life you want. Listen when you need, ignore when you know it's wrong. Move forward with a goal so when you stop, you realize why you walked."
+                </p>
+            </div>
+
+            <div class="tips-tricks-card">
+                <h2>Tips & Tricks</h2>
+                <p>
+                    "IF u think someone defines Who u are ur completely Wrong,There is only one person who can discriminate u and thats You"
+                </p>
+            </div>
+
+            <div class="tips-tricks-card tips-random-card" id="randomTipCard">
+                <h2>Random Tip 🎲</h2>
+                <p id="randomTipText">"Keep moving. Even small steps still take you somewhere."</p>
+            </div>
         </section>
 
         <!-- LIKES & DISLIKES -->
@@ -3832,18 +4313,57 @@
 
         function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('show'); }
 
+        let sarahTransitionBusy = false;
+        let sarahAudioCtx = null;
+        function playSarahTransitionSound(theme) {
+            try {
+                sarahAudioCtx = sarahAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+                if (sarahAudioCtx.state === 'suspended') sarahAudioCtx.resume();
+                const now = sarahAudioCtx.currentTime;
+                const gain = sarahAudioCtx.createGain();
+                gain.connect(sarahAudioCtx.destination);
+                gain.gain.setValueAtTime(0.0001, now);
+                gain.gain.exponentialRampToValueAtTime(theme === 'photography' ? 0.055 : 0.035, now + .012);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + (theme === 'photography' ? .16 : .34));
+                const osc = sarahAudioCtx.createOscillator();
+                osc.connect(gain);
+                osc.type = theme === 'photography' ? 'sine' : 'triangle';
+                osc.frequency.setValueAtTime(theme === 'photography' ? 1450 : 520, now);
+                osc.frequency.exponentialRampToValueAtTime(theme === 'photography' ? 900 : 760, now + (theme === 'photography' ? .14 : .3));
+                osc.start(now); osc.stop(now + .36);
+            } catch(e) {}
+        }
+        function runSarahSectionTransition(nextSection, done) {
+            const theme = document.body.getAttribute('data-sarah-theme');
+            if (!document.body.classList.contains('sarah-mode') || !theme) { done(); return; }
+            const overlay = document.getElementById('sarahTransitionOverlay');
+            if (!overlay) { done(); return; }
+            sarahTransitionBusy = true;
+            overlay.className = 'active ' + theme;
+            const lyric = document.getElementById('sarahLyricsText');
+            if (lyric) lyric.textContent = ['game-life','mini-game'].includes(nextSection) ? '♪ Here we go... ♪' : '♪ Turning the page... ♪';
+            playSarahTransitionSound(theme);
+            setTimeout(() => { done(); }, theme === 'reading' ? 420 : 390);
+            setTimeout(() => { overlay.className = ''; sarahTransitionBusy = false; }, 1080);
+        }
+
         function showSection(sectionId) {
-            const sections = document.querySelectorAll('.page-section');
-            sections.forEach(sec => {
-                sec.classList.remove('active');
-                sec.style.display = 'none';
-            });
-            const target = document.getElementById(sectionId);
-            target.style.display = 'block';
-            void target.offsetWidth;
-            target.classList.add('active');
-            document.getElementById('dropdownMenu').classList.remove('show');
-            if (typeof recordPassportSectionVisit === 'function') recordPassportSectionVisit(sectionId);
+            if (sarahTransitionBusy) return;
+            const change = () => {
+                const sections = document.querySelectorAll('.page-section');
+                sections.forEach(sec => {
+                    sec.classList.remove('active');
+                    sec.style.display = 'none';
+                });
+                const target = document.getElementById(sectionId);
+                if (!target) return;
+                target.style.display = 'block';
+                void target.offsetWidth;
+                target.classList.add('active');
+                document.getElementById('dropdownMenu').classList.remove('show');
+                if (typeof recordPassportSectionVisit === 'function') recordPassportSectionVisit(sectionId);
+            };
+            runSarahSectionTransition(sectionId, change);
         }
 
         window.onclick = function(event) {
@@ -4113,7 +4633,7 @@
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '2.5.0';
+        const SITE_VERSION = '3.0.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
@@ -4661,6 +5181,15 @@
 
 
 
+
+    <!-- THEME-SPECIFIC TOPIC TRANSITION -->
+    <div id="sarahTransitionOverlay" aria-hidden="true">
+        <div class="sarah-transition-lyrics"><span id="sarahLyricsText">♪ Here we go... ♪</span></div>
+        <div class="sarah-page left"></div><div class="sarah-page right"></div>
+        <div class="sarah-camera-flash"></div>
+        <div class="sarah-plane">✈️</div>
+    </div>
+
     <!-- SARAH VIBE CURSOR -->
     <div id="sarahVibeCursor" class="sarah-vibe-cursor" aria-hidden="true">🎤</div>
 
@@ -4674,7 +5203,386 @@
     </div>
     <div id="sarahModeToast" class="sarah-mode-toast"></div>
 
+
+<style>
+/* Extra Tips & Tricks card */
+.tips-tricks-card {
+    width: min(100%, 760px);
+    margin: 28px auto 4px;
+    padding: 28px 30px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 28px;
+    background: rgba(11, 17, 31, .58);
+    box-shadow: 0 18px 50px rgba(0,0,0,.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    text-align: center;
+}
+
+.tips-tricks-card h2 {
+    margin: 0 0 14px;
+    font-size: clamp(22px, 4vw, 30px);
+}
+
+.tips-tricks-card p {
+    margin: 0;
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 19px;
+    line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+    .tips-tricks-card {
+        width: calc(100% - 24px);
+        margin: 26px auto 4px;
+        padding: 22px 18px;
+        border-radius: 24px;
+    }
+
+    .tips-tricks-card h2 {
+        font-size: 24px;
+    }
+
+    .tips-tricks-card p {
+        font-size: 17px;
+        line-height: 1.65;
+        text-align: center !important;
+    }
+}
+
+@media (max-width: 420px) {
+    .tips-tricks-card {
+        width: calc(100% - 18px);
+        padding: 20px 15px;
+    }
+
+    .tips-tricks-card p {
+        font-size: 16px;
+    }
+}
+</style>
+
+<style>
+/* Tips page: two separate cards instead of one outer card containing another. */
+#tips.tips-page {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+}
+
+#tips.tips-page .tips-tricks-card {
+    width: min(100%, 760px);
+    margin: 0 auto 26px;
+}
+
+#tips.tips-page .tips-tricks-card:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 700px) {
+    #tips.tips-page {
+        width: calc(100% - 28px) !important;
+        max-width: 640px !important;
+        padding: 0 !important;
+        margin: 12px auto 26px !important;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+    }
+
+    #tips.tips-page .tips-tricks-card {
+        width: 100% !important;
+        margin: 0 auto 20px !important;
+        padding: 22px 18px !important;
+        border-radius: 24px;
+    }
+
+    #tips.tips-page .tips-tricks-card:last-child {
+        margin-bottom: 0 !important;
+    }
+}
+
+@media (max-width: 420px) {
+    #tips.tips-page {
+        width: calc(100% - 22px) !important;
+    }
+
+    #tips.tips-page .tips-tricks-card {
+        padding: 20px 15px !important;
+        border-radius: 22px;
+    }
+}
+</style>
+<script>
+(function initRandomTipCard() {
+    const tips = [
+        '"Keep moving. Even small steps still take you somewhere."',
+        '"Protect your peace. Not every argument needs a reply."',
+        '"Do not rush your journey just because someone else is already there."',
+        '"Rest when you need to. Giving up and taking a break are not the same thing."',
+        '"Stay curious. One random idea can turn into something amazing."',
+        '"If today feels slow, remember: slow progress is still progress."',
+        '"Laugh at the small things. Life is too short to be serious all the time. 😂"'
+    ];
+    const target = document.getElementById('randomTipText');
+    if (!target) return;
+    target.textContent = tips[Math.floor(Math.random() * tips.length)];
+})();
+</script>
+
 </body>
 </html>
 
+<style>
+/* Mobile natural-page movement: sections scroll with the document instead of feeling pinned. */
+@media (max-width: 700px) {
+    html, body {
+        height: auto !important;
+        min-height: 100%;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+    body {
+        display: block !important;
+        position: relative !important;
+        align-items: initial !important;
+        justify-content: initial !important;
+        touch-action: pan-y !important;
+    }
+    main {
+        position: relative !important;
+        display: block !important;
+        min-height: 0 !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        padding-top: 74px !important;
+        padding-bottom: 40px !important;
+    }
+    .page-section {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        transform: none;
+        margin-top: 0 !important;
+        margin-bottom: 22px !important;
+    }
+    /* Mobile intro: compact card that can scroll internally instead of filling the screen. */
+    #intro {
+        width: calc(100% - 28px) !important;
+        max-width: 640px !important;
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: 68dvh !important;
+        margin: 12px auto 26px !important;
+        padding: 26px 20px !important;
+        box-sizing: border-box !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        overscroll-behavior: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: thin;
+        scroll-behavior: smooth;
+    }
+    #intro h1 {
+        margin-top: 0 !important;
+        font-size: clamp(28px, 8vw, 40px) !important;
+        line-height: 1.12 !important;
+    }
+    #intro p {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        max-width: 560px !important;
+        line-height: 1.65 !important;
+    }
+    #intro p:last-child {
+        margin-bottom: 4px;
+    }
+
+    @media (max-width: 420px) {
+        #intro {
+            width: calc(100% - 24px) !important;
+            max-height: 64dvh !important;
+            padding: 22px 16px !important;
+        }
+        #intro h1 {
+            font-size: clamp(25px, 8vw, 34px) !important;
+        }
+    }
+}
+</style>
+<style>
+/* Mobile: keep Tips & Tricks comfortably centered like the other cards. */
+@media (max-width: 700px) {
+    #tips {
+        width: calc(100% - 44px) !important;
+        max-width: 520px !important;
+        margin: 18px auto 24px !important;
+        padding: 20px 16px !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        max-height: 58dvh !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+    }
+
+    #tips::-webkit-scrollbar {
+        width: 5px;
+    }
+    #tips::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: rgba(255,255,255,.25);
+    }
+    #tips h1,
+    #tips p {
+        width: 100% !important;
+        max-width: 560px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        text-align: center !important;
+    }
+    #tips h1 {
+        margin-top: 0 !important;
+        line-height: 1.15 !important;
+    }
+    #tips p {
+        line-height: 1.5 !important;
+        font-size: 15px !important;
+    }
+}
+@media (max-width: 420px) {
+    #tips {
+        width: calc(100% - 34px) !important;
+        max-height: 54dvh !important;
+        padding: 18px 14px !important;
+    }
+}
+
+        /* MOBILE FLOW: intro + tips behave like every other page */
+        @media (max-width: 700px) {
+            html, body {
+                min-height: 100%;
+                height: auto;
+                overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior-y: auto;
+            }
+
+            body {
+                display: block;
+                align-items: initial;
+                justify-content: initial;
+            }
+
+            main {
+                width: 100%;
+                max-width: 720px;
+                margin: 0 auto;
+                padding: 82px 18px 42px;
+                min-height: calc(100dvh + 1px);
+            }
+
+            .page-section {
+                width: 100%;
+                margin: 0 auto 28px;
+                min-height: 0;
+                padding: 38px 24px;
+            }
+
+            #intro,
+            #tips {
+                min-height: 0;
+                display: none;
+            }
+
+            #intro.active,
+            #tips.active {
+                display: block;
+            }
+
+            #intro > *,
+            #tips > * {
+                max-width: 100%;
+            }
+
+            /* Keep short pages naturally movable instead of vertically locking them. */
+            main::after {
+                content: "";
+                display: block;
+                height: 28px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            main {
+                padding-left: 14px;
+                padding-right: 14px;
+                padding-top: 78px;
+            }
+
+            .page-section {
+                padding: 32px 20px;
+                border-radius: 22px;
+            }
+        }
+</style>
+<style>
+/* Mobile page movement fix: let the document itself move, not the individual card. */
+@media (max-width: 700px) {
+    html, body {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        height: auto !important;
+        min-height: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: auto !important;
+    }
+
+    main {
+        height: auto !important;
+        min-height: 0 !important;
+        padding-top: 78px !important;
+        padding-bottom: 24dvh !important;
+    }
+
+    .page-section,
+    #intro,
+    #tips {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        overflow-y: visible !important;
+        overscroll-behavior: auto !important;
+    }
+
+    #intro,
+    #tips {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
+
+@media (max-width: 420px) {
+    main {
+        padding-bottom: 20dvh !important;
+    }
+}
+</style>
 
