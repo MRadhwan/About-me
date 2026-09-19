@@ -2718,235 +2718,6 @@
 }
 </style>
 
-<style id="responsive-layout-cleanup">
-/* =========================================================
-   RESPONSIVE LAYOUT CLEANUP
-   One responsive boundary, no CSS after </html>, and no
-   mobile rules leaking into the desktop document layout.
-   ========================================================= */
-
-/* MOBILE: normal document flow */
-@media (max-width: 700px) {
-    html {
-        height: auto !important;
-        min-height: 100%;
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-        overscroll-behavior-y: auto !important;
-        scroll-padding-top: 70px;
-    }
-
-    body {
-        display: block !important;
-        position: relative !important;
-        width: 100% !important;
-        height: auto !important;
-        min-height: 100dvh !important;
-        max-height: none !important;
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-        align-items: initial !important;
-        justify-content: initial !important;
-        touch-action: pan-y !important;
-    }
-
-    main {
-        display: block !important;
-        position: relative !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        margin: 0 auto !important;
-        padding: 78px 18px 42px !important;
-        overflow: visible !important;
-        box-sizing: border-box !important;
-    }
-
-    .page-section,
-    .page-section.active {
-        position: relative !important;
-        top: auto !important;
-        right: auto !important;
-        bottom: auto !important;
-        left: auto !important;
-        width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        margin: 0 auto 28px !important;
-        overflow: visible !important;
-        transform: none !important;
-        touch-action: pan-y !important;
-        box-sizing: border-box !important;
-    }
-
-    .page-section.active { display: block !important; }
-
-    /* The intro and Tips cards move with the document rather than becoming
-       their own trapped scroll areas. */
-    #intro,
-    #tips {
-        min-height: 0 !important;
-        max-height: none !important;
-        overflow: visible !important;
-        overflow-y: visible !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-    }
-
-    #intro {
-        width: calc(100% - 10px) !important;
-        max-width: 640px !important;
-        padding: 26px 20px !important;
-    }
-
-    #tips {
-        width: calc(100% - 28px) !important;
-        max-width: 640px !important;
-        padding: 20px 16px !important;
-        text-align: center !important;
-    }
-
-    #tips.tips-page {
-        width: calc(100% - 28px) !important;
-        max-width: 640px !important;
-        padding: 0 !important;
-        margin: 12px auto 26px !important;
-        overflow: visible !important;
-    }
-
-    #tips.tips-page .tips-tricks-card {
-        width: 100% !important;
-        margin: 0 auto 20px !important;
-        padding: 22px 18px !important;
-    }
-
-    #tips h1,
-    #tips p,
-    main p, main small, main label, main li,
-    main .section-subtitle, main .card-description,
-    main .fun-fact-desc, main .badge-description,
-    main .passport-note, main .review-meta, main .review-text,
-    main .game-status, main .game-result, main .gallery-caption {
-        text-align: center !important;
-    }
-
-    #tips h1, #tips p {
-        width: 100% !important;
-        max-width: 560px !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-    }
-
-    #tips p { line-height: 1.5 !important; font-size: 15px !important; }
-
-    main input, main textarea, main select {
-        max-width: 100%;
-        box-sizing: border-box;
-        text-align: center;
-    }
-
-    /* Keep intentional internal controls scrollable, but never make the
-       portfolio page itself a nested scroll container. */
-    .terminal-body,
-    .dropdown-content {
-        overscroll-behavior: contain;
-    }
-
-    #lockScreen { position: fixed !important; }
-}
-
-@media (max-width: 420px) {
-    main {
-        padding-left: 14px !important;
-        padding-right: 14px !important;
-        padding-top: 78px !important;
-        padding-bottom: 42px !important;
-    }
-
-    .page-section {
-        padding-left: 15px !important;
-        padding-right: 15px !important;
-        border-radius: 22px;
-    }
-
-    #intro {
-        width: calc(100% - 2px) !important;
-        padding: 22px 16px !important;
-    }
-
-    #tips,
-    #tips.tips-page {
-        width: calc(100% - 10px) !important;
-    }
-
-    #tips.tips-page .tips-tricks-card {
-        padding: 20px 15px !important;
-        border-radius: 22px;
-    }
-
-    body { font-size: 14px; }
-}
-
-/* DESKTOP: exactly one viewport boundary.
-   html/body never become page scroll containers. main is the only normal
-   document scroll area, so scrolling cannot continue beneath fixed controls. */
-@media (min-width: 701px) {
-    html {
-        width: 100%;
-        height: 100%;
-        min-height: 100%;
-        overflow: hidden !important;
-        overscroll-behavior-y: none;
-    }
-
-    body {
-        box-sizing: border-box;
-        width: 100%;
-        height: 100dvh;
-        min-height: 100dvh;
-        max-height: 100dvh;
-        overflow: hidden !important;
-        overscroll-behavior-y: none;
-    }
-
-    /* Desktop is intentionally a locked viewport. The site switches between
-       sections instead of scrolling the whole portfolio. Chrome was the only
-       browser exposing the nested main scroller as an extra scroll range. */
-    main {
-        box-sizing: border-box;
-        height: calc(100dvh - 60px);
-        max-height: calc(100dvh - 60px);
-        overflow: clip;
-        overflow-x: clip;
-        overflow-y: clip;
-        overscroll-behavior: none;
-        scrollbar-gutter: auto;
-    }
-
-    /* Chrome desktop: the active page owns the usable viewport.
-       Do not allow an active section to finish high above the bottom of the
-       scroll frame and leave a second empty document area underneath it. */
-    .page-section.active {
-        box-sizing: border-box !important;
-        margin-bottom: 0 !important;
-    }
-
-    /* Keep the fixed danger control inside the same visual boundary. */
-    main {
-        padding-bottom: 84px !important;
-    }
-
-    /* Fixed decorative controls remain tied to the viewport. */
-    #sarahTransitionOverlay,
-    #sarahTransitionOverlay *,
-    .sarah-vibe-cursor {
-        pointer-events: none !important;
-    }
-}
-</style>
 </head>
 <body>
 
@@ -4982,7 +4753,7 @@
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '8.0.0';
+        const SITE_VERSION = '9.0.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
@@ -5704,4 +5475,304 @@
 
 </body>
 </html>
+
+<style>
+/* Mobile natural-page movement: sections scroll with the document instead of feeling pinned. */
+@media (max-width: 700px) {
+    html, body {
+        height: auto !important;
+        min-height: 100%;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+    body {
+        display: block !important;
+        position: relative !important;
+        align-items: initial !important;
+        justify-content: initial !important;
+        touch-action: pan-y !important;
+    }
+    main {
+        position: relative !important;
+        display: block !important;
+        min-height: 0 !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        padding-top: 74px !important;
+        padding-bottom: 40px !important;
+    }
+    .page-section {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        transform: none;
+        margin-top: 0 !important;
+        margin-bottom: 22px !important;
+    }
+    /* Mobile intro: compact card that can scroll internally instead of filling the screen. */
+    #intro {
+        width: calc(100% - 28px) !important;
+        max-width: 640px !important;
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: 68dvh !important;
+        margin: 12px auto 26px !important;
+        padding: 26px 20px !important;
+        box-sizing: border-box !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        overscroll-behavior: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: thin;
+        scroll-behavior: smooth;
+    }
+    #intro h1 {
+        margin-top: 0 !important;
+        font-size: clamp(28px, 8vw, 40px) !important;
+        line-height: 1.12 !important;
+    }
+    #intro p {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        max-width: 560px !important;
+        line-height: 1.65 !important;
+    }
+    #intro p:last-child {
+        margin-bottom: 4px;
+    }
+
+    @media (max-width: 420px) {
+        #intro {
+            width: calc(100% - 24px) !important;
+            max-height: 64dvh !important;
+            padding: 22px 16px !important;
+        }
+        #intro h1 {
+            font-size: clamp(25px, 8vw, 34px) !important;
+        }
+    }
+}
+</style>
+<style>
+/* Mobile: keep Tips & Tricks comfortably centered like the other cards. */
+@media (max-width: 700px) {
+    #tips {
+        width: calc(100% - 44px) !important;
+        max-width: 520px !important;
+        margin: 18px auto 24px !important;
+        padding: 20px 16px !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        max-height: 58dvh !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+    }
+
+    #tips::-webkit-scrollbar {
+        width: 5px;
+    }
+    #tips::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: rgba(255,255,255,.25);
+    }
+    #tips h1,
+    #tips p {
+        width: 100% !important;
+        max-width: 560px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        text-align: center !important;
+    }
+    #tips h1 {
+        margin-top: 0 !important;
+        line-height: 1.15 !important;
+    }
+    #tips p {
+        line-height: 1.5 !important;
+        font-size: 15px !important;
+    }
+}
+@media (max-width: 420px) {
+    #tips {
+        width: calc(100% - 34px) !important;
+        max-height: 54dvh !important;
+        padding: 18px 14px !important;
+    }
+}
+
+        /* MOBILE FLOW: intro + tips behave like every other page */
+        @media (max-width: 700px) {
+            html, body {
+                min-height: 100%;
+                height: auto;
+                overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior-y: auto;
+            }
+
+            body {
+                display: block;
+                align-items: initial;
+                justify-content: initial;
+            }
+
+            main {
+                width: 100%;
+                max-width: 720px;
+                margin: 0 auto;
+                padding: 82px 18px 42px;
+                min-height: calc(100dvh + 1px);
+            }
+
+            .page-section {
+                width: 100%;
+                margin: 0 auto 28px;
+                min-height: 0;
+                padding: 38px 24px;
+            }
+
+            #intro,
+            #tips {
+                min-height: 0;
+                display: none;
+            }
+
+            #intro.active,
+            #tips.active {
+                display: block;
+            }
+
+            #intro > *,
+            #tips > * {
+                max-width: 100%;
+            }
+
+            /* Keep short pages naturally movable instead of vertically locking them. */
+            main::after {
+                content: "";
+                display: block;
+                height: 28px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            main {
+                padding-left: 14px;
+                padding-right: 14px;
+                padding-top: 78px;
+            }
+
+            .page-section {
+                padding: 32px 20px;
+                border-radius: 22px;
+            }
+        }
+</style>
+<style>
+/* Mobile page movement fix: let the document itself move, not the individual card. */
+@media (max-width: 700px) {
+    html, body {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        height: auto !important;
+        min-height: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: auto !important;
+    }
+
+    main {
+        height: auto !important;
+        min-height: 0 !important;
+        padding-top: 78px !important;
+        padding-bottom: 24dvh !important;
+    }
+
+    .page-section,
+    #intro,
+    #tips {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        overflow-y: visible !important;
+        overscroll-behavior: auto !important;
+    }
+
+    #intro,
+    #tips {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
+
+@media (max-width: 420px) {
+    main {
+        padding-bottom: 20dvh !important;
+    }
+}
+</style>
+
+<style>
+/* Desktop: keep the original document flow. Chrome can expose a small
+   document scroll range even when the active section already fits in the
+   viewport. Only hide that page-level scroll when the active section fits;
+   content that genuinely needs scrolling remains scrollable. */
+@media (min-width: 701px) {
+    html, body {
+        overflow-x: hidden;
+    }
+}
+</style>
+<script>
+(function () {
+    function updateDesktopPageScroll() {
+        if (window.innerWidth <= 700) return;
+
+        const root = document.documentElement;
+        const body = document.body;
+        const active = document.querySelector('main .page-section.active');
+        if (!active) return;
+
+        // Measure the real active card, not fixed controls or decorative layers.
+        const rect = active.getBoundingClientRect();
+        const viewportBottom = window.innerHeight;
+        const fits = rect.bottom <= viewportBottom + 2 && rect.top >= -2;
+
+        if (fits) {
+            root.style.overflowY = 'hidden';
+            body.style.overflowY = 'hidden';
+        } else {
+            root.style.overflowY = '';
+            body.style.overflowY = '';
+        }
+    }
+
+    window.addEventListener('load', updateDesktopPageScroll, { passive: true });
+    window.addEventListener('resize', updateDesktopPageScroll, { passive: true });
+    window.addEventListener('orientationchange', updateDesktopPageScroll, { passive: true });
+
+    // Section switching changes which card is active.
+    const observer = new MutationObserver(updateDesktopPageScroll);
+    observer.observe(document.documentElement, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+
+    // Re-check after the existing section fade-in/layout animations settle.
+    setTimeout(updateDesktopPageScroll, 100);
+    setTimeout(updateDesktopPageScroll, 700);
+})();
+</script>
 
