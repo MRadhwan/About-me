@@ -5315,6 +5315,24 @@ function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle
             });
         }
 
+        async function loadPublicReviews() {
+            const container = document.getElementById('reviewContainer');
+            if (!container) return;
+            try {
+                const base = FIREBASE_CONFIG.databaseURL.replace(/\/$/,'');
+                const response = await fetch(`${base}/reviews.json`);
+                if (!response.ok) throw new Error(`HTTP_${response.status}`);
+                const data = await response.json();
+                const reviews = data ? Object.entries(data).map(([id, review]) => ({...review, id})) : [];
+                reviews.sort((a,b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+                renderReviews(reviews);
+                saveLocalReviews(reviews);
+            } catch (e) {
+                console.warn('Public review loading unavailable:', e);
+                renderReviews(getLocalReviews());
+            }
+        }
+
         async function firebaseAuth(endpoint, payload) {
             const response = await fetch(`https://identitytoolkit.googleapis.com/v1/${endpoint}?key=${encodeURIComponent(FIREBASE_CONFIG.apiKey)}`, {
                 method: 'POST',
@@ -5375,8 +5393,8 @@ function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle
                 createdAt: Date.now()
             };
 
-            // Keep the visitor's own review visible locally, while Firebase remains
-            // private: only the owner account is allowed to read the database.
+            // Save locally immediately, then sync to Firebase so every visitor
+            // can see the same public review feed.
             const reviews = getLocalReviews();
             reviews.unshift(review);
             saveLocalReviews(reviews);
@@ -5384,7 +5402,9 @@ function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle
 
             const synced = await syncReviewToFirebase(review);
             if (!synced) {
-                alert('The review was saved on this device, but could not be sent to the owner inbox. Please try again when online.');
+                alert('The review was saved on this device, but could not be sent to the public review feed. Please try again when online.');
+            } else {
+                await loadPublicReviews();
             }
             unlockBadge('reviewer');
 
@@ -5441,7 +5461,21 @@ function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle
                 <div class="admin-review-item">
                     <div class="meta">${escapeReview(r.name)} · ${'★'.repeat(Math.min(5, Math.max(1, Number(r.rating)||5)))}${'☆'.repeat(5-Math.min(5, Math.max(1, Number(r.rating)||5)))} · ${escapeReview(r.date)}</div>
                     <div>${escapeReview(r.text)}</div>
+                    <div style="display:flex;justify-content:flex-end;margin-top:10px;"><button class="delete" style="padding:7px 11px;" onclick="deleteOwnerReview('${escapeReview(r.id)}')">✕ DELETE</button></div>
                 </div>`).join('') : '<small>No reviews found.</small>';
+        }
+
+        async function deleteOwnerReview(id) {
+            if (!ownerIdToken || !id) return;
+            if (!confirm('Delete this review permanently?')) return;
+            try {
+                const base = FIREBASE_CONFIG.databaseURL.replace(/\/$/,'');
+                const response = await fetch(`${base}/reviews/${encodeURIComponent(id)}.json?auth=${encodeURIComponent(ownerIdToken)}`, {method:'DELETE'});
+                if (!response.ok) throw new Error('DELETE_FAILED');
+                await loadOwnerReviews();
+            } catch(e) {
+                alert('Could not delete the review.');
+            }
         }
 
         async function toggleOwnerReviews() {
@@ -5461,14 +5495,17 @@ function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => renderReviews());
+        document.addEventListener('DOMContentLoaded', () => {
+            renderReviews();
+            loadPublicReviews();
+        });
 
 
         /* SITE UPDATE SYSTEM
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '1.1.0';
+        const SITE_VERSION = '25.0.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
@@ -6413,14 +6450,14 @@ function renderCommunityCard(p){
  let poll='';
  if(p.type==='poll'&&Array.isArray(p.options)){const v=p.votes||{},total=Object.keys(v).length;poll=`<div class="community-poll">${p.options.map((op,i)=>{const num=Object.values(v).filter(x=>Number(x)===i).length,pct=total?Math.round(num/total*100):0;return `<button class="community-poll-option" onclick="voteCommunityPoll('${communityEscape(p.id)}',${i})"><div class="poll-bar" style="width:${pct}%"></div><span>${communityEscape(op)}</span><em>${pct}%</em></button>`}).join('')}</div><small style="display:block;margin-top:5px;color:var(--text-muted);font-size:8px">${total} vote${total===1?'':'s'}</small>`}
  const ch=ce.map(c=>`<div class="community-comment"><strong>${communityEscape(c.author)}</strong>${communityEscape(c.text)}</div>`).join('');
- return `<article class="community-card"><div class="community-card-head"><div class="community-card-avatar">${communityInitial(p.author)}</div><div class="community-card-meta"><strong>${communityEscape(p.author)}</strong><small>${communityDate(p.createdAt)}</small></div><span class="community-type-badge">${typeLabel}</span></div><h3>${communityEscape(p.title||'')}</h3>${p.body?`<div class="community-card-body">${communityEscape(p.body)}</div>`:''}${poll}<div class="community-actions"><button class="community-action ${liked?'liked':''}" onclick="toggleCommunityLike('${communityEscape(p.id)}')">${liked?'❤️':'♡'} ${Object.keys(likes).length}</button><button class="community-action" onclick="toggleCommunityComments('${communityEscape(p.id)}')">💬 ${Object.keys(comments).length}</button><button class="community-action" onclick="shareCommunityPost('${communityEscape(p.id)}')">↗ Share</button></div><div id="community-comments-${communityEscape(p.id)}" class="community-comment-box"><input id="community-comment-input-${communityEscape(p.id)}" class="community-input" maxlength="300" placeholder="Write a comment…"><button class="community-post-btn" onclick="addCommunityComment('${communityEscape(p.id)}')">SEND</button></div>${ch?`<div class="community-comment-list">${ch}</div>`:''}</article>`
+ return `<article class="community-card"><div class="community-card-head"><div class="community-card-avatar">${communityInitial(p.author)}</div><div class="community-card-meta"><strong>${communityEscape(p.author)}</strong><small>${communityDate(p.createdAt)}</small></div><span class="community-type-badge">${typeLabel}</span></div><h3>${communityEscape(p.title||'')}</h3>${p.body?`<div class="community-card-body">${communityEscape(p.body)}</div>`:''}${poll}<div class="community-actions"><button class="community-action ${liked?'liked':''}" onclick="toggleCommunityLike('${communityEscape(p.id)}')">${liked?'❤️':'♡'} ${Object.keys(likes).length}</button><button class="community-action" onclick="toggleCommunityComments('${communityEscape(p.id)}')">💬 ${Object.keys(comments).length}</button><button class="community-action" onclick="shareCommunityPost('${communityEscape(p.id)}')">↗ Share</button></div><div id="community-comments-${communityEscape(p.id)}" class="community-comment-box"><input id="community-comment-name-${communityEscape(p.id)}" class="community-input community-display-name-input" maxlength="40" value="${communityEscape(communityProfile().name||'')}" placeholder="Display name" autocomplete="nickname"><input id="community-comment-input-${communityEscape(p.id)}" class="community-input" maxlength="300" placeholder="Write a comment…"><button class="community-post-btn" onclick="addCommunityComment('${communityEscape(p.id)}')">SEND</button></div>${ch?`<div class="community-comment-list">${ch}</div>`:''}</article>`
 }
 async function toggleCommunityLike(id){
  try{await ensureCommunityAuth();const l=communityLikes(),now=!l[id],r=await communityDb(`community/posts/${id}/likes/${communityUid}`,{method:'PUT',body:now,token:visitorIdToken});if(!r.ok)throw new Error(await r.text());if(now)l[id]=true;else delete l[id];saveCommunityLikes(l);const p=communityPosts.find(x=>x.id===id);if(p){p.likes=p.likes||{};if(now)p.likes[communityUid]=true;else delete p.likes[communityUid]}renderCommunityFeed()}catch(e){console.error(e)}
 }
 async function addCommunityComment(id){
- const i=document.getElementById(`community-comment-input-${id}`),text=i?.value.trim(),pr=communityProfile();if(!text)return;if(!pr.name){alert('Set your display name first.');return}
- try{await ensureCommunityAuth();const c={author:pr.name,text,createdAt:Date.now(),authorUid:communityUid},r=await communityDb(`community/posts/${id}/comments`,{method:'POST',body:c,token:visitorIdToken});if(!r.ok)throw new Error(await r.text());const p=communityPosts.find(x=>x.id===id);if(p){p.comments=p.comments||{};p.comments['local-'+Date.now()]=c}i.value='';renderCommunityFeed()}catch(e){alert('Could not send the comment.')}
+ const i=document.getElementById(`community-comment-input-${id}`),n=document.getElementById(`community-comment-name-${id}`),text=i?.value.trim(),name=n?.value.trim()||'';if(!text)return;if(!name){alert('Add a display name before replying.');n?.focus();return}if(name.length>40){alert('Display name must be 40 characters or less.');n?.focus();return}
+ try{await ensureCommunityAuth();saveCommunityProfile({name});const c={author:name,text,createdAt:Date.now(),authorUid:communityUid},r=await communityDb(`community/posts/${id}/comments`,{method:'POST',body:c,token:visitorIdToken});if(!r.ok)throw new Error(await r.text());const p=communityPosts.find(x=>x.id===id);if(p){p.comments=p.comments||{};p.comments['local-'+Date.now()]=c}i.value='';renderCommunityFeed()}catch(e){alert('Could not send the comment.')}
 }
 function toggleCommunityComments(id){document.getElementById(`community-comments-${id}`)?.classList.toggle('show')}
 async function voteCommunityPoll(id,index){
@@ -6445,6 +6482,10 @@ function updateCommunityComposer(){const p=communityProfile(),name=p.name||'Visi
 document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('communityBody');if(b)b.addEventListener('input',()=>document.getElementById('communityCharCount').textContent=`${b.value.length} / 3000`);const n=document.getElementById('communityName');if(n)n.addEventListener('change',()=>{const p=communityProfile();p.name=n.value.trim();saveCommunityProfile(p);updateCommunityComposer()});updateCommunityComposer();setCommunityType('post');loadCommunityFeed(false)});
 </script>
 
+
+<style>
+.community-display-name-input{margin-bottom:7px;}
+</style>
 </body>
 
 <style>
