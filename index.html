@@ -2624,194 +2624,6 @@
   .page-section { padding-left: 12px; padding-right: 12px; }
   body { font-size: 14px; }
 }
-
-/* ===== FINAL WORLD MAP LAYOUT / ROUTES ===== */
-.website-world-map{
-  min-height:610px;
-  height:610px;
-  isolation:isolate;
-}
-.world-routes-svg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  overflow:visible;
-  pointer-events:none;
-  z-index:1;
-}
-.world-routes-svg line{
-  stroke:rgba(92,201,255,.52);
-  stroke-width:1.15;
-  vector-effect:non-scaling-stroke;
-  filter:drop-shadow(0 0 3px rgba(60,190,255,.18));
-}
-.world-route{display:none!important;}
-.world-location{z-index:3;}
-.world-center{z-index:4;}
-
-@media (min-width:701px){
-  .location-home{left:3%;top:7%}
-  .location-football{left:34%;top:7%}
-  .location-games{right:3%;top:8%}
-
-  .location-mini{left:3%;top:43%}
-  .location-secrets{left:25%;top:31%}
-  .location-tips{right:25%;top:31%}
-  .location-community{right:3%;top:48%}
-
-  .location-tools{left:3%;bottom:7%}
-  .location-terminal{left:25%;bottom:6%}
-  .location-updates{left:calc(50% - 72px);bottom:7%}
-  .location-reviews{right:3%;bottom:7%}
-
-  .world-center{left:50%;top:54%;width:150px;height:150px;}
-}
-
-/* Phone: use a compact 3-column perimeter and keep the center clear. */
-@media (max-width:700px){
-  .world-map-modal{
-    padding:6px;
-    align-items:center;
-  }
-  .website-world-card{
-    width:98vw;
-    max-width:98vw;
-    max-height:96dvh;
-    padding:12px;
-    border-radius:18px;
-    overflow:hidden;
-  }
-  .website-world-heading{
-    gap:9px;
-    margin:0 38px 9px 2px;
-  }
-  .website-world-heading h2{
-    font-size:17px;
-    letter-spacing:1px;
-  }
-  .website-world-heading p{
-    font-size:8px;
-    line-height:1.2;
-  }
-  .world-orb{
-    width:40px;height:40px;
-    flex:0 0 40px;
-    font-size:21px;
-  }
-  .world-map-close{
-    top:10px;right:10px;
-    width:34px;height:34px;
-    font-size:21px;
-  }
-
-  .website-world-map{
-    width:100%;
-    height:clamp(500px,70dvh,590px);
-    min-height:500px;
-    border-radius:15px;
-    background-size:auto,30px 30px,30px 30px;
-  }
-
-  .world-location{
-    width:78px;
-    min-width:78px;
-    min-height:51px;
-    padding:6px 4px;
-    border-radius:10px;
-    text-align:center;
-    transform:translate(-50%,-50%);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-  }
-  .world-location:hover{
-    transform:translate(-50%,-50%) scale(1.025);
-  }
-  .world-location .location-icon{
-    font-size:14px;
-    margin-bottom:1px;
-    line-height:1;
-  }
-  .world-location strong{
-    font-size:7px;
-    letter-spacing:.45px;
-    line-height:1.1;
-  }
-  .world-location small{
-    font-size:5.5px;
-    margin-top:2px;
-    line-height:1;
-  }
-
-  /* 3 top, 2 inner, 2 side-middle, 4 bottom = no crowding around the orb. */
-  .location-home{left:14%;top:10%}
-  .location-football{left:50%;top:8%}
-  .location-games{left:86%;top:10%}
-
-  .location-mini{left:10%;top:35%}
-  .location-secrets{left:27%;top:29%}
-  .location-tips{left:73%;top:29%}
-  .location-community{left:90%;top:48%}
-
-  .location-tools{left:10%;top:77%}
-  .location-terminal{left:29%;top:89%}
-  .location-updates{left:50%;top:77%}
-  .location-reviews{left:71%;top:89%}
-
-  .world-center{
-    left:50%;top:53%;
-    width:104px;height:104px;
-  }
-  .world-center span{font-size:17px;margin-bottom:1px}
-  .world-center strong{font-size:8px;letter-spacing:1.1px}
-
-  .world-routes-svg line{
-    stroke:rgba(92,201,255,.40);
-    stroke-width:1;
-  }
-
-  .website-world-footer{
-    margin-top:8px;
-    padding:0 2px;
-    font-size:8px;
-    gap:7px;
-  }
-  .website-world-footer button{
-    padding:7px 9px;
-    font-size:8px;
-  }
-}
-
-/* Very small phones: shrink the map and cards without changing the structure. */
-@media (max-width:390px){
-  .website-world-card{padding:9px}
-  .website-world-heading{margin-bottom:7px}
-  .website-world-heading h2{font-size:15px}
-  .website-world-heading p{font-size:7px}
-  .world-orb{width:35px;height:35px;flex-basis:35px;font-size:18px}
-  .world-map-close{width:31px;height:31px;font-size:19px}
-  .website-world-map{
-    height:clamp(470px,68dvh,540px);
-    min-height:470px;
-  }
-  .world-location{
-    width:69px;
-    min-width:69px;
-    min-height:47px;
-    padding:5px 3px;
-  }
-  .world-location .location-icon{font-size:12px}
-  .world-location strong{font-size:6.2px}
-  .world-location small{font-size:5px}
-  .world-center{width:92px;height:92px}
-  .world-center span{font-size:15px}
-  .world-center strong{font-size:7px}
-  .website-world-footer{font-size:7px}
-  .website-world-footer button{font-size:7px;padding:6px 8px}
-}
-
 </style>
 <style>
 /* Desktop cursor/transition safety: decorative layers must never become the
@@ -3567,7 +3379,6 @@
 
     <div class="website-world-map">
       <div class="world-grid"></div>
-      <svg class="world-routes-svg" aria-hidden="true" preserveAspectRatio="none"></svg>
       <div class="world-route route-1"></div>
       <div class="world-route route-2"></div>
       <div class="world-route route-3"></div>
@@ -5649,7 +5460,7 @@ function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '11.0.0';
+        const SITE_VERSION = '12.0.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
@@ -6415,53 +6226,6 @@ document.addEventListener('keydown', function (event) {
 </style>
 <script>
 
-
-function updateWorldMapRoutes(){
-  const map = document.querySelector('.website-world-map');
-  const svg = map && map.querySelector('.world-routes-svg');
-  const center = map && map.querySelector('.world-center');
-  if(!map || !svg || !center || getComputedStyle(map).display === 'none') return;
-
-  const mr = map.getBoundingClientRect();
-  const cr = center.getBoundingClientRect();
-  const cx = cr.left + cr.width/2 - mr.left;
-  const cy = cr.top + cr.height/2 - mr.top;
-
-  svg.setAttribute('viewBox', `0 0 ${mr.width} ${mr.height}`);
-  svg.innerHTML = '';
-
-  map.querySelectorAll('.world-location').forEach((button) => {
-    const br = button.getBoundingClientRect();
-    const bx = br.left + br.width/2 - mr.left;
-    const by = br.top + br.height/2 - mr.top;
-
-    const dx = bx - cx;
-    const dy = by - cy;
-    const len = Math.hypot(dx,dy) || 1;
-
-    // Start at the edge of the centre orb and finish at the edge of the
-    // destination card. This makes every line visibly "come from" the orb
-    // and physically meet its corresponding box.
-    const startGap = Math.max(cr.width,cr.height)/2 + 5;
-    const endGap = Math.min(br.width,br.height)/2 + 2;
-
-    const x1 = cx + dx/len * startGap;
-    const y1 = cy + dy/len * startGap;
-    const x2 = bx - dx/len * endGap;
-    const y2 = by - dy/len * endGap;
-
-    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',x1.toFixed(1));
-    line.setAttribute('y1',y1.toFixed(1));
-    line.setAttribute('x2',x2.toFixed(1));
-    line.setAttribute('y2',y2.toFixed(1));
-    svg.appendChild(line);
-  });
-}
-
-window.addEventListener('resize', () => requestAnimationFrame(updateWorldMapRoutes));
-window.addEventListener('orientationchange', () => setTimeout(updateWorldMapRoutes, 80));
-
 function worldTravelTo(target) {
   closeWorldMap();
 
@@ -6528,7 +6292,6 @@ function openWorldMap(){
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
   document.body.classList.add('world-map-open');
-  requestAnimationFrame(() => requestAnimationFrame(updateWorldMapRoutes));
 }
 function closeWorldMap(){
   const modal = document.getElementById('worldMapModal');
@@ -6583,7 +6346,7 @@ async function submitCommunityPost(){
 }
 async function loadCommunityFeed(silent=false){
  const f=document.getElementById('communityFeed');if(!f)return;if(!silent)f.innerHTML='<div class="community-loading"><span class="community-spinner"></span> Loading the community…</div>';
- try{const r=await communityDb('community/posts',{auth:false,query:{orderBy:'status',equalTo:'approved'}});if(!r.ok)throw new Error(await r.text());const d=await r.json();communityPosts=d?Object.values(d).filter(p=>p&&p.status==='approved').sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0)):[];document.getElementById('communityPostCount').textContent=communityPosts.length;renderCommunityFeed()}
+ try{const r=await communityDb('community/posts',{auth:false,query:{orderBy:'"status"',equalTo:'"approved"'}});if(!r.ok)throw new Error(await r.text());const d=await r.json();communityPosts=d?Object.values(d).filter(p=>p&&p.status==='approved').sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0)):[];document.getElementById('communityPostCount').textContent=communityPosts.length;renderCommunityFeed()}
  catch(e){console.error(e);f.innerHTML='<div class="community-empty"><div style="font-size:28px">🌐</div><strong>Community is waiting for Firebase</strong><p style="margin-top:7px;font-size:10px">Your Firebase rules need to allow approved community posts to be read.</p></div>'}
 }
 function renderCommunityFeed(){
