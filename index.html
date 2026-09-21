@@ -2900,17 +2900,6 @@
   background:radial-gradient(ellipse at center,transparent 38%,rgba(0,0,0,.55) 76%);
   pointer-events:none;
 }
-.world-route{
-  position:absolute;
-  height:1px;
-  transform-origin:left center;
-  background:linear-gradient(90deg,rgba(80,190,255,0),rgba(80,190,255,.42),rgba(80,190,255,0));
-  opacity:.7;
-}
-.route-1{left:25%;top:39%;width:50%;transform:rotate(12deg)}
-.route-2{left:32%;top:65%;width:43%;transform:rotate(-17deg)}
-.route-3{left:46%;top:27%;width:28%;transform:rotate(65deg)}
-
 /* World Map connector lines: drawn dynamically from the centre to each card. */
 .world-routes-svg{
   position:absolute;
@@ -3399,11 +3388,7 @@
     <div class="website-world-map">
       <div class="world-grid"></div>
       <svg class="world-routes-svg" aria-hidden="true" preserveAspectRatio="none"></svg>
-      <div class="world-route route-1"></div>
-      <div class="world-route route-2"></div>
-      <div class="world-route route-3"></div>
-
-      <button class="world-location location-home" onclick="worldTravelTo('index')">
+<button class="world-location location-home" onclick="worldTravelTo('index')">
         <span class="location-icon">🏠</span>
         <strong>HOME</strong><small>Start here</small>
       </button>
@@ -5480,7 +5465,7 @@ function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '15.0.0';
+        const SITE_VERSION = '20.0.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
