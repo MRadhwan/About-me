@@ -2911,6 +2911,25 @@
 .route-2{left:32%;top:65%;width:43%;transform:rotate(-17deg)}
 .route-3{left:46%;top:27%;width:28%;transform:rotate(65deg)}
 
+/* World Map connector lines: drawn dynamically from the centre to each card. */
+.world-routes-svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  overflow:visible;
+  pointer-events:none;
+  z-index:1;
+}
+.world-routes-svg line{
+  stroke:rgba(92,201,255,.52);
+  stroke-width:1.15;
+  vector-effect:non-scaling-stroke;
+  filter:drop-shadow(0 0 3px rgba(60,190,255,.18));
+}
+.world-location{z-index:3;}
+.world-center{z-index:4;}
+
  .world-location{
   position:absolute;
   width:145px;
@@ -3379,6 +3398,7 @@
 
     <div class="website-world-map">
       <div class="world-grid"></div>
+      <svg class="world-routes-svg" aria-hidden="true" preserveAspectRatio="none"></svg>
       <div class="world-route route-1"></div>
       <div class="world-route route-2"></div>
       <div class="world-route route-3"></div>
@@ -5460,7 +5480,7 @@ function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle
            Increase SITE_VERSION whenever you publish a new version.
            The menu can then detect the newer deployed HTML and refresh it.
         */
-        const SITE_VERSION = '12.0.0';
+        const SITE_VERSION = '15.0.0';
         const SITE_VERSION_KEY = 'radhwan_site_version';
 
         function compareSiteVersions(a, b) {
@@ -6226,6 +6246,51 @@ document.addEventListener('keydown', function (event) {
 </style>
 <script>
 
+function updateWorldMapRoutes(){
+  const map = document.querySelector('.website-world-map');
+  const svg = map && map.querySelector('.world-routes-svg');
+  const center = map && map.querySelector('.world-center');
+  if(!map || !svg || !center || getComputedStyle(map).display === 'none') return;
+
+  const mr = map.getBoundingClientRect();
+  const cr = center.getBoundingClientRect();
+  const cx = cr.left + cr.width/2 - mr.left;
+  const cy = cr.top + cr.height/2 - mr.top;
+
+  svg.setAttribute('viewBox', `0 0 ${mr.width} ${mr.height}`);
+  svg.innerHTML = '';
+
+  map.querySelectorAll('.world-location').forEach((button) => {
+    const br = button.getBoundingClientRect();
+    const bx = br.left + br.width/2 - mr.left;
+    const by = br.top + br.height/2 - mr.top;
+
+    const dx = bx - cx;
+    const dy = by - cy;
+    const len = Math.hypot(dx,dy) || 1;
+
+    // Start at the edge of the centre orb and finish at the edge
+    // of the destination card, so every line physically meets both.
+    const startGap = Math.max(cr.width,cr.height)/2 + 5;
+    const endGap = Math.min(br.width,br.height)/2 + 2;
+
+    const x1 = cx + dx/len * startGap;
+    const y1 = cy + dy/len * startGap;
+    const x2 = bx - dx/len * endGap;
+    const y2 = by - dy/len * endGap;
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',x1.toFixed(1));
+    line.setAttribute('y1',y1.toFixed(1));
+    line.setAttribute('x2',x2.toFixed(1));
+    line.setAttribute('y2',y2.toFixed(1));
+    svg.appendChild(line);
+  });
+}
+
+window.addEventListener('resize', () => requestAnimationFrame(updateWorldMapRoutes));
+window.addEventListener('orientationchange', () => setTimeout(updateWorldMapRoutes, 80));
+
 function worldTravelTo(target) {
   closeWorldMap();
 
@@ -6292,6 +6357,7 @@ function openWorldMap(){
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
   document.body.classList.add('world-map-open');
+  requestAnimationFrame(updateWorldMapRoutes);
 }
 function closeWorldMap(){
   const modal = document.getElementById('worldMapModal');
